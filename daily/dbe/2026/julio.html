@@ -151,14 +151,14 @@
             </section>
 
             <section class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Cantidad de Unidades por Motivo de Rechazo</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Sumatoria de Piezas Rechazadas por Motivo</h3>
                 <div class="h-80 w-full">
                     <canvas id="chartMotivos"></canvas>
                 </div>
             </section>
 
             <section class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Detalle de Clientes y Rutas Críticas</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top 10 Clientes y Rutas con Mayor Volumen de Rechazo</h3>
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
@@ -166,8 +166,8 @@
                                 <th class="p-2.5">Código</th>
                                 <th class="p-2.5">Cliente</th>
                                 <th class="p-2.5">Ruta</th>
-                                <th class="p-2.5 text-right">Surtido</th>
-                                <th class="p-2.5 text-right">Rechazado</th>
+                                <th class="p-2.5 text-right">Surtido Total</th>
+                                <th class="p-2.5 text-right">Rechazado Total</th>
                                 <th class="p-2.5 text-right text-indigo-600">% DBE</th>
                             </tr>
                         </thead>
@@ -433,11 +433,13 @@
             });
         }
 
-        // CORREGIDO: Gráfico de Motivos cambiado a orientación horizontal (indexAxis: 'y')
+        // GRÁFICO OPTIMIZADO: Hace la sumatoria real de las piezas rechazadas por motivo en formato horizontal
         function renderMotivosChart(dataMotivos) {
             let mMap = {};
             dataMotivos.forEach(r => {
-                if(r.rechazado > 0 && r.motivo && r.motivo !== '-') mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
+                if(r.rechazado > 0 && r.motivo && r.motivo !== '-') {
+                    mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
+                }
             });
             let sorted = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]})).sort((a,b) => b.qty - a.qty);
 
@@ -447,14 +449,15 @@
                 data: {
                     labels: sorted.map(x => x.name),
                     datasets: [{ 
-                        data: sorted.map(x => Math.round(x.qty)), 
+                        label: 'Total Rechazado',
+                        data: sorted.map(x => x.qty), 
                         backgroundColor: '#f43f5e', 
                         borderRadius: 4,
                         barThickness: 16
                     }]
                 },
                 options: { 
-                    indexAxis: 'y', // CAMBIO CLAVE A EJE HORIZONTAL
+                    indexAxis: 'y', 
                     responsive: true, 
                     maintainAspectRatio: false, 
                     plugins: { legend: { display: false } },
@@ -574,16 +577,24 @@
             return rate > dbeMeta ? 'text-rose-600 font-bold bg-rose-50/40 rounded px-1' : 'text-emerald-600 font-bold bg-emerald-50/40 rounded px-1';
         }
 
+        // OPTIMIZADO: Agrupa la sumatoria total por cliente y ruta, y limita estrictamente a un TOP 10 ordenado
         function renderTable(dataTable) {
             let cMap = {};
             dataTable.forEach(row => {
                 let k = row.codClie + '_' + row.cliente;
-                if(!cMap[k]) cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
-                cMap[k].s += row.surtido; cMap[k].r += row.rechazado;
+                if(!cMap[k]) {
+                    cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
+                }
+                cMap[k].s += row.surtido; 
+                cMap[k].r += row.rechazado;
             });
+
+            // Ordenamiento por sumatoria de rechazos de mayor a menor y limitación estricta a TOP 10 (Top Ten)
             let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 10);
+            
             const body = document.getElementById('tableClientsBody');
             body.innerHTML = '';
+            
             list.forEach(c => {
                 let numRate = c.s > 0 ? (c.r / c.s * 100) : 0;
                 let tr = document.createElement('tr');
@@ -591,8 +602,8 @@
                     <td class="p-2.5 font-mono text-slate-400">${c.cod}</td>
                     <td class="p-2.5 font-medium truncate max-w-[150px]">${c.name}</td>
                     <td class="p-2.5 text-slate-500">${c.ruta}</td>
-                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE')}</td>
-                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE')}</td>
+                    <td class="p-2.5 text-right font-mono">${c.s.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="p-2.5 text-right font-mono text-rose-600 font-semibold">${c.r.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                     <td class="p-2.5 text-right ${getContrastColorClass(numRate)}">${numRate.toFixed(1)}%</td>
                 `;
                 body.appendChild(tr);
