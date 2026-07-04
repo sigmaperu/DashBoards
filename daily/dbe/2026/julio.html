@@ -23,6 +23,13 @@
             background: #cbd5e1;
             border-radius: 4px;
         }
+        /* Estilo para los botones seleccionados del calendario */
+        .day-btn.active {
+            background-color: #4f46e5 !important;
+            color: white !important;
+            border-color: #4f46e5 !important;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen">
@@ -30,7 +37,7 @@
     <header class="bg-slate-900 text-white px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-50 shadow-sm">
         <div>
             <h1 class="text-lg font-bold tracking-tight">Dashboard de Control % DBE</h1>
-            <p class="text-xs text-slate-400 mt-0.5">Mapeo e Indicadores de Rechazos | Datos en Tiempo Real</p>
+            <p class="text-xs text-slate-400 mt-0.5">Análisis de Despacho y Gestión de Rechazos | Datos en Tiempo Real</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <span id="dataStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -45,73 +52,72 @@
 
     <div class="p-4 md:p-6 max-w-[1600px] mx-auto space-y-6">
         
-        <section class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Segmentadores Informativos</span>
-                </div>
-                <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors">Borrar filtros</button>
-            </div>
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 mb-1">Centro (Col 1)</label>
-                    <select id="filterCentro" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                        <option value="ALL">Todos los Centros</option>
-                    </select>
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-1 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Segmentadores</span>
+                    <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors">Limpiar</button>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 mb-1">Canal (Col 2)</label>
-                    <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                        <option value="ALL">Todos los Canales</option>
-                    </select>
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">Centro</label>
+                        <select id="filterCentro" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                            <option value="ALL">Todos los Centros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">Canal</label>
+                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                            <option value="ALL">Todos los Canales</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">Vehículo</label>
+                        <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                            <option value="ALL">Todos los Vehículos</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 mb-1">Vehículo (Col 4)</label>
-                    <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                        <option value="ALL">Todos los Vehículos</option>
-                    </select>
+            </div>
+
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-2 flex flex-col justify-between">
+                <div class="border-b border-slate-100 pb-2 mb-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Filtro por N° Día</span>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 mb-1">Distrito (Col 15)</label>
-                    <select id="filterDistrito" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                        <option value="ALL">Todos los Distritos</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 mb-1">N° Día (dd)</label>
-                    <select id="filterDia" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                        <option value="ALL">Todos los Días</option>
-                    </select>
+                <div id="calendarContainer" class="grid grid-cols-7 sm:grid-cols-10 gap-1.5 max-h-[140px] overflow-y-auto custom-scrollbar p-0.5">
+                    </div>
+                <div class="text-[11px] text-slate-400 mt-2 italic">
+                    * Nota: Seleccionar un día específico no afectará la curva del gráfico de Evolución Mensual.
                 </div>
             </div>
         </section>
 
         <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Surtido (Col 31)</p>
+                <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Surtido</p>
                 <h3 id="kpiSurtido" class="text-3xl font-bold text-slate-900 mt-1">0</h3>
             </div>
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Rechazado (Col 34)</p>
+                <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Rechazado</p>
                 <h3 id="kpiRechazado" class="text-3xl font-bold text-rose-600 mt-1">0</h3>
             </div>
             <div class="bg-indigo-900 text-white p-5 rounded-xl border border-indigo-950 shadow-xs">
-                <p class="text-xs font-medium uppercase tracking-wider text-indigo-200">Indicador maestro % DBE</p>
+                <p class="text-xs font-medium uppercase tracking-wider text-indigo-200">Indicador Maestro % DBE</p>
                 <h3 id="kpiDbe" class="text-3xl font-black mt-1">0.00%</h3>
             </div>
         </section>
 
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs lg:col-span-2">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Evolución del % DBE por Fecha (Col 9)</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Evolución del % DBE Mensual</h3>
                 <div class="h-64 w-full">
                     <canvas id="chartTrend"></canvas>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Motivos de Rechazo (Col 36)</h3>
-                <div class="h-64 w-full flex items-center justify-center">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Principales Motivos de Rechazo</h3>
+                <div class="h-64 w-full">
                     <canvas id="chartMotivos"></canvas>
                 </div>
             </div>
@@ -119,13 +125,13 @@
 
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top Distritos con Mayor % DBE</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top Distritos con Mayor Incidencia % DBE</h3>
                 <div class="h-72 w-full">
                     <canvas id="chartDistritos"></canvas>
                 </div>
             </div>
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Detalle de Clientes y Rutas Críticas (Col 5, 6, 7)</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Detalle de Clientes y Rutas Críticas</h3>
                 <div class="overflow-x-auto custom-scrollbar flex-1">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
@@ -149,6 +155,7 @@
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv';
         let rawData = [];
         let filteredData = [];
+        let selectedDia = 'ALL'; // Control de estado del calendario corporativo
 
         let trendChart = null;
         let motivosChart = null;
@@ -160,7 +167,7 @@
             const statusBadge = document.getElementById('dataStatus');
             try {
                 const response = await fetch(csvUrl);
-                if (!response.ok) throw new Error('Error de red al leer GitHub');
+                if (!response.ok) throw new Error('Error al leer GitHub');
                 const text = await response.text();
                 parseCSV(text);
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
@@ -168,9 +175,9 @@
                 populateFilterOptions();
                 applyFilters();
             } catch (err) {
-                console.warn("Usando datos simulados preventivos por restricción de red.");
+                console.warn("Modo simulación local activo.");
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30";
-                statusBadge.innerHTML = `ℹ️ Modo Respaldo (Local/Offline)`;
+                statusBadge.innerHTML = `ℹ️ Modo Respaldo Offline`;
                 generateMockData();
                 populateFilterOptions();
                 applyFilters();
@@ -207,12 +214,11 @@
                 let centro = cols[1] || '';
                 if (!centro || centro === "" || centro.toLowerCase() === "null") continue;
 
-                // CORRECCIÓN EXACTA PARA EL FORMATO m/d/yyyy
                 let fechaStr = cols[9] || '1/07/2026';
                 let diaFicticio = '01';
                 if (fechaStr.includes('/')) {
                     let partes = fechaStr.split('/');
-                    if (partes[1]) { // partes[0] es mes, partes[1] es el DÍA real
+                    if (partes[1]) {
                         diaFicticio = partes[1].trim().padStart(2, '0');
                     }
                 }
@@ -225,7 +231,7 @@
                     cliente: cols[6] || 'Consumidor',
                     rutaVenta: cols[7] || 'Sin Ruta',
                     fecha: fechaStr,
-                    numDia: diaFicticio, // Ahora sí contiene el día real con formato "dd"
+                    numDia: diaFicticio,
                     distrito: cols[15] || 'Otros',
                     surtido: parseFloat(cols[31]) || 0,
                     rechazado: parseFloat(cols[34]) || 0,
@@ -235,25 +241,25 @@
         }
 
         function generateMockData() {
-            const centros = ['CD Ate', 'CD Comas', 'CD Callao', 'CD Villa'];
-            const canales = ['Tradicional', 'Moderno', 'Horizontal'];
-            const vehicles = ['Camión N3', 'Furgón M2', 'Furgoneta M1'];
-            const distritos = ['Comas', 'Ate', 'San Borja', 'La Molina', 'Los Olivos', 'Santiago de Surco'];
-            const motivos = ['Cliente Ausente', 'Producto Dañado', 'Pedido Duplicado', 'Fuera de Horario'];
+            const centros = ['CD Ate', 'CD Comas', 'CD Callao'];
+            const canales = ['Tradicional', 'Moderno', 'Horizontal', 'MES', 'DET', 'FSE'];
+            const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
+            const distritos = ['CHORRILLOS', 'SANTA ANITA', 'SAN MARTIN DE PORRES', 'LA VICTORIA', 'ATE', 'COMAS'];
+            const motivos = ['Recepcíon no recibe', 'Tienda Cerrada', 'Fuera hora de recepc', 'Dif en liquid (s/efe'];
             
             for (let day = 1; day <= 15; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 20; k++) {
-                    let surtido = Math.floor(Math.random() * 100) + 20;
-                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.15) : 0;
+                for (let k = 0; k < 25; k++) {
+                    let surtido = Math.floor(Math.random() * 1200) + 100;
+                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.12) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        codClie: 'CLI-' + (1000 + Math.floor(Math.random() * 500)),
-                        cliente: 'Cliente Mercantil ' + String.fromCharCode(65 + Math.floor(Math.random() * 15)),
-                        rutaVenta: 'R-' + (200 + Math.floor(Math.random() * 10)),
-                        fecha: `7/${day}/2026`, // Formato m/d/yyyy
+                        codClie: 'CLI-' + (1175000 + Math.floor(Math.random() * 5000)),
+                        cliente: 'EMPRESA LOGISTICA ' + String.fromCharCode(65 + Math.floor(Math.random() * 10)) + ' SAC',
+                        rutaVenta: 'B' + (Math.floor(Math.random() * 5) + 4) + String.fromCharCode(65 + Math.floor(Math.random() * 5)),
+                        fecha: `7/${day}/2026`,
                         numDia: formattedDay,
                         distrito: distritos[Math.floor(Math.random() * distritos.length)],
                         surtido: surtido,
@@ -279,50 +285,85 @@
             setOptions('filterCentro', getUnique('centro'));
             setOptions('filterCanal', getUnique('canal'));
             setOptions('filterVehiculo', getUnique('vehiculo'));
-            setOptions('filterDistrito', getUnique('distrito'));
-            setOptions('filterDia', getUnique('numDia')); // Llena correctamente los días del 01 al 31
+
+            // Construir Calendario Visual
+            renderCalendarioVisual(getUnique('numDia'));
+        }
+
+        function renderCalendarioVisual(diasDisponibles) {
+            const container = document.getElementById('calendarContainer');
+            container.innerHTML = '';
+
+            // Botón comodín "Todos"
+            const btnAll = document.createElement('button');
+            btnAll.className = "day-btn text-xs py-2 px-1 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer text-center active";
+            btnAll.id = "btn-day-ALL";
+            btnAll.innerText = "Todos";
+            btnAll.onclick = () => selectDiaCalendario('ALL');
+            container.appendChild(btnAll);
+
+            diasDisponibles.forEach(dia => {
+                if(!dia) return;
+                const btn = document.createElement('button');
+                btn.className = "day-btn text-xs py-2 px-1 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 transition-colors cursor-pointer text-center";
+                btn.id = `btn-day-${dia}`;
+                btn.innerText = dia;
+                btn.onclick = () => selectDiaCalendario(dia);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectDiaCalendario(dia) {
+            selectedDia = dia;
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-day-${dia}`).classList.add('active');
+            applyFilters();
         }
 
         function applyFilters() {
             const c = document.getElementById('filterCentro').value;
             const ca = document.getElementById('filterCanal').value;
             const v = document.getElementById('filterVehiculo').value;
-            const d = document.getElementById('filterDistrito').value;
-            const dia = document.getElementById('filterDia').value;
 
+            // FILTRADO GENERAL PRINCIPAL
             filteredData = rawData.filter(row => {
                 if (c !== 'ALL' && row.centro !== c) return false;
                 if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
-                if (d !== 'ALL' && row.distrito !== d) return false;
-                if (dia !== 'ALL' && row.numDia !== dia) return false;
+                return true;
+            });
+
+            // DATA DESACOPLADA PARA TENDENCIA MENSUAL (Ignora el filtro específico del calendario)
+            renderTrendChart(filteredData);
+
+            // APLICAR FILTRO DEL CALENDARIO DIARIO PARA EL RESTO DE ELEMENTOS
+            let dataParaKpisYTablas = filteredData.filter(row => {
+                if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
             let ts = 0, tr = 0;
-            filteredData.forEach(row => { ts += row.surtido; tr += row.rechazado; });
+            dataParaKpisYTablas.forEach(row => { ts += row.surtido; tr += row.rechazado; });
             
-            document.getElementById('kpiSurtido').innerText = ts.toLocaleString('es-PE');
-            document.getElementById('kpiRechazado').innerText = tr.toLocaleString('es-PE');
+            document.getElementById('kpiSurtido').innerText = ts.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('kpiRechazado').innerText = tr.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById('kpiDbe').innerText = (ts > 0 ? (tr / ts * 100) : 0).toFixed(2) + '%';
 
-            renderCharts();
-            renderTable();
+            renderMotivosChart(dataParaKpisYTablas);
+            renderDistritosChart(dataParaKpisYTablas);
+            renderTable(dataParaKpisYTablas);
         }
 
         function resetFilters() {
             document.getElementById('filterCentro').value = 'ALL';
             document.getElementById('filterCanal').value = 'ALL';
             document.getElementById('filterVehiculo').value = 'ALL';
-            document.getElementById('filterDistrito').value = 'ALL';
-            document.getElementById('filterDia').value = 'ALL';
-            applyFilters();
+            selectDiaCalendario('ALL');
         }
 
-        function renderCharts() {
-            // Ordenamiento cronológico preciso basado en el día extraído
+        function renderTrendChart(dataTrend) {
             let fMap = {};
-            filteredData.forEach(r => {
+            dataTrend.forEach(r => {
                 if(!fMap[r.fecha]) fMap[r.fecha] = {s:0, r:0, d: parseInt(r.numDia)};
                 fMap[r.fecha].s += r.surtido; fMap[r.fecha].r += r.rechazado;
             });
@@ -334,36 +375,60 @@
                 data: {
                     labels: sortedDates,
                     datasets: [{
-                        label: '% DBE Diario',
+                        label: '% DBE Mensual',
                         data: sortedDates.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.02)',
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.04)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.1
+                        tension: 0.1,
+                        pointBackgroundColor: '#4f46e5'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: { y: { ticks: { callback: v => v + '%' } } }
+                }
             });
+        }
 
+        function renderMotivosChart(dataMotivos) {
             let mMap = {};
-            filteredData.forEach(r => {
+            dataMotivos.forEach(r => {
                 if(r.rechazado > 0 && r.motivo && r.motivo !== '-') {
                     mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
                 }
             });
-            if(motivosChart) motivosChart.destroy();
-            motivosChart = new Chart(document.getElementById('chartMotivos').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(mMap),
-                    datasets: [{ data: Object.values(mMap), backgroundColor: ['#f43f5e', '#3b82f6', '#eab308', '#10b981', '#8b5cf6'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
 
+            // Ordenar de mayor a menor volumen de piezas rechazadas
+            let sortedMotivos = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]}))
+                                      .sort((a,b) => b.qty - a.qty).slice(0, 6);
+
+            if(motivosChart) motivosChart.destroy();
+            // CAMBIADO: Ahora es un gráfico de barras verticales moderno en vez de rosca
+            motivosChart = new Chart(document.getElementById('chartMotivos').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: sortedMotivos.map(x => x.name),
+                    datasets: [{
+                        label: 'Cantidad Rechazada',
+                        data: sortedMotivos.map(x => x.qty.toFixed(0)),
+                        backgroundColor: '#f43f5e',
+                        borderRadius: 6
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderDistritosChart(dataDistritos) {
             let dMap = {};
-            filteredData.forEach(r => {
+            dataDistritos.forEach(r => {
                 if(!dMap[r.distrito]) dMap[r.distrito] = {s:0, r:0};
                 dMap[r.distrito].s += r.surtido; dMap[r.distrito].r += r.rechazado;
             });
@@ -376,15 +441,15 @@
                 type: 'bar',
                 data: {
                     labels: dList.map(x => x.name),
-                    datasets: [{ label: '% DBE por Distrito', data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#6366f1' }]
+                    datasets: [{ label: '% DBE por Distrito', data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#eab308', borderRadius: 4 }]
                 },
-                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        function renderTable() {
+        function renderTable(dataTable) {
             let cMap = {};
-            filteredData.forEach(row => {
+            dataTable.forEach(row => {
                 let k = row.codClie + '_' + row.cliente;
                 if(!cMap[k]) cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
                 cMap[k].s += row.surtido; cMap[k].r += row.rechazado;
@@ -392,14 +457,20 @@
             let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 15);
             const body = document.getElementById('tableClientsBody');
             body.innerHTML = '';
+            
+            if(list.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Sin rechazos para este criterio.</td></tr>`;
+                return;
+            }
+
             list.forEach(c => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2.5 font-mono text-slate-400">${c.cod}</td>
                     <td class="p-2.5 font-medium truncate max-w-[150px]" title="${c.name}">${c.name}</td>
                     <td class="p-2.5 text-slate-500">${c.ruta}</td>
-                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE')}</td>
-                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE')}</td>
+                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE', {maximumFractionDigits:1})}</td>
+                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE', {maximumFractionDigits:1})}</td>
                     <td class="p-2.5 text-right font-bold text-slate-900">${(c.s > 0 ? (c.r/c.s*100) : 0).toFixed(1)}%</td>
                 `;
                 body.appendChild(tr);
