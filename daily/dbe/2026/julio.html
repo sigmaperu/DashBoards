@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -33,6 +35,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
+    <!-- Header Superior -->
     <header class="bg-slate-900 text-white px-6 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50 shadow-sm shrink-0">
         <div>
             <h1 class="text-base font-bold tracking-tight">Dashboard de Control % DBE</h1>
@@ -49,8 +52,10 @@
         </div>
     </header>
 
+    <!-- Contenedor Layout Principal -->
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full">
         
+        <!-- SIDEBAR DE FILTROS (Izquierda) -->
         <aside class="w-full lg:w-[320px] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-4">
@@ -80,6 +85,7 @@
                 </div>
             </div>
 
+            <!-- Calendario Matriz -->
             <div class="border-t border-slate-100 pt-4">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Julio 2026</span>
@@ -94,8 +100,10 @@
             </div>
         </aside>
 
+        <!-- PANEL DE GRÁFICOS (Derecha) -->
         <main class="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-6">
             
+            <!-- KPIs -->
             <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                     <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Surtido</p>
@@ -111,6 +119,7 @@
                 </div>
             </section>
 
+            <!-- Gráficos Principales -->
             <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs xl:col-span-2">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Evolución del % DBE Mensual</h3>
@@ -119,13 +128,14 @@
                     </div>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Principales Motivos de Rechazo</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Principales Motivos de Nike</h3>
                     <div class="h-64 w-full">
                         <canvas id="chartMotivos"></canvas>
                     </div>
                 </div>
             </section>
 
+            <!-- Distritos y Tabla Detalle -->
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top Distritos con Mayor Incidencia % DBE</h3>
@@ -272,7 +282,7 @@
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
                         codClie: '117' + (4000 + Math.floor(Math.random() * 2000)),
-                        cliente: 'DISTRIBUIDORA LIMA ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)) + ' SAC',
+                        cliente: 'DISTRIBUIDORA LIMA S.A.C.',
                         rutaVenta: 'B4' + String.fromCharCode(68 + Math.floor(Math.random() * 4)),
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
@@ -388,6 +398,11 @@
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // LEYENDA REMOVIDA EXITOSAMENTE AQUÍ
+                        }
+                    },
                     scales: { y: { ticks: { callback: v => v + '%' } } }
                 }
             });
