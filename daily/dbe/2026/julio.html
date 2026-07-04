@@ -131,7 +131,7 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top Distritos con Mayor Incidencia % DBE</h3>
                     <div class="h-72 w-full">
                         <canvas id="chartDistritos"></canvas>
-                </div>
+                    </div>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Detalle de Clientes y Rutas Críticas</h3>
@@ -260,7 +260,7 @@
             const canales = ['DET', 'FSE', 'MES', 'MOD'];
             const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
             const distritos = ['CHORRILLOS', 'SANTA ANITA', 'SAN MARTIN DE PORRES', 'LA VICTORIA'];
-            const motivos = ['Recepcíon no recibe', 'Tienda Cerrada', 'Fuera hora de recepc'];
+            const motivos = ['Recepción no recibe', 'Tienda Cerrada', 'Fuera hora de recepc'];
             
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
@@ -271,8 +271,8 @@
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        codClie: 'CLI-' + (1174000 + Math.floor(Math.random() * 2000)),
-                        cliente: 'DISTRIBUIDORA PERÚ S.A.C.',
+                        codClie: '117' + (4000 + Math.floor(Math.random() * 2000)),
+                        cliente: 'DISTRIBUIDORA LIMA ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)) + ' SAC',
                         rutaVenta: 'B4' + String.fromCharCode(68 + Math.floor(Math.random() * 4)),
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
@@ -300,7 +300,7 @@
             setOptions('filterCentro', getUnique('centro'), 'Todos los Centros');
             setOptions('filterCanal', getUnique('canal'), 'Todos los Canales');
             setOptions('filterVehiculo', getUnique('vehiculo'), 'Todos los Vehículos');
-            setOptions('filterRuta', getUnique('rutaVenta'), 'Todas las Rutas'); // Filtro Ruta Venta poblado
+            setOptions('filterRuta', getUnique('rutaVenta'), 'Todas las Rutas');
         }
 
         function selectDiaCalendario(dia) {
@@ -373,7 +373,7 @@
             trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: sortedDays, // OPTIMIZADO: Eje X ahora solo muestra el número del día ("01", "02"...)
+                    labels: sortedDays,
                     datasets: [{
                         label: '% DBE Diario',
                         data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
@@ -411,4 +411,50 @@
             });
         }
 
-        ...
+        function renderDistritosChart(dataDistritos) {
+            let dMap = {};
+            dataDistritos.forEach(r => {
+                if(!dMap[r.distrito]) dMap[r.distrito] = {s:0, r:0};
+                dMap[r.distrito].s += r.surtido; dMap[r.distrito].r += r.rechazado;
+            });
+            let dList = Object.keys(dMap).map(k => ({
+                name: k, rate: dMap[k].s > 0 ? (dMap[k].r / dMap[k].s * 100) : 0
+            })).sort((a,b) => b.rate - a.rate).slice(0, 6);
+
+            if(distritosChart) distritosChart.destroy();
+            distritosChart = new Chart(document.getElementById('chartDistritos').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: dList.map(x => x.name),
+                    datasets: [{ data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#eab308', borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderTable(dataTable) {
+            let cMap = {};
+            dataTable.forEach(row => {
+                let k = row.codClie + '_' + row.cliente;
+                if(!cMap[k]) cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
+                cMap[k].s += row.surtido; cMap[k].r += row.rechazado;
+            });
+            let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 10);
+            const body = document.getElementById('tableClientsBody');
+            body.innerHTML = '';
+            list.forEach(c => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2.5 font-mono text-slate-400">${c.cod}</td>
+                    <td class="p-2.5 font-medium truncate max-w-[150px]">${c.name}</td>
+                    <td class="p-2.5 text-slate-500">${c.ruta}</td>
+                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE')}</td>
+                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE')}</td>
+                    <td class="p-2.5 text-right font-bold text-slate-900">${(c.s > 0 ? (c.r/c.s*100) : 0).toFixed(1)}%</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
