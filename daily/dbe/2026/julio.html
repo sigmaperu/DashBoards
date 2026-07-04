@@ -23,7 +23,6 @@
             background: #cbd5e1;
             border-radius: 4px;
         }
-        /* Estilo para los botones seleccionados del calendario */
         .day-btn.active {
             background-color: #4f46e5 !important;
             color: white !important;
@@ -54,42 +53,51 @@
         
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-1 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Segmentadores</span>
-                    <button onclick="resetFilters()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors">Limpiar</button>
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-1 space-y-4 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Segmentadores</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Centro</label>
+                            <select id="filterCentro" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                                <option value="ALL">Todos los Centros</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Canal</label>
+                            <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                                <option value="ALL">Todos los Canales</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Vehículo</label>
+                            <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
+                                <option value="ALL">Todos los Vehículos</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Centro</label>
-                        <select id="filterCentro" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                            <option value="ALL">Todos los Centros</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Canal</label>
-                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                            <option value="ALL">Todos los Canales</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-500 mb-1">Vehículo</label>
-                        <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all">
-                            <option value="ALL">Todos los Vehículos</option>
-                        </select>
-                    </div>
-                </div>
+                <button onclick="resetFilters()" class="w-full mt-4 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 rounded-lg transition-colors">
+                    Limpiar Todos los Filtros
+                </button>
             </div>
 
-            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-2 flex flex-col justify-between">
-                <div class="border-b border-slate-100 pb-2 mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Filtro por N° Día</span>
+            <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-xs lg:col-span-2">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-semibold px-2.5 py-1 rounded-md transition-colors">
+                        Ver Todo el Mes
+                    </button>
                 </div>
-                <div id="calendarContainer" class="grid grid-cols-7 sm:grid-cols-10 gap-1.5 max-h-[140px] overflow-y-auto custom-scrollbar p-0.5">
+                
+                <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-400 mb-1.5">
+                    <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                </div>
+
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1">
                     </div>
-                <div class="text-[11px] text-slate-400 mt-2 italic">
-                    * Nota: Seleccionar un día específico no afectará la curva del gráfico de Evolución Mensual.
-                </div>
             </div>
         </section>
 
@@ -155,19 +163,46 @@
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv';
         let rawData = [];
         let filteredData = [];
-        let selectedDia = 'ALL'; // Control de estado del calendario corporativo
+        let selectedDia = 'ALL';
 
         let trendChart = null;
         let motivosChart = null;
         let distritosChart = null;
 
-        document.addEventListener('DOMContentLoaded', () => { loadData(); });
+        document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); loadData(); });
+
+        // Función para estructurar la cuadrícula real de Julio 2026 (Inicia miércoles, 31 días)
+        function buildCalendarGrid() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Julio 2026 inicia en miércoles, por ende dejamos 3 espacios vacíos (Domingo, Lunes, Martes)
+            const diaInicioSemana = 3; 
+            const totalDiasMes = 31;
+
+            // Bloques vacíos iniciales
+            for (let s = 0; s < diaInicioSemana; s++) {
+                const emptyDiv = document.createElement('div');
+                grid.appendChild(emptyDiv);
+            }
+
+            // Crear botones numéricos reales
+            for (let d = 1; d <= totalDiasMes; d++) {
+                const diaStr = String(d).padStart(2, '0');
+                const btn = document.createElement('button');
+                btn.className = "day-btn text-xs py-2 border border-slate-100 rounded-md bg-white hover:bg-indigo-50/50 text-slate-700 transition-all text-center cursor-pointer font-medium shadow-2xs";
+                btn.id = `btn-day-${diaStr}`;
+                btn.innerText = d;
+                btn.onclick = () => selectDiaCalendario(diaStr);
+                grid.appendChild(btn);
+            }
+        }
 
         async function loadData() {
             const statusBadge = document.getElementById('dataStatus');
             try {
                 const response = await fetch(csvUrl);
-                if (!response.ok) throw new Error('Error al leer GitHub');
+                if (!response.ok) throw new Error('Error de red');
                 const text = await response.text();
                 parseCSV(text);
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
@@ -175,7 +210,6 @@
                 populateFilterOptions();
                 applyFilters();
             } catch (err) {
-                console.warn("Modo simulación local activo.");
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30";
                 statusBadge.innerHTML = `ℹ️ Modo Respaldo Offline`;
                 generateMockData();
@@ -187,7 +221,6 @@
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             rawData = [];
-            
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
@@ -195,17 +228,11 @@
                 let cols = [];
                 let insideQuote = false;
                 let current = "";
-                
                 for (let j = 0; j < line.length; j++) {
                     let char = line[j];
-                    if (char === '"') {
-                        insideQuote = !insideQuote;
-                    } else if (char === ',' && !insideQuote) {
-                        cols.push(current.trim());
-                        current = "";
-                    } else {
-                        current += char;
-                    }
+                    if (char === '"') insideQuote = !insideQuote;
+                    else if (char === ',' && !insideQuote) { cols.push(current.trim()); current = ""; }
+                    else current += char;
                 }
                 cols.push(current.trim());
 
@@ -214,13 +241,11 @@
                 let centro = cols[1] || '';
                 if (!centro || centro === "" || centro.toLowerCase() === "null") continue;
 
-                let fechaStr = cols[9] || '1/07/2026';
+                let fechaStr = cols[9] || '7/1/2026';
                 let diaFicticio = '01';
                 if (fechaStr.includes('/')) {
                     let partes = fechaStr.split('/');
-                    if (partes[1]) {
-                        diaFicticio = partes[1].trim().padStart(2, '0');
-                    }
+                    if (partes[1]) diaFicticio = partes[1].trim().padStart(2, '0');
                 }
 
                 rawData.push({
@@ -241,24 +266,24 @@
         }
 
         function generateMockData() {
-            const centros = ['CD Ate', 'CD Comas', 'CD Callao'];
-            const canales = ['Tradicional', 'Moderno', 'Horizontal', 'MES', 'DET', 'FSE'];
+            const centros = ['0374', '0754', '0780'];
+            const canales = ['DET', 'FSE', 'MES', 'MOD'];
             const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
-            const distritos = ['CHORRILLOS', 'SANTA ANITA', 'SAN MARTIN DE PORRES', 'LA VICTORIA', 'ATE', 'COMAS'];
-            const motivos = ['Recepcíon no recibe', 'Tienda Cerrada', 'Fuera hora de recepc', 'Dif en liquid (s/efe'];
+            const distritos = ['CHORRILLOS', 'SANTA ANITA', 'SAN MARTIN DE PORRES', 'LA VICTORIA'];
+            const motivos = ['Recepcíon no recibe', 'Tienda Cerrada', 'Fuera hora de recepc'];
             
-            for (let day = 1; day <= 15; day++) {
+            for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 25; k++) {
-                    let surtido = Math.floor(Math.random() * 1200) + 100;
-                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.12) : 0;
+                for (let k = 0; k < 15; k++) {
+                    let surtido = Math.floor(Math.random() * 2000) + 150;
+                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.1) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        codClie: 'CLI-' + (1175000 + Math.floor(Math.random() * 5000)),
-                        cliente: 'EMPRESA LOGISTICA ' + String.fromCharCode(65 + Math.floor(Math.random() * 10)) + ' SAC',
-                        rutaVenta: 'B' + (Math.floor(Math.random() * 5) + 4) + String.fromCharCode(65 + Math.floor(Math.random() * 5)),
+                        codClie: 'CLI-' + (1174000 + Math.floor(Math.random() * 2000)),
+                        cliente: 'DISTRIBUIDORA PERÚ ' + String.fromCharCode(65 + Math.floor(Math.random() * 5)) + ' SAC',
+                        rutaVenta: 'B4' + String.fromCharCode(68 + Math.floor(Math.random() * 4)),
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
                         distrito: distritos[Math.floor(Math.random() * distritos.length)],
@@ -285,38 +310,22 @@
             setOptions('filterCentro', getUnique('centro'));
             setOptions('filterCanal', getUnique('canal'));
             setOptions('filterVehiculo', getUnique('vehiculo'));
-
-            // Construir Calendario Visual
-            renderCalendarioVisual(getUnique('numDia'));
-        }
-
-        function renderCalendarioVisual(diasDisponibles) {
-            const container = document.getElementById('calendarContainer');
-            container.innerHTML = '';
-
-            // Botón comodín "Todos"
-            const btnAll = document.createElement('button');
-            btnAll.className = "day-btn text-xs py-2 px-1 border border-slate-200 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer text-center active";
-            btnAll.id = "btn-day-ALL";
-            btnAll.innerText = "Todos";
-            btnAll.onclick = () => selectDiaCalendario('ALL');
-            container.appendChild(btnAll);
-
-            diasDisponibles.forEach(dia => {
-                if(!dia) return;
-                const btn = document.createElement('button');
-                btn.className = "day-btn text-xs py-2 px-1 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 transition-colors cursor-pointer text-center";
-                btn.id = `btn-day-${dia}`;
-                btn.innerText = dia;
-                btn.onclick = () => selectDiaCalendario(dia);
-                container.appendChild(btn);
-            });
         }
 
         function selectDiaCalendario(dia) {
             selectedDia = dia;
             document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-day-${dia}`).classList.add('active');
+            
+            const btnAll = document.getElementById('btnDayAll');
+            if (dia === 'ALL') {
+                btnAll.classList.add('bg-indigo-600', 'text-white');
+                btnAll.classList.remove('bg-indigo-50', 'text-indigo-600');
+            } else {
+                btnAll.classList.remove('bg-indigo-600', 'text-white');
+                btnAll.classList.add('bg-indigo-50', 'text-indigo-600');
+                const targetBtn = document.getElementById(`btn-day-${dia}`);
+                if (targetBtn) targetBtn.classList.add('active');
+            }
             applyFilters();
         }
 
@@ -325,7 +334,6 @@
             const ca = document.getElementById('filterCanal').value;
             const v = document.getElementById('filterVehiculo').value;
 
-            // FILTRADO GENERAL PRINCIPAL
             filteredData = rawData.filter(row => {
                 if (c !== 'ALL' && row.centro !== c) return false;
                 if (ca !== 'ALL' && row.canal !== ca) return false;
@@ -333,25 +341,25 @@
                 return true;
             });
 
-            // DATA DESACOPLADA PARA TENDENCIA MENSUAL (Ignora el filtro específico del calendario)
+            // GRÁFICO MENSUAL DESACOPLADO (Sigue mostrando la tendencia total)
             renderTrendChart(filteredData);
 
-            // APLICAR FILTRO DEL CALENDARIO DIARIO PARA EL RESTO DE ELEMENTOS
-            let dataParaKpisYTablas = filteredData.filter(row => {
+            // DATA FILTRADA POR DÍA PARA EL RESTO DEL PACK
+            let finalData = filteredData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
             let ts = 0, tr = 0;
-            dataParaKpisYTablas.forEach(row => { ts += row.surtido; tr += row.rechazado; });
+            finalData.forEach(row => { ts += row.surtido; tr += row.rechazado; });
             
-            document.getElementById('kpiSurtido').innerText = ts.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('kpiRechazado').innerText = tr.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('kpiSurtido').innerText = ts.toLocaleString('es-PE', { minimumFractionDigits: 2 });
+            document.getElementById('kpiRechazado').innerText = tr.toLocaleString('es-PE', { minimumFractionDigits: 2 });
             document.getElementById('kpiDbe').innerText = (ts > 0 ? (tr / ts * 100) : 0).toFixed(2) + '%';
 
-            renderMotivosChart(dataParaKpisYTablas);
-            renderDistritosChart(dataParaKpisYTablas);
-            renderTable(dataParaKpisYTablas);
+            renderMotivosChart(finalData);
+            renderDistritosChart(finalData);
+            renderTable(finalData);
         }
 
         function resetFilters() {
@@ -375,54 +383,34 @@
                 data: {
                     labels: sortedDates,
                     datasets: [{
-                        label: '% DBE Mensual',
+                        label: '% DBE Continental',
                         data: sortedDates.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
                         borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.04)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.02)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.1,
-                        pointBackgroundColor: '#4f46e5'
+                        tension: 0.1
                     }]
                 },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    scales: { y: { ticks: { callback: v => v + '%' } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
         function renderMotivosChart(dataMotivos) {
             let mMap = {};
             dataMotivos.forEach(r => {
-                if(r.rechazado > 0 && r.motivo && r.motivo !== '-') {
-                    mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
-                }
+                if(r.rechazado > 0 && r.motivo && r.motivo !== '-') mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
             });
-
-            // Ordenar de mayor a menor volumen de piezas rechazadas
-            let sortedMotivos = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]}))
-                                      .sort((a,b) => b.qty - a.qty).slice(0, 6);
+            let sorted = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]})).sort((a,b) => b.qty - a.qty).slice(0, 5);
 
             if(motivosChart) motivosChart.destroy();
-            // CAMBIADO: Ahora es un gráfico de barras verticales moderno en vez de rosca
             motivosChart = new Chart(document.getElementById('chartMotivos').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: sortedMotivos.map(x => x.name),
-                    datasets: [{
-                        label: 'Cantidad Rechazada',
-                        data: sortedMotivos.map(x => x.qty.toFixed(0)),
-                        backgroundColor: '#f43f5e',
-                        borderRadius: 6
-                    }]
+                    labels: sorted.map(x => x.name),
+                    datasets: [{ data: sorted.map(x => x.qty), backgroundColor: '#f43f5e', borderRadius: 4 }]
                 },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
@@ -434,14 +422,14 @@
             });
             let dList = Object.keys(dMap).map(k => ({
                 name: k, rate: dMap[k].s > 0 ? (dMap[k].r / dMap[k].s * 100) : 0
-            })).sort((a,b) => b.rate - a.rate).slice(0, 7);
+            })).sort((a,b) => b.rate - a.rate).slice(0, 6);
 
             if(distritosChart) distritosChart.destroy();
             distritosChart = new Chart(document.getElementById('chartDistritos').getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: dList.map(x => x.name),
-                    datasets: [{ label: '% DBE por Distrito', data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#eab308', borderRadius: 4 }]
+                    datasets: [{ data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#eab308', borderRadius: 4 }]
                 },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
@@ -454,23 +442,17 @@
                 if(!cMap[k]) cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
                 cMap[k].s += row.surtido; cMap[k].r += row.rechazado;
             });
-            let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 15);
+            let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 10);
             const body = document.getElementById('tableClientsBody');
             body.innerHTML = '';
-            
-            if(list.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-slate-400">Sin rechazos para este criterio.</td></tr>`;
-                return;
-            }
-
             list.forEach(c => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-2.5 font-mono text-slate-400">${c.cod}</td>
-                    <td class="p-2.5 font-medium truncate max-w-[150px]" title="${c.name}">${c.name}</td>
+                    <td class="p-2.5 font-medium truncate max-w-[150px]">${c.name}</td>
                     <td class="p-2.5 text-slate-500">${c.ruta}</td>
-                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE', {maximumFractionDigits:1})}</td>
-                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE', {maximumFractionDigits:1})}</td>
+                    <td class="p-2.5 text-right">${c.s.toLocaleString('es-PE')}</td>
+                    <td class="p-2.5 text-right text-rose-600 font-semibold">${c.r.toLocaleString('es-PE')}</td>
                     <td class="p-2.5 text-right font-bold text-slate-900">${(c.s > 0 ? (c.r/c.s*100) : 0).toFixed(1)}%</td>
                 `;
                 body.appendChild(tr);
