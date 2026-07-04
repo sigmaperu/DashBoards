@@ -49,9 +49,9 @@
         </div>
     </header>
 
-    <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full">
+    <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-6 p-4 md:p-6">
         
-        <aside class="w-full lg:w-[320px] bg-white border-b lg:border-b-0 lg:border-r border-slate-200 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+        <aside class="w-full lg:w-[320px] bg-white rounded-xl border border-slate-200 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar shadow-xs">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-4">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Segmentadores</span>
@@ -93,14 +93,13 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
 
-            <div class="border-t border-slate-100 pt-4 flex-1 min-h-[150px] flex flex-col">
+            <div class="border-t border-slate-100 pt-4 flex-1 min-h-[180px] flex flex-col">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Vehículos con Mayor % DBE</span>
-                <div id="sidebarVehicleList" class="text-[11px] space-y-2 overflow-y-auto flex-1 custom-scrollbar pr-1 text-slate-600">
-                    </div>
+                <div id="sidebarVehicleList" class="text-[11px] space-y-2 overflow-y-auto flex-1 custom-scrollbar pr-1 text-slate-600"></div>
             </div>
         </aside>
 
-        <main class="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-6">
+        <main class="flex-1 overflow-y-auto custom-scrollbar space-y-6">
             
             <section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <div class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-xs flex flex-col">
@@ -152,8 +151,8 @@
             </section>
 
             <section class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Cantidad de Unidades por Motivo de Rechazo (Universo Completo)</h3>
-                <div class="h-72 w-full">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Cantidad de Unidades por Motivo de Rechazo</h3>
+                <div class="h-80 w-full">
                     <canvas id="chartMotivos"></canvas>
                 </div>
             </section>
@@ -370,7 +369,6 @@
                 return true;
             });
 
-            // Universos Desacoplados de las tablas superiores
             let dataParaTablaCentros = rawData.filter(row => {
                 if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
@@ -390,7 +388,7 @@
             renderMotivosChart(finalData);
             renderCentrosTable(dataParaTablaCentros);
             renderCanalesTable(dataParaTablaCanales);
-            renderSidebarVehicleList(finalData); // Actualiza la visual del Sidebar
+            renderSidebarVehicleList(finalData);
             renderTable(finalData);
         }
 
@@ -435,14 +433,12 @@
             });
         }
 
-        // GRÁFICO MODIFICADO: Muestra todos los motivos en barra vertical e indica cantidades exactas
+        // CORREGIDO: Gráfico de Motivos cambiado a orientación horizontal (indexAxis: 'y')
         function renderMotivosChart(dataMotivos) {
             let mMap = {};
             dataMotivos.forEach(r => {
                 if(r.rechazado > 0 && r.motivo && r.motivo !== '-') mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
             });
-            
-            // Trae todos los motivos mapeados ordenados de mayor a menor
             let sorted = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]})).sort((a,b) => b.qty - a.qty);
 
             if(motivosChart) motivosChart.destroy();
@@ -453,18 +449,17 @@
                     datasets: [{ 
                         data: sorted.map(x => Math.round(x.qty)), 
                         backgroundColor: '#f43f5e', 
-                        borderRadius: 5,
-                        barThickness: 25
+                        borderRadius: 4,
+                        barThickness: 16
                     }]
                 },
                 options: { 
+                    indexAxis: 'y', // CAMBIO CLAVE A EJE HORIZONTAL
                     responsive: true, 
                     maintainAspectRatio: false, 
-                    plugins: { 
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true }
+                        x: { beginAtZero: true }
                     }
                 }
             });
@@ -491,8 +486,8 @@
                 tr.className = "hover:bg-slate-50 transition-colors";
                 tr.innerHTML = `
                     <td class="p-2 font-medium text-slate-800">${centro}</td>
-                    <td class="p-2 text-right font-mono">${item.s.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td class="p-2 text-right font-mono">${item.r.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="p-2 text-right font-mono">${item.s.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2 text-right font-mono">${item.r.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
                     <td class="p-2 text-right ${getContrastColorClass(numRate)}">${numRate.toFixed(2)}%</td>
                 `;
                 tbody.appendChild(tr);
@@ -501,8 +496,8 @@
             let grandDbeNum = grandSurtido > 0 ? (grandRechazado / grandSurtido * 100) : 0;
             document.getElementById('tableCentrosFoot').innerHTML = `
                 <td class="p-2">Grand Total</td>
-                <td class="p-2 text-right font-mono">${grandSurtido.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                <td class="p-2 text-right font-mono">${grandRechazado.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td class="p-2 text-right font-mono">${grandSurtido.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
+                <td class="p-2 text-right font-mono">${grandRechazado.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
                 <td class="p-2 text-right ${getContrastColorClass(grandDbeNum)}">${grandDbeNum.toFixed(2)}%</td>
             `;
         }
@@ -528,8 +523,8 @@
                 tr.className = "hover:bg-slate-50 transition-colors";
                 tr.innerHTML = `
                     <td class="p-2 font-medium text-slate-800">${canal}</td>
-                    <td class="p-2 text-right font-mono">${item.s.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td class="p-2 text-right font-mono">${item.r.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="p-2 text-right font-mono">${item.s.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2 text-right font-mono">${item.r.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
                     <td class="p-2 text-right ${getContrastColorClass(numRate)}">${numRate.toFixed(2)}%</td>
                 `;
                 tbody.appendChild(tr);
@@ -538,13 +533,12 @@
             let grandDbeNum = grandSurtido > 0 ? (grandRechazado / grandSurtido * 100) : 0;
             document.getElementById('tableCanalesFoot').innerHTML = `
                 <td class="p-2">Grand Total</td>
-                <td class="p-2 text-right font-mono">${grandSurtido.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                <td class="p-2 text-right font-mono">${grandRechazado.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td class="p-2 text-right font-mono">${grandSurtido.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
+                <td class="p-2 text-right font-mono">${grandRechazado.toLocaleString('es-PE', {minimumFractionDigits: 2})}</td>
                 <td class="p-2 text-right ${getContrastColorClass(grandDbeNum)}">${grandDbeNum.toFixed(2)}%</td>
             `;
         }
 
-        // NUEVA FUNCIÓN: Genera la lista de vehículos críticos debajo del calendario en el Sidebar
         function renderSidebarVehicleList(dataVehiculos) {
             let vMap = {};
             dataVehiculos.forEach(r => {
