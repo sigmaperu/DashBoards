@@ -100,52 +100,72 @@
             </div>
         </aside>
 
-        <!-- PANEL DE GRÁFICOS (Derecha) -->
+        <!-- PANEL DE CONTROL (Derecha) -->
         <main class="flex-1 p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-6">
             
-            <!-- KPIs -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Surtido</p>
-                    <h3 id="kpiSurtido" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+            <!-- SECCIÓN SUPERIOR: FOTO RESUMIDA GLOBAL (Centros + KPIs) -->
+            <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <!-- Comparativo de Centros como Foto Global Directa -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col xl:col-span-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Resumen Comparativo por Centros</h3>
+                    <div class="overflow-x-auto flex-1">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                                    <th class="p-2.5">Centro</th>
+                                    <th class="p-2.5 text-right">Surtid</th>
+                                    <th class="p-2.5 text-right">Rechazado</th>
+                                    <th class="p-2.5 text-right text-indigo-600">% DBE</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableCentrosBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                            <tfoot>
+                                <tr id="tableCentrosFoot" class="bg-slate-100 font-bold border-t border-slate-300 text-slate-900"></tr>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Rechazado</p>
-                    <h3 id="kpiRechazado" class="text-2xl font-bold text-rose-600 mt-1">0</h3>
-                </div>
-                <div class="bg-indigo-900 text-white p-5 rounded-xl border border-indigo-950 shadow-xs">
-                    <p class="text-xs font-medium uppercase tracking-wider text-indigo-200">Indicador Maestro % DBE</p>
-                    <h3 id="kpiDbe" class="text-2xl font-black mt-1">0.00%</h3>
+
+                <!-- Bloque Vertical de KPIs Generales -->
+                <div class="flex flex-col gap-4">
+                    <div class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-xs flex-1 flex flex-col justify-center">
+                        <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Surtido</p>
+                        <h3 id="kpiSurtido" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-xs flex-1 flex flex-col justify-center">
+                        <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total Rechazado</p>
+                        <h3 id="kpiRechazado" class="text-2xl font-bold text-rose-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-indigo-900 text-white p-4.5 rounded-xl border border-indigo-950 shadow-xs flex-1 flex flex-col justify-center">
+                        <p class="text-xs font-medium uppercase tracking-wider text-indigo-200">Indicador Maestro % DBE</p>
+                        <h3 id="kpiDbe" class="text-2xl font-black mt-1">0.00%</h3>
+                    </div>
                 </div>
             </section>
 
-            <!-- Gráficos Principales -->
+            <!-- SECCIÓN INTERMEDIA: GRÁFICOS DE EVOLUCIÓN Y MOTIVOS -->
             <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <!-- Evolución del % DBE Mensual -->
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs xl:col-span-2">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Evolución del % DBE Mensual</h3>
                     <div class="h-64 w-full">
                         <canvas id="chartTrend"></canvas>
                     </div>
                 </div>
+                <!-- Principales Motivos de Rechazo -->
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Principales Motivos de Nike</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Principales Motivos de Rechazo</h3>
                     <div class="h-64 w-full">
                         <canvas id="chartMotivos"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!-- Distritos y Tabla Detalle -->
-            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top Distritos con Mayor Incidencia % DBE</h3>
-                    <div class="h-72 w-full">
-                        <canvas id="chartDistritos"></canvas>
-                    </div>
-                </div>
+            <!-- SECCIÓN INFERIOR: TABLA DE DETALLE CRÍTICO -->
+            <section class="grid grid-cols-1 gap-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Detalle de Clientes y Rutas Críticas</h3>
-                    <div class="overflow-x-auto custom-scrollbar flex-1">
+                    <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-medium">
@@ -173,7 +193,13 @@
 
         let trendChart = null;
         let motivosChart = null;
-        let distritosChart = null;
+
+        const centroMapping = {
+            "0374": "Ate 1",
+            "0752": "Chorrillos",
+            "0754": "Chancay",
+            "0780": "Ate 2"
+        };
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); loadData(); });
 
@@ -238,8 +264,10 @@
 
                 if (cols.length < 37) continue;
 
-                let centro = cols[1] || '';
-                if (!centro || centro === "" || centro.toLowerCase() === "null") continue;
+                let rawCentro = cols[1] || '';
+                if (!rawCentro || rawCentro === "" || rawCentro.toLowerCase() === "null") continue;
+
+                let centroNombre = centroMapping[rawCentro] || rawCentro;
 
                 let fechaStr = cols[9] || '7/1/2026';
                 let diaFicticio = '01';
@@ -249,7 +277,7 @@
                 }
 
                 rawData.push({
-                    centro: centro,
+                    centro: centroNombre,
                     canal: cols[2] || 'Otros',
                     vehiculo: cols[4] || 'No Especificado',
                     codClie: cols[5] || 'Sin Código',
@@ -266,10 +294,9 @@
         }
 
         function generateMockData() {
-            const centros = ['0374', '0754', '0780'];
+            const centros = ['Ate 1', 'Chorrillos', 'Chancay', 'Ate 2'];
             const canales = ['DET', 'FSE', 'MES', 'MOD'];
             const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
-            const distritos = ['CHORRILLOS', 'SANTA ANITA', 'SAN MARTIN DE PORRES', 'LA VICTORIA'];
             const motivos = ['Recepción no recibe', 'Tienda Cerrada', 'Fuera hora de recepc'];
             
             for (let day = 1; day <= 31; day++) {
@@ -286,7 +313,7 @@
                         rutaVenta: 'B4' + String.fromCharCode(68 + Math.floor(Math.random() * 4)),
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
-                        distrito: distritos[Math.floor(Math.random() * distritos.length)],
+                        distrito: 'Lima',
                         surtido: surtido,
                         rechazado: rechazado,
                         motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : '-'
@@ -359,7 +386,7 @@
             document.getElementById('kpiDbe').innerText = (ts > 0 ? (tr / ts * 100) : 0).toFixed(2) + '%';
 
             renderMotivosChart(finalData);
-            renderDistritosChart(finalData);
+            renderCentrosTable(finalData);
             renderTable(finalData);
         }
 
@@ -398,11 +425,7 @@
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false // LEYENDA REMOVIDA EXITOSAMENTE AQUÍ
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: { y: { ticks: { callback: v => v + '%' } } }
                 }
             });
@@ -426,25 +449,41 @@
             });
         }
 
-        function renderDistritosChart(dataDistritos) {
-            let dMap = {};
-            dataDistritos.forEach(r => {
-                if(!dMap[r.distrito]) dMap[r.distrito] = {s:0, r:0};
-                dMap[r.distrito].s += r.surtido; dMap[r.distrito].r += r.rechazado;
+        function renderCentrosTable(dataCentros) {
+            let cMap = {};
+            dataCentros.forEach(r => {
+                if(!cMap[r.centro]) cMap[r.centro] = { s: 0, r: 0 };
+                cMap[r.centro].s += r.surtido; cMap[r.centro].r += r.rechazado;
             });
-            let dList = Object.keys(dMap).map(k => ({
-                name: k, rate: dMap[k].s > 0 ? (dMap[k].r / dMap[k].s * 100) : 0
-            })).sort((a,b) => b.rate - a.rate).slice(0, 6);
 
-            if(distritosChart) distritosChart.destroy();
-            distritosChart = new Chart(document.getElementById('chartDistritos').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: dList.map(x => x.name),
-                    datasets: [{ data: dList.map(x => x.rate.toFixed(2)), backgroundColor: '#eab308', borderRadius: 4 }]
-                },
-                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            const tbody = document.getElementById('tableCentrosBody');
+            tbody.innerHTML = '';
+            let grandSurtido = 0, grandRechazado = 0;
+            let sortedCentros = Object.keys(cMap).sort((a,b) => cMap[b].r - cMap[a].r);
+
+            sortedCentros.forEach(centro => {
+                let item = cMap[centro];
+                grandSurtido += item.s; grandRechazado += item.r;
+                let dbeRate = item.s > 0 ? (item.r / item.s * 100).toFixed(2) + '%' : '0.00%';
+
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-medium text-slate-800">${centro}</td>
+                    <td class="p-2.5 text-right font-mono">${item.s.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="p-2.5 text-right font-mono">${item.r.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="p-2.5 text-right font-bold text-rose-600">${dbeRate}</td>
+                `;
+                tbody.appendChild(tr);
             });
+
+            let grandDbe = grandSurtido > 0 ? (grandRechazado / grandSurtido * 100).toFixed(2) + '%' : '0.00%';
+            document.getElementById('tableCentrosFoot').innerHTML = `
+                <td class="p-2.5">Grand Total</td>
+                <td class="p-2.5 text-right font-mono">${grandSurtido.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td class="p-2.5 text-right font-mono">${grandRechazado.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td class="p-2.5 text-right text-indigo-700">${grandDbe}</td>
+            `;
         }
 
         function renderTable(dataTable) {
