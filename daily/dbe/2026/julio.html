@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body {
@@ -18,7 +19,7 @@
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #1e293b;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
+        .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #475569;
             border-radius: 4px;
         }
@@ -28,10 +29,9 @@
             border-color: #6366f1 !important;
             font-weight: 600;
         }
-        /* Clase para tarjetas que no están seleccionadas en el filtro cruzado */
         .card-inactive {
             opacity: 0.4;
-            transform: scale(0.98);
+            transform: scale(0.99);
             border-color: #1e293b !important;
         }
     </style>
@@ -97,16 +97,29 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
             <div class="text-[10px] text-slate-500 italic mt-auto leading-normal">
-                * Tip: Haz clic en el círculo de una tarjeta para filtrar por CD. Mantén presionado **Ctrl** para elegir varios.
+                * Tip: Filtra por CD haciendo clic en las tarjetas. Usa **Ctrl** para selección múltiple.
             </div>
         </aside>
 
-        <main class="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar py-1">
-            <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
-                <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+        <main class="flex-1 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+            
+            <div class="overflow-x-auto overflow-y-hidden custom-scrollbar py-1 shrink-0">
+                <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
+                    <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
+                    <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                </section>
+            </div>
+
+            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[320px]">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Evolución Diaria del % DBE Mensual</h3>
+                    <div class="text-[10px] text-slate-500 font-mono">* Reacciona dinámicamente según los CDs seleccionados arriba</div>
+                </div>
+                <div class="flex-1 w-full relative">
+                    <canvas id="chartTrend"></canvas>
+                </div>
             </section>
         </main>
     </div>
@@ -118,8 +131,8 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Control de Estado del Filtro Cruzado de Centros
-        let selectedCentrosFiltro = []; // Array vacío significa "Todos activos"
+        // Estado del Filtro Cruzado Multiselección de las Tarjetas
+        let selectedCentrosFiltro = [];
 
         let expandedState = {
             'card-Global': false,
@@ -161,7 +174,7 @@
         async function loadData() {
             try {
                 const response = await fetch(csvUrl);
-                if (!response.ok) throw new Error('GitHub Connect Fail');
+                if (!response.ok) throw new Error('Error GitHub');
                 const text = await response.text();
                 parseCSV(text);
                 populateFilterOptions();
@@ -281,25 +294,21 @@
             applyFilters();
         }
 
-        // LÓGICA MAESTRA INTERACTIVA AL HACER CLIC EN LOS BOTONES CIRCULARES DE LAS CARDS
         window.handleCardClick = function(centroName, event) {
-            // Detener propagación si hacen clic en el desplegable de canal interno
             if(event.target.closest('button')) return;
 
             if (centroName === 'Total Operación') {
-                selectedCentrosFiltro = []; // Reset general
+                selectedCentrosFiltro = [];
             } else {
                 if (event.ctrlKey) {
-                    // Modo Multi-Select con CTRL
                     if (selectedCentrosFiltro.includes(centroName)) {
                         selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
                     } else {
                         selectedCentrosFiltro.push(centroName);
                     }
                 } else {
-                    // Modo Single Select clásico sin CTRL
                     if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) {
-                        selectedCentrosFiltro = []; // Si vuelven a tocar el mismo, resetea
+                        selectedCentrosFiltro = [];
                     } else {
                         selectedCentrosFiltro = [centroName];
                     }
@@ -313,16 +322,29 @@
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            // Filtro Base del Sidebar
-            filteredData = rawData.filter(row => {
+            // 1. DATA HISTÓRICA BASE (Filtros del sidebar)
+            let dataBaseSidebar = rawData.filter(row => {
                 if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
+                return true;
+            });
+
+            // 2. DATA FILTRADA PARA LAS TARJETAS SUPERIORES (Añade el día seleccionado)
+            let dataParaTarjetas = dataBaseSidebar.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
-            renderPerformanceCards(filteredData);
+            renderPerformanceCards(dataParaTarjetas, ca);
+
+            // 3. DATA FILTRADA PARA EL GRÁFICO DE EVOLUCIÓN (Reacciona al Filtro Cruzado de las tarjetas)
+            let dataParaGraficoTrend = dataBaseSidebar.filter(row => {
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                return true;
+            });
+
+            renderTrendChart(dataParaGraficoTrend);
         }
 
         function resetFilters() {
@@ -333,8 +355,7 @@
             selectDiaCalendario('ALL');
         }
 
-        function renderPerformanceCards(dataCards) {
-            // Evaluamos la opacidad de inactividad de las tarjetas según el filtro cruzado actual
+        function renderPerformanceCards(dataCards, filtroCanal) {
             const updateCardClasses = (id, targetName) => {
                 const el = document.getElementById(id);
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(targetName) && targetName !== 'Total') {
@@ -349,15 +370,20 @@
             updateCardClasses('card-Ate1', 'Ate 1');
             updateCardClasses('card-Ate2', 'Ate 2');
 
-            // Renderizado de contenidos individuales
-            buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
+            // La tarjeta global reacciona al filtro de canal del combo sidebar
+            let globalData = dataCards.filter(row => {
+                if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
+                return true;
+            });
+
+            buildSingleCard('card-Global', 'Total Operación', globalData, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2');
         }
 
         window.toggleCanales = function(containerId, e) {
-            e.stopPropagation(); // Evita que el colapsable dispare el filtro de la tarjeta madre
+            e.stopPropagation();
             expandedState[containerId] = !expandedState[containerId];
             applyFilters();
         };
@@ -382,7 +408,6 @@
             let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
             let isExpanded = expandedState[containerId];
 
-            // Determinar estado del círculo de selección visual
             let isCircleChecked = false;
             if (filterKey === 'Total' && selectedCentrosFiltro.length === 0) isCircleChecked = true;
             if (selectedCentrosFiltro.includes(filterKey)) isCircleChecked = true;
@@ -396,7 +421,8 @@
                     <div>
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2 truncate">
-                                ${circleHtml} <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
+                                ${circleHtml}
+                                <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
                             </div>
                             <span class="text-[8px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
@@ -463,6 +489,59 @@
                 </div>
             `;
             document.getElementById(containerId).innerHTML = cardHtml;
+        }
+
+        // NUEVO GRÁFICO INCORPORADO: Evolutivo Diario de tendencia mensual
+        function renderTrendChart(dataTrend) {
+            let fMap = {};
+            dataTrend.forEach(r => {
+                if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0};
+                fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
+            });
+            let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
+
+            if(trendChart) trendChart.destroy();
+            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: sortedDays,
+                    datasets: [{
+                        label: '% DBE Diario',
+                        data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.02)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 3,
+                        pointHitRadius: 10,
+                        pointBackgroundColor: '#6366f1'
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return ' DBE: ' + context.parsed.y + '%'; }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true,
+                            ticks: { color: '#94a3b8', callback: v => v + '%' }, 
+                            grid: { color: '#334155/30' } 
+                        },
+                        x: { 
+                            ticks: { color: '#94a3b8' }, 
+                            grid: { display: false } 
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
