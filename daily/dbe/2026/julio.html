@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -39,8 +39,17 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2.5 shadow-md shrink-0 flex items-center sticky top-0 z-50">
-        <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2.5 shadow-md shrink-0 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
+            <h1 class="text-sm font-black tracking-wider text-slate-100 uppercase bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/60">
+                Dashboard % DBE
+            </h1>
+        </div>
+        
+        <div class="bg-slate-950/50 border border-slate-800/80 px-3 py-1 rounded-lg text-right">
+            <span class="text-xs font-black text-indigo-300 tracking-wide font-mono">Creado por MARCO DAVILA</span>
+        </div>
     </header>
 
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
@@ -109,9 +118,8 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estados de Filtros Cruzados Avanzados
         let selectedCentrosFiltro = [];
-        let selectedCanalesFiltro = []; // Array de canales seleccionados con CTRL
+        let selectedCanalesFiltro = []; 
 
         let trendChart = null;
 
@@ -199,7 +207,7 @@
                 }
 
                 let canalNombre = cols[2] || 'Otros';
-                if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS'; // Forzado a Mayúsculas estricto
+                if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS';
 
                 rawData.push({
                     centro: centroNombre,
@@ -278,7 +286,6 @@
         }
 
         window.handleCardClick = function(centroName, event) {
-            // Si el click viene de los botones de despliegue o círculos de canal, ignorar filtrado macro de tarjeta
             if(event.target.closest('.noclick')) return;
 
             if (centroName === 'Total Operación') {
@@ -301,7 +308,6 @@
             applyFilters();
         };
 
-        // MANEJADOR DINÁMICO DE FILTRADO CRUZADO POR CANAL INTERNO
         window.handleCanalCircleClick = function(canalName, event) {
             event.stopPropagation();
             if (event.ctrlKey) {
@@ -324,14 +330,12 @@
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            // 1. DATA HISTÓRICA BASE (Filtros del sidebar)
             let dataBaseSidebar = rawData.filter(row => {
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
                 return true;
             });
 
-            // 2. DATA DE CONTROL DIARIA (Añade el día del calendario)
             let dataDiariaControl = dataBaseSidebar.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -339,7 +343,6 @@
 
             renderPerformanceCards(dataDiariaControl);
 
-            // 3. APLICAR FILTROS COMBINADOS (CD + CANAL SELECCIONADO) AL GRÁFICO DE LÍNEA
             let dataParaGraficoTrend = dataBaseSidebar.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -389,25 +392,35 @@
         function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey) {
             let totalSurtido = 0;
             let totalRechazado = 0;
+            
+            // Mapeo Maestro completo para que NUNCA desaparezcan filas de canales
             let canalMap = {};
-
+            
+            // 1. Inicializar siempre todos los canales detectados en este CD específico 
             dataset.forEach(row => {
-                // Si hay canales seleccionados, las métricas internas del Card se recalculan dinámicamente
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
-
-                totalSurtido += row.surtido;
-                totalRechazado += row.rechazado;
-                if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
-                canalMap[row.canal].s += row.surtido;
-                canalMap[row.canal].r += row.rechazado;
+                if (!canalMap[row.canal]) {
+                    canalMap[row.canal] = { s: 0, r: 0 };
+                }
             });
 
-            // Si está contraído, recolectamos el mapeo completo de canales de todas formas para el despliegue posterior
-            if (!expandedState[containerId] && selectedCanalesFiltro.length > 0) {
-                dataset.forEach(row => {
-                    if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
-                });
-            }
+            // 2. Procesar cálculos respetando si hay filtros activos o si el menú está contraído
+            dataset.forEach(row => {
+                // Sumar al canal individual de todas formas
+                canalMap[row.canal].s += row.surtido;
+                canalMap[row.canal].r += row.rechazado;
+
+                // Si el card está expandido y hay canales elegidos, el KPI Macro obedece a la selección
+                if (expandedState[containerId] && selectedCanalesFiltro.length > 0) {
+                    if (selectedCanalesFiltro.includes(row.canal)) {
+                        totalSurtido += row.surtido;
+                        totalRechazado += row.rechazado;
+                    }
+                } else {
+                    // Si está contraído o no hay canales filtrados, muestra el consolidado limpio del CD
+                    totalSurtido += row.surtido;
+                    totalRechazado += row.rechazado;
+                }
+            });
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
@@ -473,7 +486,7 @@
                 cardHtml += `<p class="text-[10px] text-slate-600 italic py-0.5">Sin movimientos.</p>`;
             } else {
                 canalesOrdenados.forEach(canal => {
-                    let cItem = canalMap[canal] || {s:0, r:0};
+                    let cItem = canalMap[canal];
                     let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
                     let cWidth = Math.min((cRate / 5) * 100, 100);
                     let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
