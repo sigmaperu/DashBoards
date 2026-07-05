@@ -18,7 +18,7 @@
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #1e293b;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
+        .custom-scrollbar::-webkit-scrollbar-track {
             background: #475569;
             border-radius: 4px;
         }
@@ -27,6 +27,12 @@
             color: white !important;
             border-color: #6366f1 !important;
             font-weight: 600;
+        }
+        /* Clase para tarjetas que no están seleccionadas en el filtro cruzado */
+        .card-inactive {
+            opacity: 0.4;
+            transform: scale(0.98);
+            border-color: #1e293b !important;
         }
     </style>
 </head>
@@ -62,10 +68,6 @@
                 
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Centro Principal</label>
-                        <select id="filterCentro" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
-                    </div>
-                    <div>
                         <label class="block text-[10px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
                         <select id="filterCanal" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
@@ -94,14 +96,17 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
+            <div class="text-[10px] text-slate-500 italic mt-auto leading-normal">
+                * Tip: Haz clic en el círculo de una tarjeta para filtrar por CD. Mantén presionado **Ctrl** para elegir varios.
+            </div>
         </aside>
 
         <main class="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar py-1">
             <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
-                <div id="card-Global" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300 bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
-                <div id="card-Chancay" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
-                <div id="card-Ate1" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
-                <div id="card-Ate2" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
+                <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             </section>
         </main>
     </div>
@@ -113,7 +118,9 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Guarda qué tarjetas están expandidas por el usuario
+        // Control de Estado del Filtro Cruzado de Centros
+        let selectedCentrosFiltro = []; // Array vacío significa "Todos activos"
+
         let expandedState = {
             'card-Global': false,
             'card-Chancay': false,
@@ -160,7 +167,6 @@
                 populateFilterOptions();
                 applyFilters();
             } catch (err) {
-                console.warn("Cargando data de respaldo local offline.");
                 generateMockData();
                 populateFilterOptions();
                 applyFilters();
@@ -253,7 +259,6 @@
                     }
                 });
             };
-            setOptions('filterCentro', getUnique('centro'), 'Todos los Centros');
             setOptions('filterCanal', getUnique('canal'), 'Todos los Canales');
             setOptions('filterVehiculo', getUnique('vehiculo'), 'Todos los Vehículos');
             setOptions('filterRuta', getUnique('rutaVenta'), 'Todas las Rutas');
@@ -276,49 +281,88 @@
             applyFilters();
         }
 
+        // LÓGICA MAESTRA INTERACTIVA AL HACER CLIC EN LOS BOTONES CIRCULARES DE LAS CARDS
+        window.handleCardClick = function(centroName, event) {
+            // Detener propagación si hacen clic en el desplegable de canal interno
+            if(event.target.closest('button')) return;
+
+            if (centroName === 'Total Operación') {
+                selectedCentrosFiltro = []; // Reset general
+            } else {
+                if (event.ctrlKey) {
+                    // Modo Multi-Select con CTRL
+                    if (selectedCentrosFiltro.includes(centroName)) {
+                        selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
+                    } else {
+                        selectedCentrosFiltro.push(centroName);
+                    }
+                } else {
+                    // Modo Single Select clásico sin CTRL
+                    if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) {
+                        selectedCentrosFiltro = []; // Si vuelven a tocar el mismo, resetea
+                    } else {
+                        selectedCentrosFiltro = [centroName];
+                    }
+                }
+            }
+            applyFilters();
+        };
+
         function applyFilters() {
-            const c = document.getElementById('filterCentro').value;
             const ca = document.getElementById('filterCanal').value;
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            let dataParaTarjetas = rawData.filter(row => {
+            // Filtro Base del Sidebar
+            filteredData = rawData.filter(row => {
+                if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
-            renderPerformanceCards(dataParaTarjetas, c, ca);
+            renderPerformanceCards(filteredData);
         }
 
         function resetFilters() {
-            document.getElementById('filterCentro').value = 'ALL';
             document.getElementById('filterCanal').value = 'ALL';
             document.getElementById('filterVehiculo').value = 'ALL';
             document.getElementById('filterRuta').value = 'ALL';
+            selectedCentrosFiltro = [];
             selectDiaCalendario('ALL');
         }
 
-        function renderPerformanceCards(dataCards, filtroCentro, filtroCanal) {
-            let globalData = dataCards.filter(row => {
-                if (filtroCentro !== 'ALL' && row.centro !== filtroCentro) return false;
-                if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
-                return true;
-            });
+        function renderPerformanceCards(dataCards) {
+            // Evaluamos la opacidad de inactividad de las tarjetas según el filtro cruzado actual
+            const updateCardClasses = (id, targetName) => {
+                const el = document.getElementById(id);
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(targetName) && targetName !== 'Total') {
+                    el.classList.add('card-inactive');
+                } else {
+                    el.classList.remove('card-inactive');
+                }
+            };
 
-            buildSingleCard('card-Global', 'Total Operación', globalData, true);
-            buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false);
-            buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false);
-            buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false);
+            updateCardClasses('card-Global', 'Total');
+            updateCardClasses('card-Chancay', 'Chancay');
+            updateCardClasses('card-Ate1', 'Ate 1');
+            updateCardClasses('card-Ate2', 'Ate 2');
+
+            // Renderizado de contenidos individuales
+            buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
+            buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
+            buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
+            buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2');
         }
 
-        window.toggleCanales = function(containerId) {
+        window.toggleCanales = function(containerId, e) {
+            e.stopPropagation(); // Evita que el colapsable dispare el filtro de la tarjeta madre
             expandedState[containerId] = !expandedState[containerId];
             applyFilters();
         };
 
-        function buildSingleCard(containerId, titleName, dataset, isGlobalCard) {
+        function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey) {
             let totalSurtido = 0;
             let totalRechazado = 0;
             let canalMap = {};
@@ -338,12 +382,23 @@
             let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
             let isExpanded = expandedState[containerId];
 
+            // Determinar estado del círculo de selección visual
+            let isCircleChecked = false;
+            if (filterKey === 'Total' && selectedCentrosFiltro.length === 0) isCircleChecked = true;
+            if (selectedCentrosFiltro.includes(filterKey)) isCircleChecked = true;
+
+            let circleHtml = isCircleChecked 
+                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-[0_0_8px_rgba(99,102,241,0.5)]">✓</div>`
+                : `<div class="w-3.5 h-3.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
+
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full">
                     <div>
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName}</h4>
-                            <span class="text-[8px] px-1 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 truncate">
+                                ${circleHtml} <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
+                            </div>
+                            <span class="text-[8px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
                         </div>
@@ -371,7 +426,7 @@
                     </div>
 
                     <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col">
-                        <button onclick="toggleCanales('${containerId}')" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
