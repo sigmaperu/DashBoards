@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Fondo oscuro premium */
+            background-color: #0f172a;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
@@ -71,7 +71,7 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
-                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
+                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
@@ -101,18 +101,14 @@
             </div>
         </aside>
 
-        <!-- PANEL DE TARJETAS EN UNA SOLA FILA HORIZONTAL -->
+        <!-- PANEL DE TARJETAS EN UNA SOLA FILA -->
         <main class="flex-1 overflow-y-auto custom-scrollbar">
-            <!-- Cuadrícula configurada para colapsar en móviles y ponerse en 4 columnas idénticas en pantallas grandes -->
+            <!-- Cuadrícula fija de 4 columnas horizontales -->
             <section class="grid grid-cols-1 xl:grid-cols-4 gap-5 items-start">
-                <!-- Tarjeta 1: Resumen Global de la Operación (Nueva) -->
-                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px] bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
-                <!-- Tarjeta 2: CD Chancay Performance -->
-                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
-                <!-- Tarjeta 3: CD Ate 1 Performance -->
-                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
-                <!-- Tarjeta 4: CD Ate 2 Performance -->
-                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
+                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
+                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
+                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
+                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
             </section>
         </main>
     </div>
@@ -123,6 +119,14 @@
         let filteredData = [];
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
+
+        // Estado dinámico para recordar qué tarjetas están desplegadas
+        let expandedState = {
+            'card-Global': false,
+            'card-Chancay': false,
+            'card-Ate1': false,
+            'card-Ate2': false
+        };
 
         const centroMapping = {
             "0374": "Ate 1",
@@ -167,7 +171,7 @@
                 applyFilters();
             } catch (err) {
                 statusBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
-                statusBadge.innerHTML = `ℹ️ Datos locales de simulación`;
+                statusBadge.innerHTML = `ℹ️ Modo Desconectado (Simulación)`;
                 generateMockData();
                 populateFilterOptions();
                 applyFilters();
@@ -224,19 +228,19 @@
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
             const canales = ['FSE', 'MOD', 'DET', 'MES'];
-            const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
+            const vehicles = ['C2I-891', 'BNY-776'];
             
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 20; k++) {
+                for (let k = 0; k < 15; k++) {
                     let surtido = Math.floor(Math.random() * 2500) + 300;
-                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.07) : 0;
+                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.06) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
                         codClie: '1174500',
-                        cliente: 'CLIENTE OPERATIVO',
+                        cliente: 'CLIENTE',
                         rutaVenta: 'B6A',
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
@@ -289,7 +293,6 @@
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            // Universo de control respetando filtros temporales y de flota corporativa
             let dataParaTarjetas = rawData.filter(row => {
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
@@ -308,10 +311,7 @@
             selectDiaCalendario('ALL');
         }
 
-        // CONSTRUCTOR DINÁMICO DE LAS 4 TARJETAS EN LÍNEA HORIZONTAL
         function renderPerformanceCards(dataCards, filtroCentro, filtroCanal) {
-            
-            // 1. PROCESAR PRIMERO LA TARJETA GLOBAL (Suma total y reacciona a los filtros de Centro y Canal elegidos)
             let globalData = dataCards.filter(row => {
                 if (filtroCentro !== 'ALL' && row.centro !== filtroCentro) return false;
                 if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
@@ -319,14 +319,17 @@
             });
 
             buildSingleCard('card-Global', 'Total Operación', globalData, true);
-
-            // 2. PROCESAR LAS 3 TARJETAS DE CENTROS ESPECÍFICOS (Se mantienen fijas comparando los CD)
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false);
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false);
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false);
         }
 
-        // Función modular constructora de layouts estilo Sales Performance
+        // Manejador del click para abrir/cerrar canales
+        window.toggleCanales = function(containerId) {
+            expandedState[containerId] = !expandedState[containerId];
+            applyFilters(); // Re-renderiza conservando el estado visual actual
+        };
+
         function buildSingleCard(containerId, titleName, dataset, isGlobalCard) {
             let totalSurtido = 0;
             let totalRechazado = 0;
@@ -345,46 +348,53 @@
             
             let barColorClass = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
             let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
-            let borderStyle = isGlobalCard ? 'border-indigo-500/40 shadow-indigo-950/20' : 'border-slate-800/80';
+            let isExpanded = expandedState[containerId];
 
+            // Reemplazado "Sumatoria" por "Kg." según lo pedido
             let cardHtml = `
-                <div>
-                    <div class="flex items-center justify-between">
-                        <h4 class="text-xs font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
-                        <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
-                            ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
-                        </span>
-                    </div>
-                    
-                    <div class="mt-3.5">
-                        <h2 class="text-2xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
-                        <p class="text-[10px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Sumatoria Rechazados</p>
-                    </div>
-                    
-                    <div class="flex items-center justify-between mt-3 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
-                        <span>Sumatoria Surtido:</span>
-                        <span class="font-mono text-slate-300 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                                ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
+                            </span>
+                        </div>
+                        
+                        <div class="mt-3.5">
+                            <h2 class="text-2xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
+                            <p class="text-[10px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Kg. Rechazados</p>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-3 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
+                            <span>Kg. Surtidos:</span>
+                            <span class="font-mono text-slate-300 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
+                        </div>
+
+                        <!-- Barra de Meta -->
+                        <div class="mt-3.5">
+                            <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                                <span>% DBE: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
+                                <span>Meta: 2.15%</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-1.5 relative overflow-hidden">
+                                <div class="${barColorClass} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
+                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1.5 bg-white/30 z-10"></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Barra de Progreso Contra la Meta -->
-                    <div class="mt-3.5">
-                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                            <span>% DBE: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
-                            <span>Meta: 2.15%</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-1.5 relative overflow-hidden">
-                            <div class="${barColorClass} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                            <div class="absolute left-[71.6%] top-0 w-0.5 h-1.5 bg-white/30 z-10"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Desglose por Canal -->
-                <div class="mt-4.5 space-y-2 border-t border-slate-800/80 pt-3">
-                    <p class="text-[9px] font-black uppercase tracking-wider text-slate-500">% DBE por Canal</p>
+                    <!-- Botón Desplegable Dinámico (Triángulo interactivo) -->
+                    <div class="mt-4 border-t border-slate-800/60 pt-2 flex flex-col">
+                        <button onclick="toggleCanales('${containerId}')" class="w-full flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-1">
+                            <span>% DBE por Canal</span>
+                            <span class="text-xs transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
+                        </button>
+                        
+                        <!-- Panel colapsable controlado por clases CSS de Tailwind -->
+                        <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-2">
             `;
 
-            // Construir mini barras para los canales
             let canalesOrdenados = Object.keys(canalMap).sort();
             if (canalesOrdenados.length === 0) {
                 cardHtml += `<p class="text-[11px] text-slate-600 italic py-1">Sin movimientos.</p>`;
@@ -408,10 +418,13 @@
                 });
             }
 
-            cardHtml += `</div>`;
+            cardHtml += `
+                        </div>
+                    </div>
+                </div>
+            `;
             document.getElementById(containerId).innerHTML = cardHtml;
         }
     </script>
 </body>
 </html>
-
