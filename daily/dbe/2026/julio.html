@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
@@ -33,7 +32,6 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col">
 
-    <!-- Header Superior Premium -->
     <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50 shadow-md shrink-0">
         <div>
             <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
@@ -53,10 +51,8 @@
         </div>
     </header>
 
-    <!-- Contenedor Layout Principal -->
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-6 p-4 md:p-6">
         
-        <!-- SIDEBAR DE FILTROS (Izquierda) -->
         <aside class="w-full lg:w-[300px] bg-slate-900 rounded-2xl border border-slate-800 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar shadow-xl">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-4">
@@ -71,7 +67,7 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
-                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-50 bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
+                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
@@ -86,7 +82,6 @@
                 </div>
             </div>
 
-            <!-- Calendario Matriz -->
             <div class="border-t border-slate-800 pt-4">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
@@ -101,14 +96,12 @@
             </div>
         </aside>
 
-        <!-- PANEL DE TARJETAS EN UNA SOLA FILA -->
-        <main class="flex-1 overflow-y-auto custom-scrollbar">
-            <!-- Cuadrícula fija de 4 columnas horizontales -->
-            <section class="grid grid-cols-1 xl:grid-cols-4 gap-5 items-start">
-                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
-                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
-                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
-                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
+        <main class="flex-1 overflow-y-auto custom-scrollbar flex flex-col justify-start">
+            <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-start justify-center w-full">
+                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
+                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
+                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
+                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
             </section>
         </main>
     </div>
@@ -120,7 +113,6 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estado dinámico para recordar qué tarjetas están desplegadas
         let expandedState = {
             'card-Global': false,
             'card-Chancay': false,
@@ -324,10 +316,9 @@
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false);
         }
 
-        // Manejador del click para abrir/cerrar canales
         window.toggleCanales = function(containerId) {
             expandedState[containerId] = !expandedState[containerId];
-            applyFilters(); // Re-renderiza conservando el estado visual actual
+            applyFilters();
         };
 
         function buildSingleCard(containerId, titleName, dataset, isGlobalCard) {
@@ -350,54 +341,50 @@
             let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
             let isExpanded = expandedState[containerId];
 
-            // Reemplazado "Sumatoria" por "Kg." según lo pedido
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full">
                     <div>
                         <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
-                            <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                            <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
+                            <span class="text-[8px] px-1 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
                         </div>
                         
-                        <div class="mt-3.5">
-                            <h2 class="text-2xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
-                            <p class="text-[10px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Kg. Rechazados</p>
+                        <div class="mt-2.5">
+                            <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
+                            <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Kg. Rechazados</p>
                         </div>
                         
-                        <div class="flex items-center justify-between mt-3 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
+                        <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-400 border-t border-slate-800/60 pt-1.5">
                             <span>Kg. Surtidos:</span>
                             <span class="font-mono text-slate-300 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
                         </div>
 
-                        <!-- Barra de Meta -->
-                        <div class="mt-3.5">
-                            <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                        <div class="mt-2.5">
+                            <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                                 <span>% DBE: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
                                 <span>Meta: 2.15%</span>
                             </div>
-                            <div class="w-full bg-slate-800 rounded-full h-1.5 relative overflow-hidden">
-                                <div class="${barColorClass} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1.5 bg-white/30 z-10"></div>
+                            <div class="w-full bg-slate-800 rounded-full h-1 relative overflow-hidden">
+                                <div class="${barColorClass} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
+                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1 bg-white/30 z-10"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Botón Desplegable Dinámico (Triángulo interactivo) -->
-                    <div class="mt-4 border-t border-slate-800/60 pt-2 flex flex-col">
-                        <button onclick="toggleCanales('${containerId}')" class="w-full flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-1">
+                    <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col">
+                        <button onclick="toggleCanales('${containerId}')" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
-                            <span class="text-xs transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
+                            <span class="text-[10px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
                         
-                        <!-- Panel colapsable controlado por clases CSS de Tailwind -->
-                        <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-2">
+                        <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
 
             let canalesOrdenados = Object.keys(canalMap).sort();
             if (canalesOrdenados.length === 0) {
-                cardHtml += `<p class="text-[11px] text-slate-600 italic py-1">Sin movimientos.</p>`;
+                cardHtml += `<p class="text-[10px] text-slate-600 italic py-0.5">Sin movimientos.</p>`;
             } else {
                 canalesOrdenados.forEach(canal => {
                     let cItem = canalMap[canal];
@@ -407,12 +394,12 @@
                     let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
 
                     cardHtml += `
-                        <div class="flex items-center justify-between gap-3 text-[11px]">
-                            <span class="font-medium text-slate-400 w-8 truncate" title="${canal}">${canal}</span>
+                        <div class="flex items-center justify-between gap-2 text-[10px]">
+                            <span class="font-medium text-slate-400 w-7 truncate" title="${canal}">${canal}</span>
                             <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
                                 <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
                             </div>
-                            <span class="font-bold font-mono text-right w-10 ${cText}">${cRate.toFixed(1)}%</span>
+                            <span class="font-bold font-mono text-right w-9 ${cText}">${cRate.toFixed(1)}%</span>
                         </div>
                     `;
                 });
