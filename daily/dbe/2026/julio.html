@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Icono temático de Dashboard para la pestaña del navegador -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Chart.js CDN -->
@@ -40,23 +42,40 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
-    <!-- Header Superior Premium -->
-    <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3 shadow-md shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50">
-        <div>
-            <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                Dashboard de Control % DBE de Despacho
-            </h1>
-            <p class="text-[11px] text-slate-400 mt-0.5">Performance y Objetivos de Rechazo | Datos de Operación</p>
+    <!-- Header Superior Premium con Logo de Sigma y Firma de Autoría -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3 shadow-md shrink-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <!-- Símbolo Vectorial Limpio de Sigma Alimentos (Isotipo del Hexágono) -->
+            <div class="bg-red-600 p-2 rounded-xl flex items-center justify-center shadow-md shadow-red-950/40">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 22 7 22 17 12 22 2 17 2 7 12 2"/>
+                    <polyline points="2 7 12 12 22 7"/>
+                    <line x1="12" y1="12" x2="12" y2="22"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-base font-black tracking-tight text-white flex items-center gap-2">
+                    SIGMA ALIMENTOS <span class="text-slate-500 font-medium">|</span> <span class="text-indigo-400 font-bold">Control % DBE</span>
+                </h1>
+                <p class="text-[11px] text-slate-400 mt-0.5">Performance y Objetivos de Rechazo | Gestión de Despacho</p>
+            </div>
         </div>
-        <div class="flex items-center gap-3 self-end sm:self-auto">
-            <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                ✓ Conectado a GitHub
-            </span>
-            <button id="btnReload" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium py-1 px-2.5 rounded border border-slate-700 transition-colors cursor-pointer" onclick="loadData()">
-                Sincronizar
-            </button>
+        
+        <div class="flex flex-wrap items-center gap-4 self-end md:self-auto">
+            <!-- Firma de Autoría Personalizada Requerida -->
+            <div class="bg-slate-950/60 border border-slate-800/80 px-3 py-1 rounded-lg text-right">
+                <span class="text-[9px] block uppercase font-bold text-slate-500 tracking-wider">Desarrollo e Ingeniería</span>
+                <span class="text-xs font-black text-indigo-300 tracking-wide font-mono">Creado por MARCⓊ DAVILA</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    ✓ GITHUB ONLINE
+                </span>
+                <button id="btnReload" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium py-1.5 px-3 rounded border border-slate-700 transition-colors cursor-pointer" onclick="loadData()">
+                    Sincronizar
+                </button>
+            </div>
         </div>
     </header>
 
@@ -102,9 +121,6 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
-            <div class="text-[10px] text-slate-500 italic mt-auto leading-normal">
-                * Tip: Filtra por CD haciendo clic en las tarjetas. Usa **Ctrl** para selección múltiple.
-            </div>
         </aside>
 
         <!-- PANEL DE CONTROL CENTRAL (Derecha) -->
@@ -120,14 +136,15 @@
                 </section>
             </div>
 
-            <!-- FILA INFERIOR: GRÁFICO DE EVOLUCIÓN % DBE DIARIO -->
+            <!-- FILA INFERIOR: GRÁFICO DE EVOLUCIÓN % DBE DIARIO (Corregido estructuralmente) -->
             <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[350px]">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Evolución Diaria del % DBE Mensual</h3>
-                    <div class="text-[10px] text-slate-500 font-mono">* Reacciona dinámicamente según los CDs seleccionados arriba</div>
+                    <div class="text-[10px] text-slate-500 font-mono">* Filtro dinámico según tarjetas seleccionadas</div>
                 </div>
-                <div class="flex-1 w-full relative min-h-[260px]">
-                    <canvas id="chartTrend" id="chartTrendCanvas"></canvas>
+                <!-- Div contenedor con altura mínima física estricta para forzar el dibujo de Chart.js -->
+                <div class="w-full flex-1 min-h-[280px] relative">
+                    <canvas id="chartTrend"></canvas>
                 </div>
             </section>
         </main>
@@ -141,6 +158,7 @@
         const dbeMeta = 2.15;
 
         let selectedCentrosFiltro = [];
+        let trendChart = null;
 
         let expandedState = {
             'card-Global': false,
@@ -349,10 +367,10 @@
                 return true;
             });
 
-            // CORRECCIÓN CLAVE: Retraso controlado para asegurar dimensiones del contenedor flex
+            // Retraso de renderizado para evitar colapso de tamaño en Tailwind Flex layouts
             setTimeout(() => {
                 renderTrendChart(dataParaGraficoTrend);
-            }, 50);
+            }, 60);
         }
 
         function resetFilters() {
@@ -507,7 +525,11 @@
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
 
             if(trendChart) trendChart.destroy();
-            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+            
+            // Forzar contexto del canvas de forma estricta
+            const ctx = document.getElementById('chartTrend').getContext('2d');
+            
+            trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: sortedDays,
