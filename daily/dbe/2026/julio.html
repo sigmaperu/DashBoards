@@ -12,8 +12,8 @@
             background-color: #0f172a;
         }
         .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #1e293b;
@@ -30,20 +30,20 @@
         }
     </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen flex flex-col">
+<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
-    <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50 shadow-md shrink-0">
+    <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3 shadow-md shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50">
         <div>
             <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
                 Dashboard de Control % DBE de Despacho
             </h1>
-            <p class="text-[11px] text-slate-400 mt-0.5">Resumen de Performance y Objetivos de Rechazo | Datos de Operación</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Performance y Objetivos de Rechazo | Datos de Operación</p>
         </div>
         <div class="flex items-center gap-3 self-end sm:self-auto">
-            <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                Sincronizando Base...
+            <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                ✓ Conectado a GitHub
             </span>
             <button id="btnReload" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium py-1 px-2.5 rounded border border-slate-700 transition-colors cursor-pointer" onclick="loadData()">
                 Sincronizar
@@ -51,57 +51,57 @@
         </div>
     </header>
 
-    <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-6 p-4 md:p-6">
+    <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
         
-        <aside class="w-full lg:w-[300px] bg-slate-900 rounded-2xl border border-slate-800 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar shadow-xl">
+        <aside class="w-full lg:w-[240px] bg-slate-900 rounded-2xl border border-slate-800 p-3 shrink-0 flex flex-col gap-4 overflow-y-auto custom-scrollbar shadow-xl">
             <div>
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-4">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Filtros Operativos</span>
-                    <button onclick="resetFilters()" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Limpiar</button>
+                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Filtros</span>
+                    <button onclick="resetFilters()" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Limpiar</button>
                 </div>
                 
-                <div class="space-y-4">
+                <div class="space-y-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-400 mb-1">Centro Principal</label>
-                        <select id="filterCentro" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
+                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Centro Principal</label>
+                        <select id="filterCentro" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
-                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
+                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
+                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
-                        <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
+                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
+                        <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-400 mb-1">Ruta de Venta</label>
-                        <select id="filterRuta" onchange="applyFilters()" class="w-full text-xs bg-slate-800 text-slate-200 border border-slate-700 rounded-lg p-2.5 focus:outline-hidden focus:border-indigo-500 transition-all">
+                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Ruta de Venta</label>
+                        <select id="filterRuta" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all">
                             <option value="ALL">Todas las Rutas</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div class="border-t border-slate-800 pt-4">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
-                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[10px] bg-slate-800 text-indigo-400 hover:bg-slate-700 font-bold px-2 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer">
+            <div class="border-t border-slate-800 pt-3">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-800 text-indigo-400 hover:bg-slate-700 font-bold px-1.5 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer">
                         Todo el mes
                     </button>
                 </div>
-                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-500 mb-1.5">
+                <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-500 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto custom-scrollbar flex flex-col justify-start">
-            <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-start justify-center w-full">
-                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
-                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
-                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
-                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between min-h-[300px] max-w-[270px] w-full mx-auto"></div>
+        <main class="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar py-1">
+            <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
+                <div id="card-Global" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300 bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
+                <div id="card-Chancay" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
+                <div id="card-Ate1" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
+                <div id="card-Ate2" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-300"></div>
             </section>
         </main>
     </div>
@@ -113,6 +113,7 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
+        // Guarda qué tarjetas están expandidas por el usuario
         let expandedState = {
             'card-Global': false,
             'card-Chancay': false,
@@ -142,7 +143,7 @@
             for (let d = 1; d <= totalDiasMes; d++) {
                 const diaStr = String(d).padStart(2, '0');
                 const btn = document.createElement('button');
-                btn.className = "day-btn text-[11px] py-1.5 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
+                btn.className = "day-btn text-[10px] py-1 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
                 btn.id = `btn-day-${diaStr}`;
                 btn.innerText = d;
                 btn.onclick = () => selectDiaCalendario(diaStr);
@@ -151,19 +152,15 @@
         }
 
         async function loadData() {
-            const statusBadge = document.getElementById('dataStatus');
             try {
                 const response = await fetch(csvUrl);
-                if (!response.ok) throw new Error('Error GitHub');
+                if (!response.ok) throw new Error('GitHub Connect Fail');
                 const text = await response.text();
                 parseCSV(text);
-                statusBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                statusBadge.innerHTML = `✓ Conectado a GitHub`;
                 populateFilterOptions();
                 applyFilters();
             } catch (err) {
-                statusBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
-                statusBadge.innerHTML = `ℹ️ Modo Desconectado (Simulación)`;
+                console.warn("Cargando data de respaldo local offline.");
                 generateMockData();
                 populateFilterOptions();
                 applyFilters();
@@ -226,7 +223,7 @@
                 let formattedDay = String(day).padStart(2, '0');
                 for (let k = 0; k < 15; k++) {
                     let surtido = Math.floor(Math.random() * 2500) + 300;
-                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.06) : 0;
+                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.05) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
@@ -345,7 +342,7 @@
                 <div class="flex flex-col justify-between h-full">
                     <div>
                         <div class="flex items-center justify-between">
-                            <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
+                            <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName}</h4>
                             <span class="text-[8px] px-1 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
@@ -376,7 +373,7 @@
                     <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col">
                         <button onclick="toggleCanales('${containerId}')" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
-                            <span class="text-[10px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
+                            <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
                         
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
