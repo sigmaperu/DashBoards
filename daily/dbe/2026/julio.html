@@ -31,7 +31,7 @@
             font-weight: 600;
         }
         .card-inactive {
-            opacity: 0.4;
+            opacity: 0.35;
             transform: scale(0.99);
             border-color: #1e293b !important;
         }
@@ -39,38 +39,8 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
-    <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3 shadow-md shrink-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div class="bg-red-600 p-2 rounded-xl flex items-center justify-center shadow-md shadow-red-950/40">
-                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 22 7 22 17 12 22 2 17 2 7 12 2"/>
-                    <polyline points="2 7 12 12 22 7"/>
-                    <line x1="12" y1="12" x2="12" y2="22"/>
-                </svg>
-            </div>
-            <div>
-                <h1 class="text-base font-black tracking-tight text-white flex items-center gap-2">
-                    SIGMA ALIMENTOS <span class="text-slate-500 font-medium">|</span> <span class="text-indigo-400 font-bold">Control % DBE</span>
-                </h1>
-                <p class="text-[11px] text-slate-400 mt-0.5">Performance y Objetivos de Rechazo | Gestión de Despacho</p>
-            </div>
-        </div>
-        
-        <div class="flex flex-wrap items-center gap-4 self-end md:self-auto">
-            <div class="bg-slate-950/60 border border-slate-800/80 px-3 py-1 rounded-lg text-right">
-                <span class="text-[9px] block uppercase font-bold text-slate-500 tracking-wider">Desarrollo e Ingeniería</span>
-                <span class="text-xs font-black text-indigo-300 tracking-wide font-mono">Creado por MARCⓊ DAVILA</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    ✓ GITHUB ONLINE
-                </span>
-                <button id="btnReload" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium py-1.5 px-3 rounded border border-slate-700 transition-colors cursor-pointer" onclick="loadData()">
-                    Sincronizar
-                </button>
-            </div>
-        </div>
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2.5 shadow-md shrink-0 flex items-center sticky top-0 z-50">
+        <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
     </header>
 
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
@@ -83,10 +53,6 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <div>
-                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Canal de Distribución</label>
-                        <select id="filterCanal" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
-                    </div>
                     <div>
                         <label class="block text-[10px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
                         <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
@@ -114,23 +80,22 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+        <main class="flex-1 flex flex-col gap-5 min-w-0">
             
-            <div class="overflow-x-auto overflow-y-hidden custom-scrollbar py-1 shrink-0">
-                <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
-                    <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
-                    <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[235px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div class="w-full shrink-0 py-0.5">
+                <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full">
+                    <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
+                    <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
                 </section>
             </div>
 
-            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[350px]">
-                <div class="flex items-center justify-between mb-3">
+            <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[320px]">
+                <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Evolución Diaria del % DBE Mensual</h3>
-                    <div class="text-[10px] text-slate-500 font-mono">* Filtro dinámico según tarjetas seleccionadas</div>
                 </div>
-                <div class="w-full flex-1 min-h-[280px] relative">
+                <div class="w-full flex-1 min-h-[260px] relative">
                     <canvas id="chartTrend"></canvas>
                 </div>
             </section>
@@ -144,8 +109,11 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
+        // Estados de Filtros Cruzados Avanzados
         let selectedCentrosFiltro = [];
-        let trendChart = null; // DECLARADA GLOBALMENTE PARA EVITAR EL REFERENCE_ERROR
+        let selectedCanalesFiltro = []; // Array de canales seleccionados con CTRL
+
+        let trendChart = null;
 
         let expandedState = {
             'card-Global': false,
@@ -230,9 +198,12 @@
                     if (partes[1]) diaFicticio = partes[1].trim().padStart(2, '0');
                 }
 
+                let canalNombre = cols[2] || 'Otros';
+                if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS'; // Forzado a Mayúsculas estricto
+
                 rawData.push({
                     centro: centroNombre,
-                    canal: cols[2] || 'Otros',
+                    canal: canalNombre,
                     vehiculo: cols[4] || 'No Especificado',
                     codClie: cols[5] || 'Sin Código',
                     cliente: cols[6] || 'Consumidor',
@@ -248,7 +219,7 @@
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const canales = ['FSE', 'MOD', 'DET', 'MES'];
+            const canales = ['FSE', 'MOD', 'DET', 'MES', 'OTROS'];
             const vehicles = ['C2I-891', 'BNY-776'];
             
             for (let day = 1; day <= 31; day++) {
@@ -285,7 +256,6 @@
                     }
                 });
             };
-            setOptions('filterCanal', getUnique('canal'), 'Todos los Canales');
             setOptions('filterVehiculo', getUnique('vehiculo'), 'Todos los Vehículos');
             setOptions('filterRuta', getUnique('rutaVenta'), 'Todas las Rutas');
         }
@@ -308,7 +278,8 @@
         }
 
         window.handleCardClick = function(centroName, event) {
-            if(event.target.closest('button')) return;
+            // Si el click viene de los botones de despliegue o círculos de canal, ignorar filtrado macro de tarjeta
+            if(event.target.closest('.noclick')) return;
 
             if (centroName === 'Total Operación') {
                 selectedCentrosFiltro = [];
@@ -330,27 +301,48 @@
             applyFilters();
         };
 
+        // MANEJADOR DINÁMICO DE FILTRADO CRUZADO POR CANAL INTERNO
+        window.handleCanalCircleClick = function(canalName, event) {
+            event.stopPropagation();
+            if (event.ctrlKey) {
+                if (selectedCanalesFiltro.includes(canalName)) {
+                    selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canalName);
+                } else {
+                    selectedCanalesFiltro.push(canalName);
+                }
+            } else {
+                if (selectedCanalesFiltro.length === 1 && selectedCanalesFiltro[0] === canalName) {
+                    selectedCanalesFiltro = [];
+                } else {
+                    selectedCanalesFiltro = [canalName];
+                }
+            }
+            applyFilters();
+        };
+
         function applyFilters() {
-            const ca = document.getElementById('filterCanal').value;
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
+            // 1. DATA HISTÓRICA BASE (Filtros del sidebar)
             let dataBaseSidebar = rawData.filter(row => {
-                if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
                 return true;
             });
 
-            let dataParaTarjetas = dataBaseSidebar.filter(row => {
+            // 2. DATA DE CONTROL DIARIA (Añade el día del calendario)
+            let dataDiariaControl = dataBaseSidebar.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
-            renderPerformanceCards(dataParaTarjetas, ca);
+            renderPerformanceCards(dataDiariaControl);
 
+            // 3. APLICAR FILTROS COMBINADOS (CD + CANAL SELECCIONADO) AL GRÁFICO DE LÍNEA
             let dataParaGraficoTrend = dataBaseSidebar.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
@@ -360,14 +352,14 @@
         }
 
         function resetFilters() {
-            document.getElementById('filterCanal').value = 'ALL';
             document.getElementById('filterVehiculo').value = 'ALL';
             document.getElementById('filterRuta').value = 'ALL';
             selectedCentrosFiltro = [];
+            selectedCanalesFiltro = [];
             selectDiaCalendario('ALL');
         }
 
-        function renderPerformanceCards(dataCards, filtroCanal) {
+        function renderPerformanceCards(dataCards) {
             const updateCardClasses = (id, targetName) => {
                 const el = document.getElementById(id);
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(targetName) && targetName !== 'Total') {
@@ -382,12 +374,7 @@
             updateCardClasses('card-Ate1', 'Ate 1');
             updateCardClasses('card-Ate2', 'Ate 2');
 
-            let globalData = dataCards.filter(row => {
-                if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
-                return true;
-            });
-
-            buildSingleCard('card-Global', 'Total Operación', globalData, true, 'Total');
+            buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2');
@@ -405,12 +392,22 @@
             let canalMap = {};
 
             dataset.forEach(row => {
+                // Si hay canales seleccionados, las métricas internas del Card se recalculan dinámicamente
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
+
                 totalSurtido += row.surtido;
                 totalRechazado += row.rechazado;
                 if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
                 canalMap[row.canal].s += row.surtido;
                 canalMap[row.canal].r += row.rechazado;
             });
+
+            // Si está contraído, recolectamos el mapeo completo de canales de todas formas para el despliegue posterior
+            if (!expandedState[containerId] && selectedCanalesFiltro.length > 0) {
+                dataset.forEach(row => {
+                    if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
+                });
+            }
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
@@ -430,12 +427,12 @@
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full">
                     <div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2 truncate">
+                        <div class="flex items-center justify-between gap-1">
+                            <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
-                                <h4 class="text-[10px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
+                                <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
                             </div>
-                            <span class="text-[8px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                            <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
                         </div>
@@ -462,7 +459,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col">
+                    <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col noclick">
                         <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
@@ -476,15 +473,23 @@
                 cardHtml += `<p class="text-[10px] text-slate-600 italic py-0.5">Sin movimientos.</p>`;
             } else {
                 canalesOrdenados.forEach(canal => {
-                    let cItem = canalMap[canal];
+                    let cItem = canalMap[canal] || {s:0, r:0};
                     let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
                     let cWidth = Math.min((cRate / 5) * 100, 100);
                     let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
                     let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
 
+                    let isCanalChecked = selectedCanalesFiltro.includes(canal);
+                    let canalCircleHtml = isCanalChecked
+                        ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
+                        : `<div class="w-2.5 h-2.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
+
                     cardHtml += `
-                        <div class="flex items-center justify-between gap-2 text-[10px]">
-                            <span class="font-medium text-slate-400 w-7 truncate" title="${canal}">${canal}</span>
+                        <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-800/40 p-0.5 rounded transition-colors noclick">
+                            <div class="flex items-center gap-1.5 truncate w-14">
+                                ${canalCircleHtml}
+                                <span class="font-medium text-slate-400 truncate" title="${canal}">${canal}</span>
+                            </div>
                             <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
                                 <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
                             </div>
@@ -511,7 +516,6 @@
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
 
             if(trendChart) trendChart.destroy();
-            
             const ctx = document.getElementById('chartTrend').getContext('2d');
             
             trendChart = new Chart(ctx, {
