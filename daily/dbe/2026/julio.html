@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Fondo oscuro premium para resaltar las tarjetas estilo Sales Performance */
+            background-color: #0f172a; /* Fondo oscuro premium */
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
@@ -33,13 +33,14 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col">
 
+    <!-- Header Superior Premium -->
     <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50 shadow-md shrink-0">
         <div>
             <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
                 Dashboard de Control % DBE de Despacho
             </h1>
-            <p class="text-[11px] text-slate-400 mt-0.5">Gestión de Rechazos y Eficiencia Operativa | Datos de Operación</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Resumen de Performance y Objetivos de Rechazo | Datos de Operación</p>
         </div>
         <div class="flex items-center gap-3 self-end sm:self-auto">
             <span id="dataStatus" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -52,9 +53,11 @@
         </div>
     </header>
 
+    <!-- Contenedor Layout Principal -->
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-6 p-4 md:p-6">
         
-        <aside class="w-full lg:w-[320px] bg-slate-900 rounded-2xl border border-slate-800 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar shadow-xl">
+        <!-- SIDEBAR DE FILTROS (Izquierda) -->
+        <aside class="w-full lg:w-[300px] bg-slate-900 rounded-2xl border border-slate-800 p-4 shrink-0 flex flex-col gap-5 overflow-y-auto custom-scrollbar shadow-xl">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-4">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Filtros Operativos</span>
@@ -83,6 +86,7 @@
                 </div>
             </div>
 
+            <!-- Calendario Matriz -->
             <div class="border-t border-slate-800 pt-4">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
@@ -95,52 +99,20 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
             </div>
-
-            <div class="border-t border-slate-800 pt-4 flex-1 min-h-[160px] flex flex-col">
-                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Flota con Mayor % DBE</span>
-                <div id="sidebarVehicleList" class="text-[11px] space-y-2 overflow-y-auto flex-1 custom-scrollbar pr-1"></div>
-            </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto custom-scrollbar space-y-6">
-            
-            <section class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
-                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
-                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between"></div>
-            </section>
-
-            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Evolución del % DBE Mensual (Línea de Tendencia)</h3>
-                <div class="h-60 w-full">
-                    <canvas id="chartTrend"></canvas>
-                </div>
-            </section>
-
-            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Mapeo e Incidencia Total por Motivo de Rechazo</h3>
-                <div class="h-72 w-full">
-                    <canvas id="chartMotivos"></canvas>
-                </div>
-            </section>
-
-            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Top 10 Clientes y Rutas Críticas por Piezas Rechazadas</h3>
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-slate-800/50 border-b border-slate-700 text-slate-400 font-medium">
-                                <th class="p-3">Código</th>
-                                <th class="p-3">Razon Social / Cliente</th>
-                                <th class="p-3">Ruta</th>
-                                <th class="p-3 text-right">Surtido Agrupado</th>
-                                <th class="p-3 text-right">Rechazado Agrupado</th>
-                                <th class="p-3 text-right text-indigo-400">% DBE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableClientsBody" class="divide-y divide-slate-800 text-slate-300"></tbody>
-                    </table>
-                </div>
+        <!-- PANEL DE TARJETAS EN UNA SOLA FILA HORIZONTAL -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar">
+            <!-- Cuadrícula configurada para colapsar en móviles y ponerse en 4 columnas idénticas en pantallas grandes -->
+            <section class="grid grid-cols-1 xl:grid-cols-4 gap-5 items-start">
+                <!-- Tarjeta 1: Resumen Global de la Operación (Nueva) -->
+                <div id="card-Global" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px] bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
+                <!-- Tarjeta 2: CD Chancay Performance -->
+                <div id="card-Chancay" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
+                <!-- Tarjeta 3: CD Ate 1 Performance -->
+                <div id="card-Ate1" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
+                <!-- Tarjeta 4: CD Ate 2 Performance -->
+                <div id="card-Ate2" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between min-h-[360px]"></div>
             </section>
         </main>
     </div>
@@ -150,10 +122,7 @@
         let rawData = [];
         let filteredData = [];
         let selectedDia = 'ALL';
-        const dbeMeta = 2.15; // Meta 2.15%
-
-        let trendChart = null;
-        let motivosChart = null;
+        const dbeMeta = 2.15;
 
         const centroMapping = {
             "0374": "Ate 1",
@@ -198,7 +167,7 @@
                 applyFilters();
             } catch (err) {
                 statusBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
-                statusBadge.innerHTML = `ℹ️ Datos de Respaldo Habilitados`;
+                statusBadge.innerHTML = `ℹ️ Datos locales de simulación`;
                 generateMockData();
                 populateFilterOptions();
                 applyFilters();
@@ -255,26 +224,25 @@
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
             const canales = ['FSE', 'MOD', 'DET', 'MES'];
-            const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809', 'D1M-791', 'AKL-733', 'BSX-809', 'C2H-866', 'AAR-934'];
-            const motivos = ['Recepción no recibe', 'Tienda Cerrada', 'Fuera hora de recepc', 'Dif en liquid (s/efe', 'Orden Comp venc/tda', 'Diferencias CEDI', 'Error de pedido'];
+            const vehicles = ['C2I-891', 'BNY-776', 'ALE-907', 'CKH-809'];
             
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 25; k++) {
-                    let surtido = Math.floor(Math.random() * 3000) + 200;
-                    let rechazado = Math.random() > 0.65 ? Math.floor(Math.random() * surtido * 0.09) : 0;
+                for (let k = 0; k < 20; k++) {
+                    let surtido = Math.floor(Math.random() * 2500) + 300;
+                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.07) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        codClie: '117' + (4000 + Math.floor(Math.random() * 2000)),
-                        cliente: 'EMPRESA COMERCIALIZADORA PERÚ SAC',
-                        rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
+                        codClie: '1174500',
+                        cliente: 'CLIENTE OPERATIVO',
+                        rutaVenta: 'B6A',
                         fecha: `7/${day}/2026`,
                         numDia: formattedDay,
                         surtido: surtido,
                         rechazado: rechazado,
-                        motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : '-'
+                        motivo: '-'
                     });
                 }
             }
@@ -321,23 +289,7 @@
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            // Filtro Maestro
-            filteredData = rawData.filter(row => {
-                if (c !== 'ALL' && row.centro !== c) return false;
-                if (ca !== 'ALL' && row.canal !== ca) return false;
-                if (v !== 'ALL' && row.vehiculo !== v) return false;
-                if (r !== 'ALL' && row.rutaVenta !== r) return false;
-                return true;
-            });
-
-            renderTrendChart(filteredData);
-
-            let finalData = filteredData.filter(row => {
-                if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
-                return true;
-            });
-
-            // DATA DESACOPLADA PARA LAS TARJETAS (Respetan filtros excepto Centro/Canal para mantener la comparativa global)
+            // Universo de control respetando filtros temporales y de flota corporativa
             let dataParaTarjetas = rawData.filter(row => {
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
                 if (r !== 'ALL' && row.rutaVenta !== r) return false;
@@ -345,10 +297,7 @@
                 return true;
             });
 
-            renderPerformanceCards(dataParaTarjetas);
-            renderMotivosChart(finalData);
-            renderSidebarVehicleList(finalData);
-            renderTable(finalData);
+            renderPerformanceCards(dataParaTarjetas, c, ca);
         }
 
         function resetFilters() {
@@ -359,232 +308,108 @@
             selectDiaCalendario('ALL');
         }
 
-        // LÓGICA DE CONSTRUCCIÓN DINÁMICA DE TARJETAS PREMIUM DE PERFORMANCE (Estilo la imagen adjunta)
-        function renderPerformanceCards(dataCards) {
-            const centrosInteres = [
-                { id: 'card-Chancay', name: 'Chancay' },
-                { id: 'card-Ate1', name: 'Ate 1' },
-                { id: 'card-Ate2', name: 'Ate 2' }
-            ];
+        // CONSTRUCTOR DINÁMICO DE LAS 4 TARJETAS EN LÍNEA HORIZONTAL
+        function renderPerformanceCards(dataCards, filtroCentro, filtroCanal) {
+            
+            // 1. PROCESAR PRIMERO LA TARJETA GLOBAL (Suma total y reacciona a los filtros de Centro y Canal elegidos)
+            let globalData = dataCards.filter(row => {
+                if (filtroCentro !== 'ALL' && row.centro !== filtroCentro) return false;
+                if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
+                return true;
+            });
 
-            centrosInteres.forEach(cd => {
-                let cdData = dataCards.filter(x => x.centro === cd.name);
-                
-                let totalSurtido = 0;
-                let totalRechazado = 0;
-                let canalMap = {};
+            buildSingleCard('card-Global', 'Total Operación', globalData, true);
 
-                cdData.forEach(row => {
-                    totalSurtido += row.surtido;
-                    totalRechazado += row.rechazado;
-                    if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
-                    canalMap[row.canal].s += row.surtido;
-                    canalMap[row.canal].r += row.rechazado;
-                });
+            // 2. PROCESAR LAS 3 TARJETAS DE CENTROS ESPECÍFICOS (Se mantienen fijas comparando los CD)
+            buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false);
+            buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false);
+            buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false);
+        }
 
-                let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
-                
-                // Cálculo de porcentaje para la barra de llenado visual (máximo 100% gráfico)
-                let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
-                let barColorClass = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+        // Función modular constructora de layouts estilo Sales Performance
+        function buildSingleCard(containerId, titleName, dataset, isGlobalCard) {
+            let totalSurtido = 0;
+            let totalRechazado = 0;
+            let canalMap = {};
 
-                const targetContainer = document.getElementById(cd.id);
-                
-                let htmlContent = `
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">${cd.name} Performance</h4>
-                            <span class="text-[10px] px-2 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
-                                ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
-                            </span>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <h2 class="text-3xl font-black text-rose-500 tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
-                            <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">Piezas Rechazadas</p>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mt-3 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
-                            <span>Surtido Total:</span>
-                            <span class="font-mono text-slate-200 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
-                        </div>
+            dataset.forEach(row => {
+                totalSurtido += row.surtido;
+                totalRechazado += row.rechazado;
+                if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 };
+                canalMap[row.canal].s += row.surtido;
+                canalMap[row.canal].r += row.rechazado;
+            });
 
-                        <div class="mt-4">
-                            <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                                <span>Ratio Actual: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
-                                <span>Meta: 2.15%</span>
-                            </div>
-                            <div class="w-full bg-slate-800 rounded-full h-2 relative overflow-hidden">
-                                <div class="${barColorClass} h-2 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                                <div class="absolute left-[71.6%] top-0 w-0.5 h-2 bg-white/40 z-10" title="Línea de Meta 2.15%"></div>
-                            </div>
-                        </div>
+            let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
+            let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
+            
+            let barColorClass = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
+            let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+            let borderStyle = isGlobalCard ? 'border-indigo-500/40 shadow-indigo-950/20' : 'border-slate-800/80';
+
+            let cardHtml = `
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider">${titleName} Performance</h4>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded font-bold ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                            ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
+                        </span>
+                    </div>
+                    
+                    <div class="mt-3.5">
+                        <h2 class="text-2xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
+                        <p class="text-[10px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Sumatoria Rechazados</p>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mt-3 text-[11px] text-slate-400 border-t border-slate-800/60 pt-2">
+                        <span>Sumatoria Surtido:</span>
+                        <span class="font-mono text-slate-300 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
                     </div>
 
-                    <div class="mt-5 space-y-2.5 border-t border-slate-800 pt-3.5">
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">% DBE por Canal</p>
-                `;
+                    <!-- Barra de Progreso Contra la Meta -->
+                    <div class="mt-3.5">
+                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                            <span>% DBE: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
+                            <span>Meta: 2.15%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-1.5 relative overflow-hidden">
+                            <div class="${barColorClass} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
+                            <div class="absolute left-[71.6%] top-0 w-0.5 h-1.5 bg-white/30 z-10"></div>
+                        </div>
+                    </div>
+                </div>
 
-                Object.keys(canalMap).sort().forEach(canal => {
+                <!-- Desglose por Canal -->
+                <div class="mt-4.5 space-y-2 border-t border-slate-800/80 pt-3">
+                    <p class="text-[9px] font-black uppercase tracking-wider text-slate-500">% DBE por Canal</p>
+            `;
+
+            // Construir mini barras para los canales
+            let canalesOrdenados = Object.keys(canalMap).sort();
+            if (canalesOrdenados.length === 0) {
+                cardHtml += `<p class="text-[11px] text-slate-600 italic py-1">Sin movimientos.</p>`;
+            } else {
+                canalesOrdenados.forEach(canal => {
                     let cItem = canalMap[canal];
                     let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
-                    let cWidth = Math.min((cRate / 5) * 100, 100); // escalado visual
+                    let cWidth = Math.min((cRate / 5) * 100, 100);
                     let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
                     let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
 
-                    htmlContent += `
-                        <div class="flex items-center justify-between gap-4 text-[11px]">
-                            <span class="font-medium text-slate-400 w-10">${canal}</span>
-                            <div class="flex-1 bg-slate-800/80 h-1.5 rounded-full relative overflow-hidden">
-                                <div class="${cColor} h-1.5 rounded-full" style="width: ${cWidth}%"></div>
+                    cardHtml += `
+                        <div class="flex items-center justify-between gap-3 text-[11px]">
+                            <span class="font-medium text-slate-400 w-8 truncate" title="${canal}">${canal}</span>
+                            <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
+                                <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
                             </div>
-                            <span class="font-bold font-mono text-right w-12 ${cText}">${cRate.toFixed(1)}%</span>
+                            <span class="font-bold font-mono text-right w-10 ${cText}">${cRate.toFixed(1)}%</span>
                         </div>
                     `;
                 });
-
-                htmlContent += `</div>`;
-                targetContainer.innerHTML = htmlContent;
-            });
-        }
-
-        function renderTrendChart(dataTrend) {
-            let fMap = {};
-            dataTrend.forEach(r => {
-                if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0};
-                fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
-            });
-            let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
-
-            if(trendChart) trendChart.destroy();
-            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: sortedDays,
-                    datasets: [{
-                        label: '% DBE Diario',
-                        data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.02)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1,
-                        pointRadius: 3
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155/30' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        function renderMotivosChart(dataMotivos) {
-            let mMap = {};
-            dataMotivos.forEach(r => {
-                if(r.rechazado > 0 && r.motivo && r.motivo !== '-') {
-                    mMap[r.motivo] = (mMap[r.motivo] || 0) + r.rechazado;
-                }
-            });
-            let sorted = Object.keys(mMap).map(k => ({name: k, qty: mMap[k]})).sort((a,b) => b.qty - a.qty);
-
-            if(motivosChart) motivosChart.destroy();
-            motivosChart = new Chart(document.getElementById('chartMotivos').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(x => x.name),
-                    datasets: [{ 
-                        data: sorted.map(x => x.qty), 
-                        backgroundColor: '#ef4444', 
-                        borderRadius: 4,
-                        barThickness: 14
-                    }]
-                },
-                options: { 
-                    indexAxis: 'y', 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155/30' } },
-                        y: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        function renderSidebarVehicleList(dataVehiculos) {
-            let vMap = {};
-            dataVehiculos.forEach(r => {
-                if(!vMap[r.vehiculo]) vMap[r.vehiculo] = {s:0, r:0};
-                vMap[r.vehiculo].s += r.surtido; vMap[r.vehiculo].r += r.rechazado;
-            });
-
-            let vList = Object.keys(vMap).map(k => {
-                let rate = vMap[k].s > 0 ? (vMap[k].r / vMap[k].s * 100) : 0;
-                return { name: k, rate: rate, r: vMap[k].r };
-            }).filter(x => x.r > 0).sort((a,b) => b.rate - a.rate).slice(0, 5);
-
-            const container = document.getElementById('sidebarVehicleList');
-            container.innerHTML = '';
-
-            if(vList.length === 0) {
-                container.innerHTML = `<div class="text-slate-500 italic py-2">Sin desviaciones críticas.</div>`;
-                return;
             }
 
-            vList.forEach(v => {
-                const item = document.createElement('div');
-                item.className = "flex items-center justify-between border-b border-slate-800 pb-1.5";
-                item.innerHTML = `
-                    <span class="font-mono text-slate-300">${v.name}</span>
-                    <span class="font-bold ${v.rate > dbeMeta ? 'text-rose-400' : 'text-emerald-400'}">${v.rate.toFixed(1)}%</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function getContrastColorClass(rate) {
-            return rate > dbeMeta ? 'text-rose-400 font-bold bg-rose-950/30 rounded px-1.5 py-0.5 border border-rose-900/40' : 'text-emerald-400 font-bold bg-emerald-950/30 rounded px-1.5 py-0.5 border border-emerald-900/40';
-        }
-
-        function renderTable(dataTable) {
-            let cMap = {};
-            dataTable.forEach(row => {
-                let k = row.codClie + '_' + row.cliente;
-                if(!cMap[k]) {
-                    cMap[k] = { cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, s: 0, r: 0 };
-                }
-                cMap[k].s += row.surtido; 
-                cMap[k].r += row.rechazado;
-            });
-
-            // TOP TEN Estricto de Clientes Críticos
-            let list = Object.values(cMap).sort((a,b) => b.r - a.r).slice(0, 10);
-            
-            const body = document.getElementById('tableClientsBody');
-            body.innerHTML = '';
-            
-            list.forEach(c => {
-                let numRate = c.s > 0 ? (c.r / c.s * 100) : 0;
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/30 transition-colors border-b border-slate-800/60";
-                tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-500">${c.cod}</td>
-                    <td class="p-3 font-medium truncate max-w-[220px]" title="${c.name}">${c.name}</td>
-                    <td class="p-3 text-slate-400">${c.ruta}</td>
-                    <td class="p-3 text-right font-mono text-slate-200">${Math.round(c.s).toLocaleString('es-PE')}</td>
-                    <td class="p-3 text-right font-mono text-rose-400 font-semibold">${Math.round(c.r).toLocaleString('es-PE')}</td>
-                    <td class="p-3 text-right ${getContrastColorClass(numRate)}">${numRate.toFixed(1)}%</td>
-                `;
-                body.appendChild(tr);
-            });
+            cardHtml += `</div>`;
+            document.getElementById(containerId).innerHTML = cardHtml;
         }
     </script>
 </body>
