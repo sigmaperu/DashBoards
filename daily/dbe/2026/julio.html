@@ -30,7 +30,7 @@
             background-color: #6366f1 !important;
             color: white !important;
             border-color: #6366f1 !important;
-            font-weight: 600;
+            font-weight: 700;
         }
         .card-inactive {
             opacity: 0.35;
@@ -39,10 +39,10 @@
         }
     </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
+<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
 
-    <!-- Header Corporativo Ajustado con Firma Suavizada -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2 shadow-md shrink-0 flex items-center justify-between sticky top-0 z-50">
+    <!-- Header Corporativo Máster -->
+    <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-2.5 shadow-md shrink-0 flex items-center justify-between">
         <div class="flex items-center gap-4">
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
             <h1 class="text-sm font-black tracking-wider text-slate-100 uppercase bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/60">
@@ -50,26 +50,24 @@
             </h1>
         </div>
         
-        <!-- Firma Autoría Suavizada y Solicitada -->
         <div class="text-right pr-2">
             <span class="text-xs font-black text-slate-400 tracking-wide font-mono block">MARCⓊ DAVILA</span>
             <span class="text-[10px] text-slate-500 font-mono tracking-tight block mt-0.5">mdavilab@sigma-alimentos.com</span>
         </div>
     </header>
 
-    <!-- Contenedor Layout Principal -->
-    <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
-        
-        <!-- SIDEBAR DE FILTROS TEMPORALES -->
-        <aside class="w-full lg:w-[240px] bg-slate-900 rounded-2xl border border-slate-800 p-3 shrink-0 flex flex-col gap-4 overflow-y-auto custom-scrollbar shadow-xl">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Calendario Operativo</span>
-                <button onclick="resetFilters()" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Limpiar</button>
-            </div>
+    <!-- FILA 1: TARGETAS MÁSTER DE PERFORMANCE + CALENDARIO ALINEADO AL EXTREMO -->
+    <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
+        <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
+            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
+            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             
-            <div class="calendar-container">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
+            <!-- Calendario Integrado como Quinta Tarjeta Horizontal -->
+            <div class="w-[230px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400">Julio 2026</span>
                     <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-800 text-indigo-400 hover:bg-slate-700 font-bold px-1.5 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer">
                         Todo el mes
                     </button>
@@ -77,43 +75,31 @@
                 <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-500 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
-                <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
+                <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
-        </aside>
+        </section>
+    </div>
 
-        <!-- PANEL DE CONTROL CENTRAL EN MATRIZ DE DOS FILAS -->
-        <main class="flex-1 flex flex-col gap-4 min-w-0 overflow-y-auto custom-scrollbar pr-1">
-            
-            <!-- FILA SUPERIOR MÁSTER: LAS 4 TARJETAS DE PERFORMANCE -->
-            <div class="w-full shrink-0 py-0.5">
-                <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full">
-                    <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
-                    <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                </section>
-            </div>
+    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN % DBE DIARIO MENSUAL (ANCHO COMPLETO) -->
+    <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[280px] w-full">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Evolución Diaria del % DBE Mensual</h3>
+        <div class="w-full flex-1 min-h-0 relative">
+            <canvas id="chartTrend"></canvas>
+        </div>
+    </section>
 
-            <!-- NUEVA FILA INTERMEDIA: TARJETAS DE DETALLE OPERATIVO CRÍTICO (Vehículo, Ruta, Distrito) -->
-            <div class="w-full shrink-0 py-0.5">
-                <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full">
-                    <!-- Card de Vehículos Placas -->
-                    <div id="subcard-vehiculo" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
-                    <!-- Card de Rutas de Venta -->
-                    <div id="subcard-ruta" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
-                    <!-- Card de Distritos de Cobertura -->
-                    <div id="subcard-distrito" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
-                </section>
-            </div>
-
-            <!-- FILA INFERIOR: GRÁFICO DE TENDENCIA DIARIA -->
-            <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[260px]">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Evolución Diaria del % DBE Mensual</h3>
-                <div class="w-full flex-1 min-h-[200px] relative">
-                    <canvas id="chartTrend"></canvas>
-                </div>
-            </section>
-        </main>
+    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO (Motivos, Vehículo, Ruta, Distrito) -->
+    <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
+        <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
+            <!-- Nueva Tarjeta Izquierda: Motivos Críticos por Volumen de Rechazo -->
+            <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
+            <!-- Card de Vehículos Placas Proporcional -->
+            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
+            <!-- Card de Rutas de Venta Proporcional -->
+            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
+            <!-- Card de Distritos de Cobertura Proporcional -->
+            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
+        </section>
     </div>
 
     <script>
@@ -123,16 +109,13 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estados de Selección
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
-
         let trendChart = null;
 
-        // Estados de expansión de acordeón para las 4 principales y los 3 nuevos desgloses
         let expandedState = {
             'card-Global': false, 'card-Chancay': false, 'card-Ate1': false, 'card-Ate2': false,
-            'subcard-vehiculo': false, 'subcard-ruta': false, 'subcard-distrito': false
+            'subcard-motivo': false, 'subcard-vehiculo': false, 'subcard-ruta': false, 'subcard-distrito': false
         };
 
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
@@ -146,7 +129,7 @@
             for (let d = 1; d <= totalDiasMes; d++) {
                 const diaStr = String(d).padStart(2, '0');
                 const btn = document.createElement('button');
-                btn.className = "day-btn text-[10px] py-1 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
+                btn.className = "day-btn text-[9px] py-1 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
                 btn.id = `btn-day-${diaStr}`; btn.innerText = d;
                 btn.onclick = () => selectDiaCalendario(diaStr);
                 grid.appendChild(btn);
@@ -188,11 +171,16 @@
                 let canalNombre = cols[2] || 'OTROS';
                 if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS';
 
+                let motivoRechazo = cols[36] || 'SIN ESPECIFICAR';
+                if(motivoRechazo === '-' || !motivoRechazo) motivoRechazo = 'SIN ESPECIFICAR';
+                motivoRechazo = motivoRechazo.toUpperCase();
+
                 rawData.push({
                     centro: centroNombre, canal: canalNombre,
                     vehiculo: cols[4] || 'No Especificado',
                     rutaVenta: cols[7] || 'Sin Ruta',
-                    distrito: cols[15] || 'OTROS',
+                    distrito: (cols[15] || 'OTROS').toUpperCase(),
+                    motivo: motivoRechazo,
                     fecha: fechaStr, numDia: diaFicticio,
                     surtido: parseFloat(cols[31]) || 0, rechazado: parseFloat(cols[34]) || 0
                 });
@@ -204,6 +192,7 @@
             const canales = ['FSE', 'MOD', 'DET', 'OTROS'];
             const vehicles = ['C2I-891', 'BNY-776', 'AKL-733', 'BSX-809'];
             const distritos = ['Ate', 'Comas', 'San Borja', 'Chorrillos', 'Chancay'];
+            const motivos = ['RECEPCIÓN NO RECIBE', 'TIENDA CERRADA', 'FUERA HORA DE RECEPC', 'DIFERENCIAS CEDI'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
                 for (let k = 0; k < 12; k++) {
@@ -215,6 +204,7 @@
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
                         rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
                         distrito: distritos[Math.floor(Math.random() * distritos.length)].toUpperCase(),
+                        motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : 'SIN ESPECIFICAR',
                         fecha: `7/${day}/2026`, numDia: formattedDay,
                         surtido: surtido, rechazado: rechazado
                     });
@@ -263,7 +253,6 @@
         };
 
         function applyFilters() {
-            // Universo temporal del calendario
             let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -271,18 +260,20 @@
 
             renderPerformanceCards(dataTemporal);
 
-            // Determinar universo cruzado de CDs y Canales seleccionados para alimentar la fila de desgloses críticos
             let dataCruzadaOperacion = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
+            // Renderizar la nueva tarjeta de Motivos (Filtrado puro por volumen Kg. Rechazado)
+            renderMotivosSubcard('subcard-motivo', 'Motivo', dataCruzadaOperacion);
+
+            // Renderizar las tarjetas proporcionales al Máximo % DBE operativo
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataCruzadaOperacion, 'vehiculo');
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataCruzadaOperacion, 'rutaVenta');
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataCruzadaOperacion, 'distrito');
 
-            // Alimentar gráfico evolutivo histórico mensual completo
             let dataParaGraficoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -390,12 +381,63 @@
             document.getElementById(containerId).innerHTML = cardHtml;
         }
 
-        // LÓGICA DE CONSTRUCCIÓN MAESTRA PARA LOS 3 ACORDEONES INFERIORES CRÍTICOS
+        // LÓGICA TARJETA NUEVA: Motivos ordenada estrictamente por Kg. Rechazados (De Mayor a Menor)
+        function renderMotivosSubcard(containerId, titleLabel, dataset) {
+            let map = {};
+            dataset.forEach(row => {
+                if (row.rechazado <= 0 || row.motivo === 'SIN ESPECIFICAR') return;
+                if (!map[row.motivo]) map[row.motivo] = { name: row.motivo, r: 0 };
+                map[row.motivo].r += row.rechazado;
+            });
+
+            let list = Object.values(map).sort((a, b) => b.r - a.r);
+            let isExpanded = expandedState[containerId];
+            let visibleList = isExpanded ? list : list.slice(0, 10);
+
+            // Obtener el máximo de Kg rechazados para que la barra de volumen sea proporcional
+            let maxRechazo = list.length > 0 ? list[0].r : 1;
+
+            let html = `
+                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2.5">
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} por Impacto</h4>
+                    <span class="text-[9px] text-slate-500 font-mono">${isExpanded ? 'Universo' : 'Top 10'}</span>
+                </div>
+                <div class="space-y-2.5 max-h-[185px] overflow-y-auto custom-scrollbar pr-1">
+            `;
+
+            if(visibleList.length === 0) {
+                html += `<p class="text-[10px] text-slate-600 italic py-4 text-center">Sin rechazos en la data.</p>`;
+            } else {
+                visibleList.forEach(item => {
+                    let fillWidth = Math.min((item.r / maxRechazo) * 100, 100);
+                    html += `
+                        <div class="text-[10px]">
+                            <div class="flex justify-between items-center mb-0.5">
+                                <span class="font-bold text-slate-300 truncate max-w-[150px]" title="${item.name}">${item.name}</span>
+                                <span class="font-black font-mono text-rose-400">${Math.round(item.r).toLocaleString('es-PE')} Kg</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                <div class="bg-rose-500 h-1 rounded-full transition-all duration-300" style="width: ${fillWidth}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `
+                </div>
+                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+                    <span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span>
+                </button>
+            `;
+            document.getElementById(containerId).innerHTML = html;
+        }
+
+        // LÓGICA PROPORCIONAL CORREGIDA: Ajusta las barras basándose en el Max % DBE real del set de datos
         function renderDimensionSubcard(containerId, titleLabel, dataset, groupingKey) {
             let map = {};
             dataset.forEach(row => {
                 let k = row[groupingKey]; if (!k || k === '-') return;
-                k = String(k).toUpperCase(); // Asegurar mayúsculas
                 if (!map[k]) map[k] = { name: k, s: 0, r: 0 };
                 map[k].s += row.surtido; map[k].r += row.rechazado;
             });
@@ -405,30 +447,36 @@
                 return item;
             }).sort((a, b) => b.rate - a.rate); // Ordenación estricta de mayor a menor % DBE
 
+            // CÁLCULO CLAVE SOLICITADO: Encontrar el Max % DBE de esta tanda para escalar proporcionalmente
+            let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
+            if(maxDbeInTanda === 0) maxDbeInTanda = 1;
+
             let isExpanded = expandedState[containerId];
-            let visibleList = isExpanded ? list : list.slice(0, 10); // Lógica Top Ten estricta
+            let visibleList = isExpanded ? list : list.slice(0, 10);
 
             let subhtml = `
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2.5">
                     <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4>
-                    <span class="text-[9px] text-slate-500 font-mono">${isExpanded ? 'Universo Completo' : 'Top 10'}</span>
+                    <span class="text-[9px] text-slate-500 font-mono">${isExpanded ? 'Universo' : 'Top 10'}</span>
                 </div>
-                <div class="space-y-3 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
+                <div class="space-y-2.5 max-h-[185px] overflow-y-auto custom-scrollbar pr-1">
             `;
 
             if(visibleList.length === 0) {
-                subhtml += `<p class="text-[11px] text-slate-600 italic py-4 text-center">Sin desvíos registrados.</p>`;
+                subhtml += `<p class="text-[10px] text-slate-600 italic py-4 text-center">Sin desvíos.</p>`;
             } else {
                 visibleList.forEach(item => {
                     let colBar = item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
                     let colText = item.rate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
-                    let fillW = Math.min((item.rate / 6) * 100, 100);
+                    
+                    // Escalar la barra proporcionalmente frente al peor % DBE operativo del grupo
+                    let fillW = Math.min((item.rate / maxDbeInTanda) * 100, 100);
 
                     subhtml += `
-                        <div class="text-[11px]">
-                            <div class="flex justify-between items-center text-[10px] mb-0.5">
-                                <span class="font-mono font-bold text-slate-300 truncate max-w-[120px]">${item.name}</span>
-                                <span class="text-slate-400 font-mono scale-95">${Math.round(item.r)} / ${Math.round(item.s)} kg</span>
+                        <div class="text-[10px]">
+                            <div class="flex justify-between items-center mb-0.5">
+                                <span class="font-mono font-bold text-slate-300 truncate max-w-[100px]" title="${item.name}">${item.name}</span>
+                                <span class="text-slate-500 font-mono text-[9px]">${Math.round(item.r)}/${Math.round(item.s)} kg</span>
                                 <span class="font-black font-mono ${colText}">${item.rate.toFixed(2)}%</span>
                             </div>
                             <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
@@ -441,9 +489,8 @@
 
             subhtml += `
                 </div>
-                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/80 mt-3 pt-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
-                    <span>${isExpanded ? 'Contraer Vista' : 'Ver Todos los Elementos'}</span>
-                    <span>${isExpanded ? '▲' : '▼'}</span>
+                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+                    <span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span>
                 </button>
             `;
             document.getElementById(containerId).innerHTML = subhtml;
@@ -471,7 +518,7 @@
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: { 
-                        y: { beginAtZero: true, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155/20' } },
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155/15' } },
                         x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
                     }
                 }
@@ -480,4 +527,3 @@
     </script>
 </body>
 </html>
-
