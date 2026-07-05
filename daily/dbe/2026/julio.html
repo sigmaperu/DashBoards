@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
@@ -41,7 +39,6 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
 
-    <!-- Header Corporativo Máster -->
     <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-2.5 shadow-md shrink-0 flex items-center justify-between">
         <div class="flex items-center gap-4">
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
@@ -52,19 +49,20 @@
         
         <div class="text-right pr-2">
             <span class="text-xs font-black text-slate-400 tracking-wide font-mono block">MARCⓊ DAVILA</span>
-            <span class="text-[10px] text-slate-500 font-mono tracking-tight block mt-0.5">mdavilab@sigma-alimentos.com</span>
+            <div class="flex items-center justify-end gap-2 mt-0.5">
+                <a href="https://wa.me/51946397037" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-400 text-[9px] font-bold px-1.5 py-0.5 rounded transition-all cursor-pointer">
+                    <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.93 0c3.165.001 6.14 1.233 8.377 3.469 2.237 2.235 3.467 5.21 3.466 8.377-.003 6.582-5.339 11.93-11.871 11.93h-.001c-2.01 0-3.987-.54-5.742-1.566L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.743 1.451 5.4 0 9.786-4.386 9.788-9.789 0-2.615-1.017-5.074-2.864-6.921C16.42 2.046 13.962.984 11.348.984c-5.4 0-9.785 4.386-9.787 9.79 0 1.686.46 3.328 1.328 4.771l-.995 3.637 3.738-.981zM17.15 14.8c-.31-.154-1.83-.903-2.115-1.006-.283-.103-.49-.154-.695.154-.204.307-.792.103-.97.103-.177 0-.355-.087-.664-.242-1.31-.583-2.16-1.748-2.42-2.106-.26-.357-.02-.55.154-.724.156-.156.31-.358.466-.538.155-.18.206-.308.31-.513.102-.205.05-.384-.025-.538-.076-.154-.695-1.674-.953-2.3-.25-.604-.505-.523-.695-.533-.18-.01-.385-.012-.59-.012s-.538.077-.82.384c-.282.308-1.077 1.05-1.077 2.563 0 1.512 1.1 2.973 1.253 3.178.154.205 2.165 3.307 5.244 4.636.732.316 1.302.505 1.746.646.736.234 1.407.2 1.938.12.59-.09 1.83-.747 2.086-1.465.256-.717.256-1.332.18-1.464-.077-.132-.282-.209-.592-.363z"/>
+                    </svg>
+                    WhatsApp
+                </a>
+                <span class="text-[10px] text-slate-500 font-mono tracking-tight block">mdavilab@sigma-alimentos.com</span>
+            </div>
         </div>
     </header>
 
-    <!-- FILA 1: TARGETAS MÁSTER DE PERFORMANCE + CALENDARIO ALINEADO AL EXTREMO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            
-            <!-- Calendario Integrado como Quinta Tarjeta Horizontal -->
             <div class="w-[230px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400">Julio 2026</span>
@@ -77,10 +75,14 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
+
+            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
+            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
         </section>
     </div>
 
-    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN % DBE DIARIO MENSUAL (ANCHO COMPLETO) -->
     <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[280px] w-full">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">Evolución Diaria del % DBE Mensual</h3>
         <div class="w-full flex-1 min-h-0 relative">
@@ -88,16 +90,11 @@
         </div>
     </section>
 
-    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO (Motivos, Vehículo, Ruta, Distrito) -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <!-- Nueva Tarjeta Izquierda: Motivos Críticos por Volumen de Rechazo -->
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
-            <!-- Card de Vehículos Placas Proporcional -->
             <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
-            <!-- Card de Rutas de Venta Proporcional -->
             <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
-            <!-- Card de Distritos de Cobertura Proporcional -->
             <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl"></div>
         </section>
     </div>
@@ -247,6 +244,13 @@
             applyFilters();
         };
 
+        // Arreglado el disparador del botón de despliegue para las tarjetas superiores de canal
+        window.toggleCanales = function(containerId, event) {
+            if(event) event.stopPropagation();
+            expandedState[containerId] = !expandedState[containerId];
+            applyFilters();
+        };
+
         window.toggleSubcard = function(subcardId) {
             expandedState[subcardId] = !expandedState[subcardId];
             applyFilters();
@@ -266,10 +270,7 @@
                 return true;
             });
 
-            // Renderizar la nueva tarjeta de Motivos (Filtrado puro por volumen Kg. Rechazado)
             renderMotivosSubcard('subcard-motivo', 'Motivo', dataCruzadaOperacion);
-
-            // Renderizar las tarjetas proporcionales al Máximo % DBE operativo
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataCruzadaOperacion, 'vehiculo');
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataCruzadaOperacion, 'rutaVenta');
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataCruzadaOperacion, 'distrito');
@@ -381,7 +382,7 @@
             document.getElementById(containerId).innerHTML = cardHtml;
         }
 
-        // LÓGICA TARJETA NUEVA: Motivos ordenada estrictamente por Kg. Rechazados (De Mayor a Menor)
+        // CONTROL DE MOTIVOS: Modificado con barras y métricas en color Naranja (Amber-500)
         function renderMotivosSubcard(containerId, titleLabel, dataset) {
             let map = {};
             dataset.forEach(row => {
@@ -393,13 +394,11 @@
             let list = Object.values(map).sort((a, b) => b.r - a.r);
             let isExpanded = expandedState[containerId];
             let visibleList = isExpanded ? list : list.slice(0, 10);
-
-            // Obtener el máximo de Kg rechazados para que la barra de volumen sea proporcional
             let maxRechazo = list.length > 0 ? list[0].r : 1;
 
             let html = `
                 <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2.5">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} por Impacto</h4>
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-amber-500">${titleLabel} por Impacto</h4>
                     <span class="text-[9px] text-slate-500 font-mono">${isExpanded ? 'Universo' : 'Top 10'}</span>
                 </div>
                 <div class="space-y-2.5 max-h-[185px] overflow-y-auto custom-scrollbar pr-1">
@@ -414,10 +413,10 @@
                         <div class="text-[10px]">
                             <div class="flex justify-between items-center mb-0.5">
                                 <span class="font-bold text-slate-300 truncate max-w-[150px]" title="${item.name}">${item.name}</span>
-                                <span class="font-black font-mono text-rose-400">${Math.round(item.r).toLocaleString('es-PE')} Kg</span>
+                                <span class="font-black font-mono text-amber-500">${Math.round(item.r).toLocaleString('es-PE')} Kg</span>
                             </div>
                             <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                                <div class="bg-rose-500 h-1 rounded-full transition-all duration-300" style="width: ${fillWidth}%"></div>
+                                <div class="bg-amber-500 h-1 rounded-full transition-all duration-300" style="width: ${fillWidth}%"></div>
                             </div>
                         </div>
                     `;
@@ -426,14 +425,13 @@
 
             html += `
                 </div>
-                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-amber-500 transition-colors cursor-pointer">
                     <span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span>
                 </button>
             `;
             document.getElementById(containerId).innerHTML = html;
         }
 
-        // LÓGICA PROPORCIONAL CORREGIDA: Ajusta las barras basándose en el Max % DBE real del set de datos
         function renderDimensionSubcard(containerId, titleLabel, dataset, groupingKey) {
             let map = {};
             dataset.forEach(row => {
@@ -445,9 +443,8 @@
             let list = Object.values(map).map(item => {
                 item.rate = item.s > 0 ? (item.r / item.s * 100) : 0;
                 return item;
-            }).sort((a, b) => b.rate - a.rate); // Ordenación estricta de mayor a menor % DBE
+            }).sort((a, b) => b.rate - a.rate);
 
-            // CÁLCULO CLAVE SOLICITADO: Encontrar el Max % DBE de esta tanda para escalar proporcionalmente
             let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
             if(maxDbeInTanda === 0) maxDbeInTanda = 1;
 
@@ -468,8 +465,6 @@
                 visibleList.forEach(item => {
                     let colBar = item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
                     let colText = item.rate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
-                    
-                    // Escalar la barra proporcionalmente frente al peor % DBE operativo del grupo
                     let fillW = Math.min((item.rate / maxDbeInTanda) * 100, 100);
 
                     subhtml += `
