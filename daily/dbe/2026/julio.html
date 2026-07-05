@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
@@ -39,7 +41,8 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2.5 shadow-md shrink-0 flex items-center justify-between sticky top-0 z-50">
+    <!-- Header Corporativo Ajustado con Firma Suavizada -->
+    <header class="bg-slate-900 border-b border-slate-800 px-6 py-2 shadow-md shrink-0 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center gap-4">
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
             <h1 class="text-sm font-black tracking-wider text-slate-100 uppercase bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/60">
@@ -47,35 +50,24 @@
             </h1>
         </div>
         
-        <div class="bg-slate-950/50 border border-slate-800/80 px-3 py-1 rounded-lg text-right">
-            <span class="text-xs font-black text-indigo-300 tracking-wide font-mono">Creado por MARCO DAVILA</span>
+        <!-- Firma Autoría Suavizada y Solicitada -->
+        <div class="text-right pr-2">
+            <span class="text-xs font-black text-slate-400 tracking-wide font-mono block">MARCⓊ DAVILA</span>
+            <span class="text-[10px] text-slate-500 font-mono tracking-tight block mt-0.5">mdavilab@sigma-alimentos.com</span>
         </div>
     </header>
 
+    <!-- Contenedor Layout Principal -->
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
         
+        <!-- SIDEBAR DE FILTROS TEMPORALES -->
         <aside class="w-full lg:w-[240px] bg-slate-900 rounded-2xl border border-slate-800 p-3 shrink-0 flex flex-col gap-4 overflow-y-auto custom-scrollbar shadow-xl">
-            <div>
-                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Filtros</span>
-                    <button onclick="resetFilters()" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Limpiar</button>
-                </div>
-                
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Vehículo / Placa</label>
-                        <select id="filterVehiculo" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-medium text-slate-400 mb-1">Ruta de Venta</label>
-                        <select id="filterRuta" onchange="applyFilters()" class="w-full text-[11px] bg-slate-800 text-slate-200 border border-slate-700 rounded-md p-1.5 focus:outline-hidden focus:border-indigo-500 transition-all">
-                            <option value="ALL">Todas las Rutas</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Calendario Operativo</span>
+                <button onclick="resetFilters()" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors cursor-pointer">Limpiar</button>
             </div>
-
-            <div class="border-t border-slate-800 pt-3">
+            
+            <div class="calendar-container">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
                     <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-800 text-indigo-400 hover:bg-slate-700 font-bold px-1.5 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer">
@@ -89,22 +81,35 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col gap-5 min-w-0">
+        <!-- PANEL DE CONTROL CENTRAL EN MATRIZ DE DOS FILAS -->
+        <main class="flex-1 flex flex-col gap-4 min-w-0 overflow-y-auto custom-scrollbar pr-1">
             
+            <!-- FILA SUPERIOR MÁSTER: LAS 4 TARJETAS DE PERFORMANCE -->
             <div class="w-full shrink-0 py-0.5">
                 <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full">
                     <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
                     <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+                    <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
                 </section>
             </div>
 
-            <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[320px]">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Evolución Diaria del % DBE Mensual</h3>
-                </div>
-                <div class="w-full flex-1 min-h-[260px] relative">
+            <!-- NUEVA FILA INTERMEDIA: TARJETAS DE DETALLE OPERATIVO CRÍTICO (Vehículo, Ruta, Distrito) -->
+            <div class="w-full shrink-0 py-0.5">
+                <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full">
+                    <!-- Card de Vehículos Placas -->
+                    <div id="subcard-vehiculo" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
+                    <!-- Card de Rutas de Venta -->
+                    <div id="subcard-ruta" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
+                    <!-- Card de Distritos de Cobertura -->
+                    <div id="subcard-distrito" class="flex-1 min-w-[280px] bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl"></div>
+                </section>
+            </div>
+
+            <!-- FILA INFERIOR: GRÁFICO DE TENDENCIA DIARIA -->
+            <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[260px]">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Evolución Diaria del % DBE Mensual</h3>
+                <div class="w-full flex-1 min-h-[200px] relative">
                     <canvas id="chartTrend"></canvas>
                 </div>
             </section>
@@ -118,43 +123,31 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
+        // Estados de Selección
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
 
         let trendChart = null;
 
+        // Estados de expansión de acordeón para las 4 principales y los 3 nuevos desgloses
         let expandedState = {
-            'card-Global': false,
-            'card-Chancay': false,
-            'card-Ate1': false,
-            'card-Ate2': false
+            'card-Global': false, 'card-Chancay': false, 'card-Ate1': false, 'card-Ate2': false,
+            'subcard-vehiculo': false, 'subcard-ruta': false, 'subcard-distrito': false
         };
 
-        const centroMapping = {
-            "0374": "Ate 1",
-            "0752": "Chorrillos",
-            "0754": "Chancay",
-            "0780": "Ate 2"
-        };
+        const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); loadData(); });
 
         function buildCalendarGrid() {
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-            const diaInicioSemana = 3; 
-            const totalDiasMes = 31;
-
-            for (let s = 0; s < diaInicioSemana; s++) {
-                grid.appendChild(document.createElement('div'));
-            }
-
+            const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
+            const diaInicioSemana = 3; const totalDiasMes = 31;
+            for (let s = 0; s < diaInicioSemana; s++) grid.appendChild(document.createElement('div'));
             for (let d = 1; d <= totalDiasMes; d++) {
                 const diaStr = String(d).padStart(2, '0');
                 const btn = document.createElement('button');
                 btn.className = "day-btn text-[10px] py-1 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
-                btn.id = `btn-day-${diaStr}`;
-                btn.innerText = d;
+                btn.id = `btn-day-${diaStr}`; btn.innerText = d;
                 btn.onclick = () => selectDiaCalendario(diaStr);
                 grid.appendChild(btn);
             }
@@ -166,25 +159,18 @@
                 if (!response.ok) throw new Error('Error GitHub');
                 const text = await response.text();
                 parseCSV(text);
-                populateFilterOptions();
                 applyFilters();
             } catch (err) {
                 generateMockData();
-                populateFilterOptions();
                 applyFilters();
             }
         }
 
         function parseCSV(text) {
-            const lines = text.split(/\r?\n/);
-            rawData = [];
+            const lines = text.split(/\r?\n/); rawData = [];
             for (let i = 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-                
-                let cols = [];
-                let insideQuote = false;
-                let current = "";
+                let line = lines[i].trim(); if (!line) continue;
+                let cols = []; let insideQuote = false; let current = "";
                 for (let j = 0; j < line.length; j++) {
                     let char = line[j];
                     if (char === '"') insideQuote = !insideQuote;
@@ -192,117 +178,68 @@
                     else current += char;
                 }
                 cols.push(current.trim());
-
                 if (cols.length < 37) continue;
 
-                let rawCentro = cols[1] || '';
-                if (!rawCentro || rawCentro === "" || rawCentro.toLowerCase() === "null") continue;
-
+                let rawCentro = cols[1] || ''; if (!rawCentro || rawCentro === "null") continue;
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
                 let fechaStr = cols[9] || '7/1/2026';
-                let diaFicticio = '01';
-                if (fechaStr.includes('/')) {
-                    let partes = fechaStr.split('/');
-                    if (partes[1]) diaFicticio = partes[1].trim().padStart(2, '0');
-                }
+                let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
 
-                let canalNombre = cols[2] || 'Otros';
+                let canalNombre = cols[2] || 'OTROS';
                 if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS';
 
                 rawData.push({
-                    centro: centroNombre,
-                    canal: canalNombre,
+                    centro: centroNombre, canal: canalNombre,
                     vehiculo: cols[4] || 'No Especificado',
-                    codClie: cols[5] || 'Sin Código',
-                    cliente: cols[6] || 'Consumidor',
                     rutaVenta: cols[7] || 'Sin Ruta',
-                    fecha: fechaStr,
-                    numDia: diaFicticio,
-                    surtido: parseFloat(cols[31]) || 0,
-                    rechazado: parseFloat(cols[34]) || 0,
-                    motivo: cols[36] || 'Sin Especificar'
+                    distrito: cols[15] || 'OTROS',
+                    fecha: fechaStr, numDia: diaFicticio,
+                    surtido: parseFloat(cols[31]) || 0, rechazado: parseFloat(cols[34]) || 0
                 });
             }
         }
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const canales = ['FSE', 'MOD', 'DET', 'MES', 'OTROS'];
-            const vehicles = ['C2I-891', 'BNY-776'];
-            
+            const canales = ['FSE', 'MOD', 'DET', 'OTROS'];
+            const vehicles = ['C2I-891', 'BNY-776', 'AKL-733', 'BSX-809'];
+            const distritos = ['Ate', 'Comas', 'San Borja', 'Chorrillos', 'Chancay'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 15; k++) {
-                    let surtido = Math.floor(Math.random() * 2500) + 300;
-                    let rechazado = Math.random() > 0.7 ? Math.floor(Math.random() * surtido * 0.05) : 0;
+                for (let k = 0; k < 12; k++) {
+                    let surtido = Math.floor(Math.random() * 2000) + 300;
+                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.06) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        codClie: '1174500',
-                        cliente: 'CLIENTE',
-                        rutaVenta: 'B6A',
-                        fecha: `7/${day}/2026`,
-                        numDia: formattedDay,
-                        surtido: surtido,
-                        rechazado: rechazado,
-                        motivo: '-'
+                        rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
+                        distrito: distritos[Math.floor(Math.random() * distritos.length)].toUpperCase(),
+                        fecha: `7/${day}/2026`, numDia: formattedDay,
+                        surtido: surtido, rechazado: rechazado
                     });
                 }
             }
         }
 
-        function populateFilterOptions() {
-            const getUnique = (key) => [...new Set(rawData.map(item => item[key]))].sort();
-            const setOptions = (id, vals, defaultTxt) => {
-                const el = document.getElementById(id);
-                el.innerHTML = `<option value="ALL">${defaultTxt}</option>`;
-                vals.forEach(v => {
-                    if(v && v !== '-') {
-                        let opt = document.createElement('option');
-                        opt.value = v; opt.innerText = v; el.appendChild(opt);
-                    }
-                });
-            };
-            setOptions('filterVehiculo', getUnique('vehiculo'), 'Todos los Vehículos');
-            setOptions('filterRuta', getUnique('rutaVenta'), 'Todas las Rutas');
-        }
-
         function selectDiaCalendario(dia) {
             selectedDia = dia;
             document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-            
             const btnAll = document.getElementById('btnDayAll');
-            if (dia === 'ALL') {
-                btnAll.classList.add('bg-indigo-600', 'text-white');
-                btnAll.classList.remove('bg-slate-850');
-            } else {
-                btnAll.classList.remove('bg-indigo-600', 'text-white');
-                btnAll.classList.add('bg-slate-850');
-                const targetBtn = document.getElementById(`btn-day-${dia}`);
-                if (targetBtn) targetBtn.classList.add('active');
-            }
+            if (dia === 'ALL') { btnAll.classList.add('bg-indigo-600', 'text-white'); } 
+            else { btnAll.classList.remove('bg-indigo-600', 'text-white'); const targetBtn = document.getElementById(`btn-day-${dia}`); if (targetBtn) targetBtn.classList.add('active'); }
             applyFilters();
         }
 
         window.handleCardClick = function(centroName, event) {
             if(event.target.closest('.noclick')) return;
-
-            if (centroName === 'Total Operación') {
-                selectedCentrosFiltro = [];
-            } else {
+            if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
                 if (event.ctrlKey) {
-                    if (selectedCentrosFiltro.includes(centroName)) {
-                        selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
-                    } else {
-                        selectedCentrosFiltro.push(centroName);
-                    }
+                    if (selectedCentrosFiltro.includes(centroName)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
+                    else selectedCentrosFiltro.push(centroName);
                 } else {
-                    if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) {
-                        selectedCentrosFiltro = [];
-                    } else {
-                        selectedCentrosFiltro = [centroName];
-                    }
+                    if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) selectedCentrosFiltro = [];
+                    else selectedCentrosFiltro = [centroName];
                 }
             }
             applyFilters();
@@ -311,71 +248,57 @@
         window.handleCanalCircleClick = function(canalName, event) {
             event.stopPropagation();
             if (event.ctrlKey) {
-                if (selectedCanalesFiltro.includes(canalName)) {
-                    selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canalName);
-                } else {
-                    selectedCanalesFiltro.push(canalName);
-                }
+                if (selectedCanalesFiltro.includes(canalName)) selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canalName);
+                else selectedCanalesFiltro.push(canalName);
             } else {
-                if (selectedCanalesFiltro.length === 1 && selectedCanalesFiltro[0] === canalName) {
-                    selectedCanalesFiltro = [];
-                } else {
-                    selectedCanalesFiltro = [canalName];
-                }
+                if (selectedCanalesFiltro.length === 1 && selectedCanalesFiltro[0] === canalName) selectedCanalesFiltro = [];
+                else selectedCanalesFiltro = [canalName];
             }
             applyFilters();
         };
 
+        window.toggleSubcard = function(subcardId) {
+            expandedState[subcardId] = !expandedState[subcardId];
+            applyFilters();
+        };
+
         function applyFilters() {
-            const v = document.getElementById('filterVehiculo').value;
-            const r = document.getElementById('filterRuta').value;
-
-            let dataBaseSidebar = rawData.filter(row => {
-                if (v !== 'ALL' && row.vehiculo !== v) return false;
-                if (r !== 'ALL' && row.rutaVenta !== r) return false;
-                return true;
-            });
-
-            let dataDiariaControl = dataBaseSidebar.filter(row => {
+            // Universo temporal del calendario
+            let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
             });
 
-            renderPerformanceCards(dataDiariaControl);
+            renderPerformanceCards(dataTemporal);
 
-            let dataParaGraficoTrend = dataBaseSidebar.filter(row => {
+            // Determinar universo cruzado de CDs y Canales seleccionados para alimentar la fila de desgloses críticos
+            let dataCruzadaOperacion = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
-            setTimeout(() => {
-                renderTrendChart(dataParaGraficoTrend);
-            }, 60);
-        }
+            renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataCruzadaOperacion, 'vehiculo');
+            renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataCruzadaOperacion, 'rutaVenta');
+            renderDimensionSubcard('subcard-distrito', 'Distrito', dataCruzadaOperacion, 'distrito');
 
-        function resetFilters() {
-            document.getElementById('filterVehiculo').value = 'ALL';
-            document.getElementById('filterRuta').value = 'ALL';
-            selectedCentrosFiltro = [];
-            selectedCanalesFiltro = [];
-            selectDiaCalendario('ALL');
+            // Alimentar gráfico evolutivo histórico mensual completo
+            let dataParaGraficoTrend = rawData.filter(row => {
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
+                return true;
+            });
+
+            setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
         }
 
         function renderPerformanceCards(dataCards) {
-            const updateCardClasses = (id, targetName) => {
+            const updateClasses = (id, target) => {
                 const el = document.getElementById(id);
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(targetName) && targetName !== 'Total') {
-                    el.classList.add('card-inactive');
-                } else {
-                    el.classList.remove('card-inactive');
-                }
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(target) && target !== 'Total') el.classList.add('card-inactive');
+                else el.classList.remove('card-inactive');
             };
-
-            updateCardClasses('card-Global', 'Total');
-            updateCardClasses('card-Chancay', 'Chancay');
-            updateCardClasses('card-Ate1', 'Ate 1');
-            updateCardClasses('card-Ate2', 'Ate 2');
+            updateClasses('card-Global', 'Total'); updateClasses('card-Chancay', 'Chancay'); updateClasses('card-Ate1', 'Ate 1'); updateClasses('card-Ate2', 'Ate 2');
 
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
@@ -383,57 +306,23 @@
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2');
         }
 
-        window.toggleCanales = function(containerId, e) {
-            e.stopPropagation();
-            expandedState[containerId] = !expandedState[containerId];
-            applyFilters();
-        };
-
         function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey) {
-            let totalSurtido = 0;
-            let totalRechazado = 0;
-            
-            // Mapeo Maestro completo para que NUNCA desaparezcan filas de canales
-            let canalMap = {};
-            
-            // 1. Inicializar siempre todos los canales detectados en este CD específico 
+            let totalSurtido = 0; let totalRechazado = 0; let canalMap = {};
+            dataset.forEach(row => { if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 }; });
             dataset.forEach(row => {
-                if (!canalMap[row.canal]) {
-                    canalMap[row.canal] = { s: 0, r: 0 };
-                }
-            });
-
-            // 2. Procesar cálculos respetando si hay filtros activos o si el menú está contraído
-            dataset.forEach(row => {
-                // Sumar al canal individual de todas formas
-                canalMap[row.canal].s += row.surtido;
-                canalMap[row.canal].r += row.rechazado;
-
-                // Si el card está expandido y hay canales elegidos, el KPI Macro obedece a la selección
+                canalMap[row.canal].s += row.surtido; canalMap[row.canal].r += row.rechazado;
                 if (expandedState[containerId] && selectedCanalesFiltro.length > 0) {
-                    if (selectedCanalesFiltro.includes(row.canal)) {
-                        totalSurtido += row.surtido;
-                        totalRechazado += row.rechazado;
-                    }
-                } else {
-                    // Si está contraído o no hay canales filtrados, muestra el consolidado limpio del CD
-                    totalSurtido += row.surtido;
-                    totalRechazado += row.rechazado;
-                }
+                    if (selectedCanalesFiltro.includes(row.canal)) { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
+                } else { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
             });
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
-            
-            let barColorClass = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-            let textColorClass = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+            let barColor = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
+            let textColor = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
             let isExpanded = expandedState[containerId];
 
-            let isCircleChecked = false;
-            if (filterKey === 'Total' && selectedCentrosFiltro.length === 0) isCircleChecked = true;
-            if (selectedCentrosFiltro.includes(filterKey)) isCircleChecked = true;
-
-            let circleHtml = isCircleChecked 
+            let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey)
                 ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-[0_0_8px_rgba(99,102,241,0.5)]">✓</div>`
                 : `<div class="w-3.5 h-3.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
 
@@ -449,75 +338,115 @@
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
                         </div>
-                        
                         <div class="mt-2.5">
                             <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${Math.round(totalRechazado).toLocaleString('es-PE')}</h2>
                             <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Kg. Rechazados</p>
                         </div>
-                        
                         <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-400 border-t border-slate-800/60 pt-1.5">
                             <span>Kg. Surtidos:</span>
                             <span class="font-mono text-slate-300 font-semibold">${Math.round(totalSurtido).toLocaleString('es-PE')}</span>
                         </div>
-
                         <div class="mt-2.5">
                             <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                                <span>% DBE: <b class="${textColorClass}">${dbeRate.toFixed(2)}%</b></span>
+                                <span>% DBE: <b class="${textColor}">${dbeRate.toFixed(2)}%</b></span>
                                 <span>Meta: 2.15%</span>
                             </div>
                             <div class="w-full bg-slate-800 rounded-full h-1 relative overflow-hidden">
-                                <div class="${barColorClass} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
+                                <div class="${barColor} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
                                 <div class="absolute left-[71.6%] top-0 w-0.5 h-1 bg-white/30 z-10"></div>
                             </div>
                         </div>
                     </div>
-
                     <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col noclick">
                         <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
-                        
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
 
-            let canalesOrdenados = Object.keys(canalMap).sort();
-            if (canalesOrdenados.length === 0) {
-                cardHtml += `<p class="text-[10px] text-slate-600 italic py-0.5">Sin movimientos.</p>`;
+            Object.keys(canalMap).sort().forEach(canal => {
+                let cItem = canalMap[canal] || {s:0, r:0}; let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
+                let cWidth = Math.min((cRate / 5) * 100, 100);
+                let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
+                let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+                let canalCircle = selectedCanalesFiltro.includes(canal)
+                    ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
+                    : `<div class="w-2.5 h-2.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
+
+                cardHtml += `
+                    <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-800/40 p-0.5 rounded transition-colors noclick">
+                        <div class="flex items-center gap-1.5 truncate w-14">
+                            ${canalCircle} <span class="font-medium text-slate-400 truncate">${canal}</span>
+                        </div>
+                        <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
+                            <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
+                        </div>
+                        <span class="font-bold font-mono text-right w-9 ${cText}">${cRate.toFixed(1)}%</span>
+                    </div>
+                `;
+            });
+            cardHtml += `</div></div></div>`;
+            document.getElementById(containerId).innerHTML = cardHtml;
+        }
+
+        // LÓGICA DE CONSTRUCCIÓN MAESTRA PARA LOS 3 ACORDEONES INFERIORES CRÍTICOS
+        function renderDimensionSubcard(containerId, titleLabel, dataset, groupingKey) {
+            let map = {};
+            dataset.forEach(row => {
+                let k = row[groupingKey]; if (!k || k === '-') return;
+                k = String(k).toUpperCase(); // Asegurar mayúsculas
+                if (!map[k]) map[k] = { name: k, s: 0, r: 0 };
+                map[k].s += row.surtido; map[k].r += row.rechazado;
+            });
+
+            let list = Object.values(map).map(item => {
+                item.rate = item.s > 0 ? (item.r / item.s * 100) : 0;
+                return item;
+            }).sort((a, b) => b.rate - a.rate); // Ordenación estricta de mayor a menor % DBE
+
+            let isExpanded = expandedState[containerId];
+            let visibleList = isExpanded ? list : list.slice(0, 10); // Lógica Top Ten estricta
+
+            let subhtml = `
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4>
+                    <span class="text-[9px] text-slate-500 font-mono">${isExpanded ? 'Universo Completo' : 'Top 10'}</span>
+                </div>
+                <div class="space-y-3 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
+            `;
+
+            if(visibleList.length === 0) {
+                subhtml += `<p class="text-[11px] text-slate-600 italic py-4 text-center">Sin desvíos registrados.</p>`;
             } else {
-                canalesOrdenados.forEach(canal => {
-                    let cItem = canalMap[canal];
-                    let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
-                    let cWidth = Math.min((cRate / 5) * 100, 100);
-                    let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                    let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+                visibleList.forEach(item => {
+                    let colBar = item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
+                    let colText = item.rate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+                    let fillW = Math.min((item.rate / 6) * 100, 100);
 
-                    let isCanalChecked = selectedCanalesFiltro.includes(canal);
-                    let canalCircleHtml = isCanalChecked
-                        ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
-                        : `<div class="w-2.5 h-2.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
-
-                    cardHtml += `
-                        <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-800/40 p-0.5 rounded transition-colors noclick">
-                            <div class="flex items-center gap-1.5 truncate w-14">
-                                ${canalCircleHtml}
-                                <span class="font-medium text-slate-400 truncate" title="${canal}">${canal}</span>
+                    subhtml += `
+                        <div class="text-[11px]">
+                            <div class="flex justify-between items-center text-[10px] mb-0.5">
+                                <span class="font-mono font-bold text-slate-300 truncate max-w-[120px]">${item.name}</span>
+                                <span class="text-slate-400 font-mono scale-95">${Math.round(item.r)} / ${Math.round(item.s)} kg</span>
+                                <span class="font-black font-mono ${colText}">${item.rate.toFixed(2)}%</span>
                             </div>
-                            <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
-                                <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
+                            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                                <div class="${colBar} h-1 rounded-full transition-all duration-300" style="width: ${fillW}%"></div>
                             </div>
-                            <span class="font-bold font-mono text-right w-9 ${cText}">${cRate.toFixed(1)}%</span>
                         </div>
                     `;
                 });
             }
 
-            cardHtml += `
-                        </div>
-                    </div>
+            subhtml += `
                 </div>
+                <button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/80 mt-3 pt-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+                    <span>${isExpanded ? 'Contraer Vista' : 'Ver Todos los Elementos'}</span>
+                    <span>${isExpanded ? '▲' : '▼'}</span>
+                </button>
             `;
-            document.getElementById(containerId).innerHTML = cardHtml;
+            document.getElementById(containerId).innerHTML = subhtml;
         }
 
         function renderTrendChart(dataTrend) {
@@ -527,48 +456,23 @@
                 fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
             });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
-
             if(trendChart) trendChart.destroy();
             const ctx = document.getElementById('chartTrend').getContext('2d');
-            
             trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: sortedDays,
                     datasets: [{
-                        label: '% DBE Diario',
-                        data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.02)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointHitRadius: 10,
-                        pointBackgroundColor: '#6366f1'
+                        label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
+                        borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.02)', borderWidth: 2, fill: true, tension: 0.1, pointRadius: 3
                     }]
                 },
                 options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) { return ' DBE: ' + context.parsed.y + '%'; }
-                            }
-                        }
-                    },
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
                     scales: { 
-                        y: { 
-                            beginAtZero: true,
-                            ticks: { color: '#94a3b8', callback: v => v + '%' }, 
-                            grid: { color: '#334155/30' } 
-                        },
-                        x: { 
-                            ticks: { color: '#94a3b8' }, 
-                            grid: { display: false } 
-                        }
+                        y: { beginAtZero: true, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155/20' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
                     }
                 }
             });
