@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
@@ -38,6 +40,7 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none">
 
+    <!-- Header Superior Premium -->
     <header class="bg-slate-900 border-b border-slate-800 text-white px-6 py-3 shadow-md shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sticky top-0 z-50">
         <div>
             <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-2">
@@ -57,8 +60,10 @@
         </div>
     </header>
 
+    <!-- Contenedor Layout Principal -->
     <div class="flex flex-1 flex-col lg:flex-row min-h-0 w-full gap-4 p-4">
         
+        <!-- SIDEBAR DE FILTROS (Izquierda) -->
         <aside class="w-full lg:w-[240px] bg-slate-900 rounded-2xl border border-slate-800 p-3 shrink-0 flex flex-col gap-4 overflow-y-auto custom-scrollbar shadow-xl">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3">
@@ -84,6 +89,7 @@
                 </div>
             </div>
 
+            <!-- Calendario Matriz -->
             <div class="border-t border-slate-800 pt-3">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Julio 2026</span>
@@ -101,8 +107,10 @@
             </div>
         </aside>
 
+        <!-- PANEL DE CONTROL CENTRAL (Derecha) -->
         <main class="flex-1 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
             
+            <!-- FILA SUPERIOR: TARJETAS EN FILA ÚNICA HORIZONTAL -->
             <div class="overflow-x-auto overflow-y-hidden custom-scrollbar py-1 shrink-0">
                 <section class="flex flex-row flex-nowrap gap-4 items-start justify-start w-full min-w-[980px]">
                     <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[235px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-4 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/10 to-slate-900"></div>
@@ -112,13 +120,14 @@
                 </section>
             </div>
 
-            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[320px]">
+            <!-- FILA INFERIOR: GRÁFICO DE EVOLUCIÓN % DBE DIARIO -->
+            <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl flex flex-col flex-1 min-h-[350px]">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Evolución Diaria del % DBE Mensual</h3>
                     <div class="text-[10px] text-slate-500 font-mono">* Reacciona dinámicamente según los CDs seleccionados arriba</div>
                 </div>
-                <div class="flex-1 w-full relative">
-                    <canvas id="chartTrend"></canvas>
+                <div class="flex-1 w-full relative min-h-[260px]">
+                    <canvas id="chartTrend" id="chartTrendCanvas"></canvas>
                 </div>
             </section>
         </main>
@@ -131,7 +140,6 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estado del Filtro Cruzado Multiselección de las Tarjetas
         let selectedCentrosFiltro = [];
 
         let expandedState = {
@@ -322,7 +330,6 @@
             const v = document.getElementById('filterVehiculo').value;
             const r = document.getElementById('filterRuta').value;
 
-            // 1. DATA HISTÓRICA BASE (Filtros del sidebar)
             let dataBaseSidebar = rawData.filter(row => {
                 if (ca !== 'ALL' && row.canal !== ca) return false;
                 if (v !== 'ALL' && row.vehiculo !== v) return false;
@@ -330,7 +337,6 @@
                 return true;
             });
 
-            // 2. DATA FILTRADA PARA LAS TARJETAS SUPERIORES (Añade el día seleccionado)
             let dataParaTarjetas = dataBaseSidebar.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -338,13 +344,15 @@
 
             renderPerformanceCards(dataParaTarjetas, ca);
 
-            // 3. DATA FILTRADA PARA EL GRÁFICO DE EVOLUCIÓN (Reacciona al Filtro Cruzado de las tarjetas)
             let dataParaGraficoTrend = dataBaseSidebar.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 return true;
             });
 
-            renderTrendChart(dataParaGraficoTrend);
+            // CORRECCIÓN CLAVE: Retraso controlado para asegurar dimensiones del contenedor flex
+            setTimeout(() => {
+                renderTrendChart(dataParaGraficoTrend);
+            }, 50);
         }
 
         function resetFilters() {
@@ -370,7 +378,6 @@
             updateCardClasses('card-Ate1', 'Ate 1');
             updateCardClasses('card-Ate2', 'Ate 2');
 
-            // La tarjeta global reacciona al filtro de canal del combo sidebar
             let globalData = dataCards.filter(row => {
                 if (filtroCanal !== 'ALL' && row.canal !== filtroCanal) return false;
                 return true;
@@ -491,7 +498,6 @@
             document.getElementById(containerId).innerHTML = cardHtml;
         }
 
-        // NUEVO GRÁFICO INCORPORADO: Evolutivo Diario de tendencia mensual
         function renderTrendChart(dataTrend) {
             let fMap = {};
             dataTrend.forEach(r => {
