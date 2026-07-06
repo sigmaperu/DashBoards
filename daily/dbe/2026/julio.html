@@ -45,13 +45,12 @@
             background-color: rgba(99, 102, 241, 0.15);
             border-left: 2px solid #6366f1;
         }
-        /* Estilos de Impresión Optimizados para Exportación PDF */
         @media print {
             body {
                 background-color: #ffffff !important;
                 color: #000000 !important;
             }
-            .day-btn, header a, .noclick, button, select {
+            .day-btn, header button, header a, .noclick, button, select {
                 display: none !important;
             }
             * {
@@ -68,55 +67,40 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
 
-    <!-- Header Corporativo Máster con Logo Sigma Prominente y Firma Custom -->
+    <!-- Header Corporativo Rediseñado Integrado (Sin Cuadros de Texto Separados) -->
     <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-3 shadow-md shrink-0 flex items-center justify-between">
         <div class="flex items-center gap-5">
-            <!-- Logotipo de Sigma foods hecho notablemente más grande -->
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-14 w-auto object-contain rounded-md select-none pointer-events-none">
-            <h1 class="text-sm font-black tracking-wider text-slate-100 uppercase bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/60">
+            <!-- Título integrado directamente en la cabecera de forma limpia -->
+            <span class="text-base font-black tracking-widest text-slate-100 uppercase font-mono">
                 Dashboard % DBE
-            </h1>
+            </span>
         </div>
         
-        <!-- Bloque de Firma Rediseñada con Acciones de Compartir -->
-        <div class="text-right pr-2">
-            <div class="flex items-center justify-end gap-2 mb-1">
-                <span class="text-sm font-black text-slate-300 tracking-wide font-mono">MARCⓊ DAVILA</span>
-                
-                <!-- Botón de Copiar Enlace Web -->
-                <button onclick="copyLink()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Copiar enlace del Dashboard">
-                    <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
+        <!-- Bloque de Autoría con Iconos de Acción Solicitados -->
+        <div class="flex items-center gap-4 bg-slate-950/30 border border-slate-800/50 px-4 py-1.5 rounded-xl">
+            <span class="text-xs font-black text-slate-300 tracking-wide font-mono">MARCⓊ DAVILA</span>
+            <div class="w-px h-4 bg-slate-800"></div>
+            <div class="flex items-center gap-3">
+                <!-- Icono de Enlace (Copia URL específica solicitada) -->
+                <button onclick="copyOfficialLink()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Copiar enlace oficial del Dashboard">
+                    <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.75" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.81 15.312a4.5 4.5 0 01-1.242-7.244l4.5-4.5a4.5 4.5 0 016.364 6.364l-1.757 1.75" />
                     </svg>
                 </button>
                 
-                <!-- Botón de Exportar a PDF / Imprimir -->
-                <button onclick="exportToPDF()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Exportar pantalla a PDF">
-                    <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                <!-- Icono de Compartir Multiplataforma (WhatsApp, Teams, Correo, PDF) -->
+                <button onclick="shareDashboard()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Compartir Dashboard o guardar en PDF">
+                    <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186l5.566-2.783m-5.566 2.783l5.566 2.783m3.14-6.061a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zm0 12.122a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z" />
                     </svg>
                 </button>
-            </div>
-            <div class="flex items-center justify-end gap-2.5">
-                <!-- Enlace Directo a MS Teams -->
-                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-400 p-1 rounded-md transition-all cursor-pointer shadow-xs" title="Contactar por Microsoft Teams">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                        <path d="M11.603 9.097c.456-.002.827.362.829.818v1.391a3.785 3.785 0 011.66-.462c1.942.001 3.522 1.554 3.522 3.473a3.53 3.53 0 01-3.522 3.473c-.627 0-1.222-.167-1.745-.487l-.004.095c-.002.456-.366.824-.822.822h-1.39a3.79 3.79 0 01-1.662.463c-1.94 0-3.52-1.553-3.52-3.474a3.528 3.528 0 013.52-3.472c.628 0 1.223.167 1.747.487l.004-.095c.002-.456.365-.824.821-.822h1.364zm5.097-7.222c.343 0 .622.274.625.613v1.045a2.852 2.852 0 011.248-.348c1.46-.001 2.648 1.168 2.649 2.61a2.651 2.651 0 01-2.649 2.61c-.472 0-.922-.126-1.317-.367l-.003.072a.622.622 0 01-.62.618h-1.046c-.468.324-.954.492-1.527.492-1.458 0-2.647-1.168-2.647-2.61a2.65 2.65 0 012.647-2.61c.472 0 .92.126 1.315.367l.003-.072a.62.62 0 01.618-.618H16.7zM7.054 10.846c2.148 0 3.896 1.722 3.896 3.846 0 2.124-1.748 3.846-3.896 3.846C4.905 18.538 3.16 16.816 3.16 14.692c0-2.124 1.746-3.846 3.894-3.846zm6.302-6.538c1.378 0 2.5 1.105 2.5 2.461 0 1.357-1.122 2.462-2.5 2.462-1.378 0-2.5-1.105-2.5-2.462 0-1.356 1.122-2.461 2.5-2.461z"/>
-                    </svg>
-                </a>
-                <!-- Enlace Directo a WhatsApp Iconizado -->
-                <a href="https://wa.me/51946397037" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-400 p-1 rounded-md transition-all cursor-pointer shadow-xs" title="Contactar por WhatsApp">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.93 0c3.165.001 6.14 1.233 8.377 3.469 2.237 2.235 3.467 5.21 3.466 8.377-.003 6.582-5.339 11.93-11.871 11.93h-.001c-2.01 0-3.987-.54-5.742-1.566L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.743 1.451 5.4 0 9.786-4.386 9.788-9.789 0-2.615-1.017-5.074-2.864-6.921C16.42 2.046 13.962.984 11.348.984c-5.4 0-9.785 4.386-9.787 9.79 0 1.686.46 3.328 1.328 4.771l-.995 3.637 3.738-.981zM17.15 14.8c-.31-.154-1.83-.903-2.115-1.006-.283-.103-.49-.154-.695.154-.204.307-.792.103-.97.103-.177 0-.355-.087-.664-.242-1.31-.583-2.16-1.748-2.42-2.106-.26-.357-.02-.55.154-.724.156-.156.31-.358.466-.538.155-.18.206-.308.31-.513.102-.205.05-.384-.025-.538-.076-.154-.695-1.674-.953-2.3-.25-.604-.505-.523-.695-.533-.18-.01-.385-.012-.59-.012s-.538.077-.82.384c-.282.308-1.077 1.05-1.077 2.563 0 1.512 1.1 2.973 1.253 3.178.154.205 2.165 3.307 5.244 4.636.732.316 1.302.505 1.746.646.736.234 1.407.2 1.938.12.59-.09 1.83-.747 2.086-1.465.256-.717.256-1.332.18-1.464-.077-.132-.282-.209-.592-.363z"/>
-                    </svg>
-                </a>
-                <span class="text-[10px] text-slate-500 font-mono tracking-tight block">mdavilab@sigma-alimentos.com</span>
             </div>
         </div>
     </header>
 
-    <!-- FILA 1: CALENDARIO INTEGRADO IZQUIERDO + TARGETAS DE PERFORMANCE MÁSTER -->
+    <!-- FILA 1: CALENDARIO INTEGRADO IZQUIERDO + TARGETAS MÁSTER DE OPERACIÓN -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <!-- Calendario Izquierdo -->
@@ -141,7 +125,7 @@
         </section>
     </div>
 
-    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN DIARIA DEL % DBE MENSUAL (Sin Títulos) -->
+    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN DIARIA DEL % DBE MENSUAL -->
     <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
@@ -158,18 +142,18 @@
         </section>
     </div>
 
-    <!-- FILA 4: TABLA MAESTRA Y MAPA PERFECTAMENTE ALINEADOS EN PARALELO (65% / 35% - Sin Títulos) -->
+    <!-- FILA 4: TABLA MAESTRA Y MAPA PERFECTAMENTE ALINEADOS EN PARALELO (65% / 35%) -->
     <section class="flex flex-col xl:flex-row gap-4 items-stretch w-full min-h-[380px]">
         <!-- Bloque Tabla Maestro (65% del ancho) -->
         <div class="w-full xl:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl min-w-0">
             <div>
-                <!-- Menu superior limpio de la tabla con botón de descarga Excel (CSV) y status -->
+                <!-- Menú superior de exportación -->
                 <div class="flex items-center justify-between mb-3 border-b border-slate-800/80 pb-2">
-                    <button onclick="downloadExcel()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-950/20 transition-all select-none">
+                    <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-950/20 transition-all select-none">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                         </svg>
-                        Exportar Excel (CSV)
+                        Exportar Excel (CSV por Comas)
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-500"></span>
                 </div>
@@ -178,8 +162,10 @@
                     <table class="w-full text-left border-collapse text-[11px]">
                         <thead>
                             <tr class="bg-slate-950/60 text-slate-400 font-bold border-b border-slate-800">
+                                <!-- Nueva columna Fecha en primer orden de lectura -->
+                                <th class="p-2 text-indigo-400 font-semibold">Fecha</th>
                                 <th class="p-2 font-mono">Código</th>
-                                <th class="p-2 truncate max-w-[130px]">Cliente</th>
+                                <th class="p-2 truncate max-w-[120px]">Cliente</th>
                                 <th class="p-2">Ruta</th>
                                 <th class="p-2">Canal</th>
                                 <th class="p-2 font-mono">Vehículo</th>
@@ -198,9 +184,8 @@
             </button>
         </div>
 
-        <!-- Bloque Mapa de Leaflet (35% del ancho - Sin Título) -->
+        <!-- Bloque Mapa de Leaflet (35% del ancho) -->
         <div class="w-full xl:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-2 flex flex-col shadow-xl">
-            <!-- Contenedor del mapa real maximizado -->
             <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[330px] z-10"></div>
         </div>
     </section>
@@ -212,7 +197,6 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Arrays de Almacenamiento Multiselección con CTRL
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
         let selectedVehiculosFiltro = [];
@@ -285,7 +269,9 @@
 
                 let rawCentro = cols[1] || ''; if (!rawCentro || rawCentro === "null") continue;
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
-                let fechaStr = cols[9] || '7/1/2026';
+                
+                // Mapear estrictamente la columna Fecha (Índice 9)
+                let fechaStr = cols[9] || '01/07/2026';
                 let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
 
                 let canalNombre = cols[2] || 'OTROS';
@@ -294,8 +280,7 @@
                 motivoRechazo = motivoRechazo.toUpperCase();
 
                 // Latitud columna índice 16 y longitud columna índice 17
-                let lat = parseFloat(cols[16]); 
-                let lng = parseFloat(cols[17]);
+                let lat = parseFloat(cols[16]); let lng = parseFloat(cols[17]);
 
                 rawData.push({
                     centro: centroNombre, canal: canalNombre,
@@ -328,7 +313,7 @@
                         distrito: distritos[Math.floor(Math.random() * distritos.length)],
                         motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : 'SIN ESPECIFICAR',
                         lat: -12.0463 + (Math.random() - 0.5) * 0.15, lng: -77.0427 + (Math.random() - 0.5) * 0.15,
-                        fecha: `7/${day}/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
+                        fecha: `${formattedDay}/07/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
                     });
                 }
             }
@@ -345,9 +330,7 @@
 
         window.handleCardClick = function(centroName, event) {
             if(event.target.closest('.noclick')) return;
-            if (centroName === 'Total Operación') {
-                selectedCentrosFiltro = [];
-            } else {
+            if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
                 if (event.ctrlKey) {
                     if (selectedCentrosFiltro.includes(centroName)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
                     else selectedCentrosFiltro.push(centroName);
@@ -394,54 +377,56 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        // ACCIÓN: Copiar Enlace al Portapapeles
-        window.copyLink = function() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert("¡Enlace del Dashboard copiado al portapapeles con éxito!");
+        // ACCIÓN: Copiar URL oficial requerida
+        window.copyOfficialLink = function() {
+            const urlOficial = 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html';
+            navigator.clipboard.writeText(urlOficial).then(() => {
+                alert("¡Enlace oficial copiado al portapapeles con éxito!");
             });
         };
 
-        // ACCIÓN: Imprimir / Exportar a PDF usando las reglas del navegador
-        window.exportToPDF = function() {
-            window.print();
+        // ACCIÓN: Compartir multiplataforma nativo (WhatsApp, Teams, Correo o guardado PDF)
+        window.shareDashboard = function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dashboard de Control % DBE - Sigma Foods',
+                    text: 'Reporte operativo maestro de performance y control de rechazos en despacho.',
+                    url: 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html'
+                }).catch(err => console.log("Compartición cancelada o no admitida."));
+            } else {
+                // Alternativa de impresión a PDF si la API nativa de compartición está bloqueada
+                window.print();
+            }
         };
 
-        // ACCIÓN: Generar Descarga Excel (CSV) con el universo de despachos completo (Sin el límite Top 10)
-        window.downloadExcel = function() {
-            let customerMap = {};
+        // ACCIÓN CORREGIDA: Exportación de Excel separada estrictamente por comas (,)
+        window.downloadExcelComas = function() {
+            let recordsMap = [];
             filteredData.forEach(row => {
-                let key = row.codClie + '_' + row.cliente;
-                if (!customerMap[key]) {
-                    customerMap[key] = {
-                        cod: row.codClie, name: row.cliente, ruta: row.rutaVenta,
-                        canal: row.canal, veh: row.vehiculo, mot: row.motivo,
-                        s: 0, r: 0
-                    };
+                if(row.rechazado > 0) {
+                    recordsMap.push(row);
                 }
-                customerMap[key].s += row.surtido;
-                customerMap[key].r += row.rechazado;
             });
 
-            // Aplicar la misma regla de exclusión de ceros que la tabla interactiva
-            let list = Object.values(customerMap)
-                             .filter(x => x.r > 0)
-                             .sort((a, b) => b.r - a.r);
+            // Ordenado de Mayor a Menor Rechazo
+            recordsMap.sort((a, b) => b.rechazado - a.rechazado);
 
-            let csvContent = "\uFEFF"; // UTF-8 BOM para soporte correcto de tildes en Excel de Windows
-            csvContent += "Código;Cliente;Ruta;Canal;Vehículo;Motivo;Surtido (Kg);Rechazado (Kg);% DBE\n";
+            let csvContent = "\uFEFF"; 
+            // Encabezado con coma como separador estándar
+            csvContent += "Fecha,Código,Cliente,Ruta,Canal,Vehículo,Motivo,Surtido (Kg),Rechazado (Kg),% DBE\n";
             
-            list.forEach(c => {
-                let dbe = c.s > 0 ? (c.r / c.s * 100).toFixed(2) : "0.00";
-                let nameClean = c.name.replace(/;/g, ",").replace(/"/g, '""');
-                let motClean = c.mot.replace(/;/g, ",").replace(/"/g, '""');
-                csvContent += `"${c.cod}";"${nameClean}";"${c.ruta}";"${c.canal}";"${c.veh}";"${motClean}";${Math.round(c.s)};${Math.round(c.r)};${dbe}%\n`;
+            recordsMap.forEach(c => {
+                let dbe = c.surtido > 0 ? (c.rechazado / c.surtido * 100).toFixed(2) : "0.00";
+                let nameClean = c.cliente.replace(/,/g, " ").replace(/"/g, '""');
+                let motClean = c.motivo.replace(/,/g, " ").replace(/"/g, '""');
+                csvContent += `"${c.fecha}","${c.codClie}","${nameClean}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${motClean}",${Math.round(c.surtido)},${Math.round(c.rechazado)},${dbe}%\n`;
             });
 
             let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             let url = URL.createObjectURL(blob);
             let link = document.createElement("a");
             link.setAttribute("href", url);
-            link.setAttribute("download", "Detalle_Completo_Incidencias_DBE.csv");
+            link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -466,7 +451,6 @@
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
 
-            // Almacenar el dataset cruzado actual para la descarga total de excel
             filteredData = dataFila1.filter(row => {
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
@@ -674,30 +658,16 @@
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
+        // MAESTRO DETALLE: Incorpora columna Fecha (Índice 9) ordenado estrictamente por Kg. Rechazado
         function renderMasterTable(dataset) {
-            let customerMap = {};
-            dataset.forEach(row => {
-                let key = row.codClie + '_' + row.cliente;
-                if (!customerMap[key]) {
-                    customerMap[key] = {
-                        cod: row.codClie, name: row.cliente, ruta: row.rutaVenta,
-                        canal: row.canal, veh: row.vehiculo, mot: row.motivo,
-                        s: 0, r: 0
-                    };
-                }
-                customerMap[key].s += row.surtido;
-                customerMap[key].r += row.rechazado;
-            });
-
-            let list = Object.values(customerMap)
-                             .filter(x => x.r > 0)
-                             .sort((a, b) => b.r - a.r);
+            let recordsWithRechazo = dataset.filter(x => x.rechazado > 0);
+            
+            // Ordenado prioritario de Mayor a Menor Rechazo
+            recordsWithRechazo.sort((a, b) => b.rechazado - a.rechazado);
 
             let isExpanded = expandedState['master-table'];
-            let visibleList = isExpanded ? list : list.slice(0, 10);
+            let visibleList = isExpanded ? recordsWithRechazo : recordsWithRechazo.slice(0, 10);
 
-            // Removido los subtítulos textuales de tipo "Top 10" como se solicitó
-            document.getElementById('table-view-status').innerText = ''; 
             document.getElementById('btnTableText').innerText = isExpanded ? 'Contraer Vista Detallada' : 'Ver Todos los Despachos';
             document.getElementById('btnTableArrow').innerText = isExpanded ? '▲' : '▼';
 
@@ -705,7 +675,7 @@
             tbody.innerHTML = '';
 
             if (visibleList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center italic text-slate-500">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center italic text-slate-500">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
                 return;
             }
 
@@ -713,20 +683,21 @@
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/40";
                 tr.innerHTML = `
-                    <td class="p-2 font-mono text-slate-400 text-[10px]">${c.cod}</td>
-                    <td class="p-2 font-medium text-slate-200 truncate max-w-[130px]" title="${c.name}">${c.name}</td>
-                    <td class="p-2 text-slate-400 font-medium">${c.ruta}</td>
+                    <!-- Fecha inyectada al inicio de la tabla en formato compacto -->
+                    <td class="p-2 font-medium text-indigo-400/90 font-mono text-[10.5px]">${c.fecha}</td>
+                    <td class="p-2 font-mono text-slate-400 text-[10px]">${c.codClie}</td>
+                    <td class="p-2 font-medium text-slate-200 truncate max-w-[120px]" title="${c.cliente}">${c.cliente}</td>
+                    <td class="p-2 text-slate-400 font-medium">${c.rutaVenta}</td>
                     <td class="p-2 text-slate-400">${c.canal}</td>
-                    <td class="p-2 font-mono text-slate-300 text-[10px]">${c.veh}</td>
-                    <td class="p-2 truncate max-w-[110px] text-amber-500/90 font-medium" title="${c.mot}">${c.mot}</td>
-                    <td class="p-2 text-right font-mono text-slate-400">${Math.round(c.s).toLocaleString('es-PE')}</td>
-                    <td class="p-2 text-right font-mono text-rose-400 font-black">${Math.round(c.r).toLocaleString('es-PE')} Kg</td>
+                    <td class="p-2 font-mono text-slate-300 text-[10px]">${c.vehiculo}</td>
+                    <td class="p-2 truncate max-w-[110px] text-amber-500/90 font-medium" title="${c.motivo}">${c.motivo}</td>
+                    <td class="p-2 text-right font-mono text-slate-400">${Math.round(c.surtido).toLocaleString('es-PE')}</td>
+                    <td class="p-2 text-right font-mono text-rose-400 font-black">${Math.round(c.rechazado).toLocaleString('es-PE')} Kg</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // CONTROL DEL MAPA SIN TÍTULOS NI SUBTÍTULOS
         function renderMapMarkers(dataset) {
             if (!markersGroup) return;
             markersGroup.clearLayers();
@@ -734,7 +705,7 @@
             let validPoints = dataset.filter(x => x.rechazado > 0 && !isNaN(x.lat) && !isNaN(x.lng) && x.lat !== 0 && x.lng !== 0);
             
             validPoints.forEach(p => {
-                let rate = p.s > 0 ? (p.rechazado / p.s * 100) : 0;
+                let rate = p.surtido > 0 ? (p.rechazado / p.surtido * 100) : 0;
                 let markerColor = rate > dbeMeta ? '#f43f5e' : '#10b981';
                 let markerRadius = Math.max(5, Math.min(p.rechazado / 8, 14));
 
@@ -750,6 +721,7 @@
                 let popupContent = `
                     <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;">
                         <b style="color:#4f46e5; text-transform:uppercase;">${p.cliente}</b><br/>
+                        <b>Fecha:</b> ${p.fecha}<br/>
                         <b>Ruta:</b> ${p.rutaVenta} | <b>Vehículo:</b> ${p.vehiculo}<br/>
                         <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${Math.round(p.rechazado)} Kg</span><br/>
                         <b>Motivo:</b> <span style="color:#d97706;font-weight:bold;">${p.motivo}</span>
