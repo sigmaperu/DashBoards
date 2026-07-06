@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -157,6 +157,12 @@
                 });
                 ctx.restore();
             }
+        };
+
+        // Configuración común para remover grillas y textos del eje Y
+        const cleanScalesConfig = {
+            y: { grid: { display: false }, ticks: { display: false }, border: { display: false } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } }
         };
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); lucide.createIcons(); });
@@ -337,7 +343,6 @@
         }
 
         function applyFilters() {
-            // Opacidad de Tarjetas según selección de centros
             ['card-Global', 'card-Chancay', 'card-Ate1', 'card-Ate2'].forEach(id => {
                 let key = id === 'card-Global' ? 'Total' : id === 'card-Chancay' ? 'Chancay' : id === 'card-Ate1' ? 'Ate 1' : 'Ate 2';
                 let el = document.getElementById(id);
@@ -374,7 +379,8 @@
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            setTimeout(() => { renderTrendChart(filteredData); }, 50);
+            // El Evolutivo Diario NO depende de la selección del calendario diario (usa dataFila1 para respetar filtros estructurales)
+            setTimeout(() => { renderTrendChart(dataFila1); }, 50);
         }
 
         function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
@@ -404,7 +410,7 @@
                 options: {
                     responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
                     layout: { padding: { top: 15 } },
-                    scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
+                    scales: cleanScalesConfig,
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             let label = asigLabels[elements[0].index];
@@ -425,7 +431,7 @@
             chartDiaSemana = new Chart(document.getElementById('chartDiaSemana').getContext('2d'), {
                 type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: diaLabels, datasets: [{ data: diaData, backgroundColor: '#fb923c', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: cleanScalesConfig }
             });
 
             // 3. Número de Semana
@@ -435,7 +441,7 @@
             chartNumSemana = new Chart(document.getElementById('chartNumSemana').getContext('2d'), {
                 type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: semLabels, datasets: [{ data: semData, backgroundColor: '#2dd4bf', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: cleanScalesConfig }
             });
         }
 
@@ -599,7 +605,15 @@
                         { label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.02)', borderWidth: 1.5, fill: true, tension: 0.1, yAxisID: 'y1' }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' } }, y1: { position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } }, x: { grid: { display: false } } } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    scales: { 
+                        y: { position: 'left', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
+                        y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
+                        x: { grid: { display: false } } 
+                    } 
+                }
             });
         }
 
