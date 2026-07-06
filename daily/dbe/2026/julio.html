@@ -4,43 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Icono temático de Dashboard para la pestaña -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons para renderizado garantizado de iconos -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Leaflet CSS y JS CDN Oficiales para Mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: #f1f5f9; /* Fondo claro corporativo */
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
             height: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: #e2e8f0;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #cbd5e1;
             border-radius: 4px;
         }
         .day-btn.active {
-            background-color: #6366f1 !important;
+            background-color: #4f46e5 !important;
             color: white !important;
-            border-color: #6366f1 !important;
+            border-color: #4f46e5 !important;
             font-weight: 700;
         }
         .card-inactive {
-            opacity: 0.35;
+            opacity: 0.4;
             transform: scale(0.99);
-            border-color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+            background-color: #f8fafc !important;
         }
         .subitem-active {
-            background-color: rgba(99, 102, 241, 0.15);
-            border-left: 2px solid #6366f1;
+            background-color: rgba(79, 70, 229, 0.08);
+            border-left: 2.5px solid #4f46e5;
         }
         @media print {
             body {
@@ -54,126 +60,135 @@
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .bg-slate-900, .bg-slate-950 {
-                background-color: #f8fafc !important;
-                border-color: #cbd5e1 !important;
-                color: #0f172a !important;
-            }
         }
     </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
-    <header class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:px-6 md:py-3 shadow-md shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <!-- Header Corporativo Rediseñado (Estilo Claro Premium) -->
+    <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
                 <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-10 md:h-14 w-auto object-contain rounded-md select-none pointer-events-none">
-                <span class="text-sm md:text-base font-black tracking-widest text-slate-100 uppercase font-mono">
+                <span class="text-sm md:text-base font-black tracking-widest text-slate-800 uppercase font-mono">
                     Dashboard % DBE
                 </span>
             </div>
         </div>
         
-        <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-950/30 border border-slate-800/50 px-4 py-2 rounded-xl">
-            <span class="text-xs font-black text-slate-300 tracking-wide font-mono">MARCⓊ DAVILA</span>
-            <div class="w-px h-4 bg-slate-800 hidden sm:block"></div>
+        <!-- Bloque de Autoría con Canales de Comunicación -->
+        <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
+            <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
+            <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
             <div class="flex items-center gap-3">
-                <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer" title="Contactar por WhatsApp">
+                <!-- Icono de WhatsApp Directo -->
+                <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer" title="Contactar por WhatsApp">
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                 </a>
 
-                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-400 hover:text-blue-400 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
+                <!-- Icono de Teams Directo -->
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
                     <i data-lucide="users" class="w-4 h-4"></i>
                 </a>
 
-                <div class="w-px h-3 bg-slate-800/80"></div>
+                <div class="w-px h-3 bg-slate-200"></div>
 
-                <button onclick="shareDashboard()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Compartir Dashboard">
+                <!-- Icono de Compartir Multiplataforma -->
+                <button onclick="shareDashboard()" class="p-1 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer" title="Compartir Dashboard">
                     <i data-lucide="share-2" class="w-4 h-4"></i>
                 </button>
 
-                <button onclick="window.print()" class="p-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="Descargar Reporte en PDF">
+                <!-- Icono de Descargar PDF -->
+                <button onclick="window.print()" class="p-1 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer" title="Descargar Reporte en PDF">
                     <i data-lucide="download-cloud" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
     </header>
 
+    <!-- FILA 1: CALENDARIO INTEGRADO IZQUIERDO + TARJETAS MÁSTER -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <div class="w-[230px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400">Julio 2026</span>
-                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-800 text-indigo-400 hover:bg-slate-700 font-bold px-1.5 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer">
+            <!-- Calendario Izquierdo -->
+            <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">
                         Todo el mes
                     </button>
                 </div>
-                <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-500 mb-1">
+                <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <!-- Las 4 tarjetas de operación -->
+            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-50/20 to-white"></div>
+            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
         </section>
     </div>
 
-    <section class="bg-slate-900 p-3 md:p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[200px] md:h-[230px] w-full">
+    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN DIARIA DEL % DBE MENSUAL -->
+    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
+    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
-            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
-            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
-            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
+            <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
         </section>
     </div>
 
+    <!-- FILA 4: TABLA MAESTRA Y MAPA PARALELO CLARO -->
     <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
-        <div class="w-full lg:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xl min-w-0">
+        <!-- Bloque Tabla Maestro (65% del ancho) -->
+        <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
             <div>
-                <div class="flex items-center justify-between mb-3 border-b border-slate-800/80 pb-2">
-                    <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-950/20 transition-all select-none">
+                <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
+                    <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-xs transition-all select-none">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
                         Exportar Excel
                     </button>
-                    <span id="table-view-status" class="text-[9px] font-mono text-slate-500"></span>
+                    <span id="table-view-status" class="text-[9px] font-mono text-slate-400"></span>
                 </div>
                 
                 <div class="overflow-x-auto custom-scrollbar max-h-[290px]">
-                    <table class="w-full text-left border-collapse text-[11px] font-mono">
+                    <table class="w-full text-left border-collapse text-[11px] font-mono text-slate-700">
                         <thead>
-                            <tr class="bg-slate-950/60 text-slate-400 font-bold border-b border-slate-800">
-                                <th class="p-2 text-indigo-400 font-semibold">Fecha</th>
+                            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <th class="p-2 text-indigo-600 font-bold">Fecha</th>
                                 <th class="p-2">Código</th>
-                                <th class="p-2 truncate max-w-[140px]">Cliente</th>
+                                <th class="p-2 truncate max-w-[120px]">Cliente</th>
                                 <th class="p-2">Ruta</th>
                                 <th class="p-2">Canal</th>
                                 <th class="p-2">Vehículo</th>
                                 <th class="p-2 truncate max-w-[110px]">Motivo</th>
                                 <th class="p-2 text-right">Surtido</th>
-                                <th class="p-2 text-right text-rose-400">Rechazado</th>
+                                <th class="p-2 text-right text-rose-600">Rechazado</th>
                             </tr>
                         </thead>
-                        <tbody id="masterTableBody" class="divide-y divide-slate-800/60 text-slate-300"></tbody>
+                        <tbody id="masterTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
                     </table>
                 </div>
             </div>
-            <button onclick="toggleTableExpansion()" class="w-full border-t border-slate-800/80 mt-2 pt-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+            <button onclick="toggleTableExpansion()" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer font-mono">
                 <span id="btnTableText">Ver Todos los Despachos</span>
                 <span id="btnTableArrow">▼</span>
             </button>
         </div>
 
-        <div class="w-full lg:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-2 flex flex-col shadow-xl min-h-[300px] lg:min-h-auto">
-            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[300px] lg:min-h-[330px] z-10"></div>
+        <!-- Bloque Mapa de Leaflet (Estilo Claro) -->
+        <div class="w-full lg:w-[35%] bg-white border border-slate-200 rounded-2xl p-2 flex flex-col shadow-xs min-h-[300px] lg:min-h-auto">
+            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-50 border border-slate-200 min-h-[300px] lg:min-h-[330px] z-10"></div>
         </div>
     </section>
 
@@ -212,7 +227,8 @@
 
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            // MODIFICADO: Capa de mapa claro satinado de CartoDB (Light Positron)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; CARTO'
             }).addTo(mapInstance);
             markersGroup = L.layerGroup().addTo(mapInstance);
@@ -225,7 +241,7 @@
             for (let d = 1; d <= totalDiasMes; d++) {
                 const diaStr = String(d).padStart(2, '0');
                 const btn = document.createElement('button');
-                btn.className = "day-btn text-[9px] py-1 border border-slate-800 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all text-center cursor-pointer font-medium";
+                btn.className = "day-btn text-[9px] py-1 border border-slate-200 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-center cursor-pointer font-medium";
                 btn.id = `btn-day-${diaStr}`; btn.innerText = d;
                 btn.onclick = () => selectDiaCalendario(diaStr);
                 grid.appendChild(btn);
@@ -250,9 +266,7 @@
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i].trim(); if (!line) continue;
                 
-                let cols = [];
-                let insideQuote = false;
-                let current = "";
+                let cols = []; let insideQuote = false; let current = "";
                 for (let j = 0; j < line.length; j++) {
                     let char = line[j];
                     if (char === '"') insideQuote = !insideQuote;
@@ -374,7 +388,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'Dashboard de Control % DBE - Sigma Foods',
-                    text: 'Reporte operativo maestro de performance y control de rechazos en despacho.',
+                    text: 'Reporte operativo de control de rechazos en despacho.',
                     url: 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html'
                 }).catch(err => console.log("Compartición no admitida."));
             } else {
@@ -386,7 +400,7 @@
             let aggregatedExcelMap = {};
             filteredData.forEach(row => {
                 if (row.rechazado <= 0) return;
-                let k = row.codClie + '_' + row.cliente;
+                let k = row.codClie;
                 if (!aggregatedExcelMap[k]) {
                     aggregatedExcelMap[k] = { ...row, surtido: 0, rechazado: 0 };
                 }
@@ -482,46 +496,46 @@
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
             let barColor = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-            let textColor = dbeRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+            let textColor = dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
             let isExpanded = expandedState[containerId];
 
             let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey)
-                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-[0_0_8px_rgba(99,102,241,0.5)]">✓</div>`
-                : `<div class="w-3.5 h-3.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
+                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-sm">✓</div>`
+                : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
 
             let cardHtml = `
-                <div class="flex flex-col justify-between h-full font-mono">
+                <div class="flex flex-col justify-between h-full font-mono text-slate-800">
                     <div>
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
-                                <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-400' : 'text-slate-300'} uppercase tracking-wider truncate">${titleName}</h4>
+                                <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4>
                             </div>
-                            <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">
+                            <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">
                                 ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
                             </span>
                         </div>
                         <div class="mt-2.5">
-                            <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-500' : 'text-emerald-400'} tracking-tight">${totalRechazado.toFixed(1).toLocaleString('es-PE')}</h2>
-                            <p class="text-[9px] uppercase font-bold text-slate-500 tracking-wide mt-0.5">Kg. Rechazados</p>
+                            <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'} tracking-tight">${totalRechazado.toFixed(1).toLocaleString('es-PE')}</h2>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">Kg. Rechazados</p>
                         </div>
-                        <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-400 border-t border-slate-800/60 pt-1.5">
+                        <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-500 border-t border-slate-200 pt-1.5">
                             <span>Kg. Surtidos:</span>
-                            <span class="font-mono text-slate-300 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
+                            <span class="font-mono text-slate-800 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
                         </div>
                         <div class="mt-2.5">
-                            <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                            <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                                 <span>% DBE: <b class="${textColor}">${dbeRate.toFixed(2)}%</b></span>
                                 <span>Meta: 2.15%</span>
                             </div>
-                            <div class="w-full bg-slate-800 rounded-full h-1 relative overflow-hidden">
+                            <div class="w-full bg-slate-100 rounded-full h-1 relative overflow-hidden">
                                 <div class="${barColor} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1 bg-white/30 z-10"></div>
+                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1 bg-slate-300 z-10"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-3 border-t border-slate-800/60 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer py-0.5">
+                    <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
@@ -532,17 +546,17 @@
                 let cItem = canalMap[canal] || {s:0, r:0}; let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
                 let cWidth = Math.min((cRate / 5) * 100, 100);
                 let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                let cText = cRate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+                let cText = cRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
                 let canalCircle = selectedCanalesFiltro.includes(canal)
-                    ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-indigo-400 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
-                    : `<div class="w-2.5 h-2.5 rounded-full border border-slate-600 bg-slate-800 shrink-0"></div>`;
+                    ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
+                    : `<div class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50 shrink-0"></div>`;
 
                 cardHtml += `
-                    <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-800/40 p-0.5 rounded transition-colors noclick">
+                    <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-50 p-0.5 rounded transition-colors noclick">
                         <div class="flex items-center gap-1.5 truncate w-14">
-                            ${canalCircle} <span class="font-medium text-slate-400 truncate">${canal}</span>
+                            ${canalCircle} <span class="font-medium text-slate-600 truncate">${canal}</span>
                         </div>
-                        <div class="flex-1 bg-slate-800/80 h-1 rounded-full relative overflow-hidden">
+                        <div class="flex-1 bg-slate-100 h-1 rounded-full relative overflow-hidden">
                             <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
                         </div>
                         <span class="font-bold font-mono text-right w-9 ${cText}">${cRate.toFixed(1)}%</span>
@@ -567,8 +581,8 @@
             let maxRechazo = list.length > 0 ? list[0].r : 1;
 
             let html = `
-                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2.5 font-mono">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-amber-500">${titleLabel} por Impacto</h4>
+                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono">
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-amber-600">${titleLabel} por Impacto</h4>
                 </div>
                 <div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">
             `;
@@ -577,19 +591,19 @@
                 let fillWidth = Math.min((item.r / maxRechazo) * 100, 100);
                 let isActive = selectedMotivosFiltro.includes(item.name);
                 html += `
-                    <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-800/60 transition-all ${isActive ? 'subitem-active' : ''}">
+                    <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${isActive ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5">
-                            <span class="font-bold text-slate-300 truncate max-w-[155px]" title="${item.name}">${item.name}</span>
-                            <span class="font-black font-mono text-amber-500">${item.r.toFixed(1).toLocaleString('es-PE')} Kg</span>
+                            <span class="font-bold text-slate-700 truncate max-w-[155px]" title="${item.name}">${item.name}</span>
+                            <span class="font-black font-mono text-amber-600">${item.r.toFixed(1).toLocaleString('es-PE')} Kg</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
                             <div class="bg-amber-500 h-1 rounded-full transition-all" style="width: ${fillWidth}%"></div>
                         </div>
                     </div>
                 `;
             });
 
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-amber-500 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -613,42 +627,41 @@
             let visibleList = isExpanded ? list : list.slice(0, 10);
 
             let subhtml = `
-                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2.5 font-mono">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4>
+                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono">
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-600">${titleLabel} Críticos</h4>
                 </div>
                 <div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">
             `;
 
             visibleList.forEach(item => {
                 let colBar = item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                let colText = item.rate > dbeMeta ? 'text-rose-400' : 'text-emerald-400';
+                let colText = item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
                 let fillW = Math.min((item.rate / maxDbeInTanda) * 100, 100);
                 let isActive = filterArray.includes(item.name);
 
                 subhtml += `
-                    <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-800/60 transition-all ${isActive ? 'subitem-active' : ''}">
+                    <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${isActive ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5">
-                            <span class="font-mono font-bold text-slate-300 truncate max-w-[100px]" title="${item.name}">${item.name}</span>
+                            <span class="font-mono font-bold text-slate-700 truncate max-w-[100px]" title="${item.name}">${item.name}</span>
                             <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)}/${item.s.toFixed(1)} kg</span>
                             <span class="font-black font-mono ${colText}">${item.rate.toFixed(2)}%</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
                             <div class="${colBar} h-1 rounded-full transition-all" style="width: ${fillW}%"></div>
                         </div>
                     </div>
                 `;
             });
 
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-800/60 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
-        // TABLA MAESTRA CORREGIDA: Consolidación unificada por Código de cliente con sumatorias y tipografía mono
         function renderMasterTable(dataset) {
             let customerMap = {};
             dataset.forEach(row => {
                 if (row.rechazado <= 0) return;
-                let key = row.codClie; // Agrupación estricta por código único de cliente
+                let key = row.codClie;
                 if (!customerMap[key]) {
                     customerMap[key] = {
                         fecha: row.fecha,
@@ -678,23 +691,23 @@
             tbody.innerHTML = '';
 
             if (visibleList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center italic text-slate-500 font-mono">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center italic text-slate-400 font-mono">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
                 return;
             }
 
             visibleList.forEach(c => {
                 let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/40 font-mono";
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 font-mono text-slate-700";
                 tr.innerHTML = `
-                    <td class="p-2 font-medium text-indigo-400/90 text-[10.5px]">${c.fecha}</td>
+                    <td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td>
                     <td class="p-2 text-slate-400 text-[10px]">${c.cod}</td>
-                    <td class="p-2 font-medium text-slate-200 truncate max-w-[120px]" title="${c.name}">${c.name}</td>
-                    <td class="p-2 text-slate-400 font-medium">${c.ruta}</td>
-                    <td class="p-2 text-slate-400">${c.canal}</td>
-                    <td class="p-2 text-slate-300 text-[10px]">${c.veh}</td>
-                    <td class="p-2 truncate max-w-[110px] text-amber-500/90 font-medium" title="${c.mot}">${c.mot}</td>
-                    <td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1).toLocaleString('es-PE')}</td>
-                    <td class="p-2 text-right text-rose-400 font-black">${c.rechazadoTotal.toFixed(1).toLocaleString('es-PE')} Kg</td>
+                    <td class="p-2 font-medium text-slate-800 truncate max-w-[120px]" title="${c.name}">${c.name}</td>
+                    <td class="p-2 text-slate-500 font-medium">${c.ruta}</td>
+                    <td class="p-2 text-slate-500">${c.canal}</td>
+                    <td class="p-2 text-slate-500 text-[10px]">${c.veh}</td>
+                    <td class="p-2 truncate max-w-[110px] text-amber-600 font-medium" title="${c.mot}">${c.mot}</td>
+                    <td class="p-2 text-right text-slate-500">${c.surtidoTotal.toFixed(1).toLocaleString('es-PE')}</td>
+                    <td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1).toLocaleString('es-PE')} Kg</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -708,16 +721,16 @@
             
             validPoints.forEach(p => {
                 let rate = p.surtido > 0 ? (p.rechazado / p.surtido * 100) : 0;
-                let markerColor = rate > dbeMeta ? '#f43f5e' : '#10b981';
+                let markerColor = rate > dbeMeta ? '#e11d48' : '#059669';
                 let markerRadius = Math.max(5, Math.min(p.rechazado / 8, 14));
 
                 let circleMarker = L.circleMarker([p.lat, p.lng], {
                     radius: markerRadius,
                     fillColor: markerColor,
-                    color: '#0f172a',
+                    color: '#ffffff',
                     weight: 1.5,
                     opacity: 1,
-                    fillOpacity: 0.8
+                    fillOpacity: 0.75
                 });
 
                 let popupContent = `
@@ -726,7 +739,7 @@
                         <b>Fecha:</b> ${p.fecha}<br/>
                         <b>Ruta:</b> ${p.rutaVenta} | <b>Vehículo:</b> ${p.vehiculo}<br/>
                         <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/>
-                        <b>Motivo:</b> <span style="color:#d97706;font-weight:bold;">${p.motivo}</span>
+                        <b>Motivo:</b> <span style="color:#b45309;font-weight:bold;">${p.motivo}</span>
                     </div>
                 `;
 
@@ -757,15 +770,15 @@
                     labels: sortedDays,
                     datasets: [{
                         label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                        borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.01)', borderWidth: 2, fill: true, tension: 0.1, pointRadius: 3
+                        borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.04)', borderWidth: 2.5, fill: true, tension: 0.1, pointRadius: 3
                     }]
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: { 
-                        y: { beginAtZero: true, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: '#334155/15' } },
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                        y: { beginAtZero: true, ticks: { color: '#64748b', callback: v => v + '%' }, grid: { color: '#e2e8f0' } },
+                        x: { ticks: { color: '#64748b' }, grid: { display: false } }
                     }
                 }
             });
