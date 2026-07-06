@@ -33,6 +33,12 @@
             border-color: #4f46e5 !important;
             font-weight: 700;
         }
+        .card-inactive {
+            opacity: 0.4;
+            transform: scale(0.99);
+            border-color: #e2e8f0 !important;
+            background-color: #f8fafc !important;
+        }
         .subitem-active {
             background-color: rgba(79, 70, 229, 0.08);
             border-left: 2px solid #4f46e5;
@@ -99,11 +105,11 @@
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
             <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día (Global / No afectado por Calendario)</span>
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día (Global / Mensual)</span>
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
             <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana (No afectado por Calendario)</span>
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana (Global / Mensual)</span>
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
@@ -269,6 +275,7 @@
             }
         }
 
+        // CORRECCIÓN ESTRUCTURAL DEL FORMATO DE FECHA (M/d/yyyy)
         function parseCSV(text) {
             const lines = text.split(/\r?\n/); rawData = [];
             for (let i = 1; i < lines.length; i++) {
@@ -285,20 +292,22 @@
 
                 let rawCentro = cols[1] || ''; if (!rawCentro || rawCentro === "null") continue;
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
-                let fechaStr = cols[9] || '01/07/2026';
-                let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
+                let fechaStr = cols[9] || '7/1/2026';
                 
-                // Cálculo de Semanas Exactas y Nombres de Día Reales en Base a Fecha
-                let partsFecha = fechaStr.split('/');
-                let d = parseInt(partsFecha[0]), m = parseInt(partsFecha[1]) - 1, y = parseInt(partsFecha[2]);
-                let dateObj = new Date(y, m, d);
+                // Parseo correcto basado en el formato nativo M/d/yyyy de tu base de datos
+                let partesFecha = fechaStr.split('/');
+                let mes = parseInt(partesFecha[0]) - 1;
+                let dia = parseInt(partesFecha[1]);
+                let anio = parseInt(partesFecha[2]);
                 
+                let diaFicticio = String(dia).padStart(2, '0');
+                let dateObj = new Date(anio, mes, dia);
                 let nombreDia = diasNombreArr[dateObj.getDay()];
                 
-                // Cálculo correcto de la semana del año
-                let tempDate = new Date(dateObj.getFullYear(), 0, 1);
-                let days = Math.floor((dateObj - tempDate) / (24 * 60 * 60 * 1000));
-                let numSemReal = Math.ceil((days + tempDate.getDay() + 1) / 7);
+                // Cálculo estricto del número de semana basado en la aritmética real de días del año
+                let tempStartYear = new Date(dateObj.getFullYear(), 0, 1);
+                let diffInDays = Math.floor((dateObj - tempStartYear) / (24 * 60 * 60 * 1000));
+                let numSemReal = Math.ceil((diffInDays + tempStartYear.getDay() + 1) / 7);
                 let numeroSemana = "Sem " + String(numSemReal).padStart(2, '0');
 
                 let placaVehiculo = (cols[4] || 'No Especificado').trim().toUpperCase();
@@ -319,7 +328,7 @@
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const vehicles = ['C2I-891', 'BNY-776', 'AKL-733'];
+            const vehicles = ['ABE 738', 'BFY-769', 'CML-932'];
             const tipos = ['PROPIO', '3PL', 'HÍBRIDO'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
@@ -329,12 +338,11 @@
                     let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.05) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)], canal: 'DET',
-                        codClie: '117' + (5000 + k), cliente: 'CLIENTE OPERATIVO ' + k,
-                        vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
-                        tipoUnidad: tipos[Math.floor(Math.random() * tipos.length)],
+                        codClie: '117' + (5000 + k), cliente: 'DISTRIBUIDORA DE ALIMENTOS PERÚ S.A.C.',
+                        vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)], tipoUnidad: tipos[Math.floor(Math.random() * tipos.length)],
                         rutaVenta: 'B6A', distrito: 'ATE', motivo: 'TIENDA CERRADA',
                         nombreDia: diasNombreArr[dateObj.getDay()], numSemana: "Sem 27",
-                        lat: -12.0463, lng: -77.0427, fecha: `${formattedDay}/07/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
+                        lat: -12.0463, lng: -77.0427, fecha: `7/${day}/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
                     });
                 }
             }
@@ -392,7 +400,6 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // dataset que responde al calendario para tarjetas máster superiores
             let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -400,17 +407,15 @@
 
             renderPerformanceCards(dataTemporal);
 
-            // dataset base filtrado por centros o canales seleccionados
             let dataFila1 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
-            // RENDER DE LOS 3 NUEVOS CARDS DE BARRAS INTERACTIVOS
+            // RENDER DE LOS 3 CARDS GRÁFICOS DE BARRAS INTERMEDIOS
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
-            // DATA FINAL CRUZADA (Sujeta a filtros elásticos inferiores)
             filteredData = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -443,10 +448,11 @@
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
         }
 
+        // LÓGICA DE RENDERS GRÁFICOS INTERMEDIOS CON ETIQUETAS E INDEPENDENCIA DE CALENDARIO
         function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            // Gráfico 1 (Tipo de Unidad): Sí es afectado por el calendario para análisis situacional
+            // Gráfico 1 (Tipo de Unidad): Sí responde al día del calendario seleccionado
             dataCalendarioActual.forEach(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -454,7 +460,7 @@
                 asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
             });
 
-            // Gráficos 2 y 3 (Día y Semana): NO afectados por el filtro del calendario (Usa dataset mensual global)
+            // Gráficos 2 y 3 (Días y Semanas): Independientes del minicalendario diario (Acumulan todo el mes)
             dataGlobalCentros.forEach(row => {
                 if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                 if (!semMap[row.numSemana]) semMap[row.numSemana] = { s:0, r:0 };
@@ -506,7 +512,7 @@
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
 
-            // 3. Render Número de Semana vs % DBE (Sin efecto de calendario)
+            // 3. Render Número de Semana vs % DBE (Sin efecto de calendario - Semanas Calculadas Exactas)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort();
             if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
@@ -520,6 +526,13 @@
         }
 
         function renderPerformanceCards(dataCards) {
+            const updateClasses = (id, target) => {
+                const el = document.getElementById(id);
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(target) && target !== 'Total') el.classList.add('card-inactive');
+                else el.classList.remove('card-inactive');
+            };
+            updateClasses('card-Global', 'Total'); updateClasses('card-Chancay', 'Chancay'); updateClasses('card-Ate1', 'Ate 1'); updateClasses('card-Ate2', 'Ate 2');
+
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
@@ -548,7 +561,7 @@
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
-                    <div>
+                    <div onclick="handleCardClick('${titleName}', event)">
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
@@ -579,7 +592,7 @@
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
                         <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
-                            <span class="text-[9px]">${isExpanded ? '▲' : '▼'}</span>
+                            <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
@@ -644,7 +657,7 @@
             let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
             let isExpanded = expandedState[containerId]; let visibleList = isExpanded ? list : list.slice(0, 10);
 
-            let subhtml = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-600">${titleLabel} Críticos</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
+            let subhtml = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
                 subhtml += `
                     <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${filterArray.includes(item.name) ? 'subitem-active' : ''}">
@@ -653,7 +666,7 @@
                             <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)} kg</span>
                             <span class="font-black font-mono ${item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${item.rate.toFixed(2)}%</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
+                        <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
             subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
@@ -664,8 +677,15 @@
             let customerMap = {};
             dataset.forEach(row => {
                 if (row.rechazado <= 0) return;
-                if (!customerMap[row.codClie]) { customerMap[row.codClie] = { fecha: row.fecha, cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, tipo: row.tipoUnidad, mot: row.motivo, surtidoTotal: 0, rechazadoTotal: 0 }; }
-                customerMap[row.codClie].surtidoTotal += row.surtido; customerMap[row.codClie].rechazadoTotal += row.rechazado;
+                let key = row.codClie;
+                if (!customerMap[key]) {
+                    customerMap[key] = {
+                        fecha: row.fecha, cod: row.codClie, name: row.cliente,
+                        ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, tipo: row.tipoUnidad, mot: row.motivo,
+                        surtidoTotal: 0, rechazadoTotal: 0
+                    };
+                }
+                customerMap[key].surtidoTotal += row.surtido; customerMap[key].rechazadoTotal += row.rechazado;
             });
             let listWithRechazo = Object.values(customerMap).sort((a, b) => b.rechazadoTotal - a.rechazadoTotal);
             let isExpanded = expandedState['master-table']; let visibleList = isExpanded ? listWithRechazo : listWithRechazo.slice(0, 10);
@@ -693,7 +713,8 @@
             let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
-            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+            const ctx = document.getElementById('chartTrend').getContext('2d');
+            trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: sortedDays,
