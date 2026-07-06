@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Leaflet CSS y JS CDN -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
@@ -45,7 +41,7 @@
         }
         .subitem-active {
             background-color: rgba(79, 70, 229, 0.08);
-            border-left: 2.5px solid #4f46e5;
+            border-left: 2px solid #4f46e5;
         }
         @media print {
             body {
@@ -55,16 +51,11 @@
             .day-btn, header button, header a, .noclick, button, select {
                 display: none !important;
             }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
         }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
-    <!-- Header Corporativo Claro Premium -->
     <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
@@ -75,7 +66,6 @@
             </div>
         </div>
         
-        <!-- Bloque de Firma de Autoría e Iconos de Contacto -->
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
@@ -83,7 +73,7 @@
                 <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer" title="Contactar por WhatsApp">
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                 </a>
-                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
                     <i data-lucide="users" class="w-4 h-4"></i>
                 </a>
                 <div class="w-px h-3 bg-slate-200"></div>
@@ -97,56 +87,63 @@
         </div>
     </header>
 
-    <!-- FILA 1: CALENDARIO + TARJETAS MÁSTER SUPERIORES -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <!-- Calendario -->
             <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
-                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">
-                        Todo el mes
-                    </button>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">Todo el mes</button>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
-
-            <!-- Contenedores estáticos de las 4 Tarjetas Máster -->
-            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
         </section>
     </div>
 
-    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN CON DOBLE EJE -->
-    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[230px] w-full">
+    <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
+        <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Distribución por Tipo de Unidad</span>
+                <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
+            </div>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día de la Semana</span>
+                <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
+            </div>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana</span>
+                <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
+            </div>
+        </section>
+    </div>
+
+    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[220px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
-    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO INTERACTIVO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
-            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
-            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
-            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
+            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
         </section>
     </div>
 
-    <!-- FILA 4: TABLA MAESTRA CONSOLIDADA Y MAPA PARALELO CLARO -->
     <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
         <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
             <div>
                 <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
                     <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-xs transition-all select-none">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        Exportar Excel
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>Exportar Excel
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-400"></span>
                 </div>
@@ -170,11 +167,9 @@
                 </div>
             </div>
             <button onclick="toggleTableExpansion()" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer font-mono">
-                <span id="btnTableText">Ver Todos los Despachos</span>
-                <span id="btnTableArrow">▼</span>
+                <span id="btnTableText">Ver Todos los Despachos</span><span id="btnTableArrow">▼</span>
             </button>
         </div>
-
         <div class="w-full lg:w-[35%] bg-white border border-slate-200 rounded-2xl p-2 flex flex-col shadow-xs min-h-[300px] lg:min-h-auto">
             <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-50 border border-slate-200 min-h-[300px] lg:min-h-[330px] z-10"></div>
         </div>
@@ -182,8 +177,11 @@
 
     <script>
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv';
+        const asignacionUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/Asignacion%20unidades.csv';
+        
         let rawData = [];
         let filteredData = [];
+        let asignacionMap = {};
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
@@ -194,10 +192,11 @@
         let selectedRutasFiltro = [];
         let selectedDistritosFiltro = [];
         let selectedMotivosFiltro = [];
+        let selectedUnidadesFiltro = []; // Nuevo Filtro Cruzado de Barra
 
         let trendChart = null;
-        let mapInstance = null;
-        let markersGroup = null;
+        let chartAsignacion = null, chartDiaSemana = null, chartNumSemana = null;
+        let mapInstance = null; let markersGroup = null;
 
         let expandedState = {
             'card-Global': false, 'card-Chancay': false, 'card-Ate1': false, 'card-Ate2': false,
@@ -206,6 +205,7 @@
         };
 
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
+        const diasNombreArr = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); });
 
@@ -231,6 +231,14 @@
 
         async function loadData() {
             try {
+                // 1. Cargar Maestro Asignación de Unidades
+                const resAsig = await fetch(asignacionUrl);
+                if (resAsig.ok) {
+                    const textAsig = await resAsig.text();
+                    parseAsignacion(textAsig);
+                }
+                
+                // 2. Cargar Base Operativa Transaccional
                 const response = await fetch(csvUrl);
                 if (!response.ok) throw new Error('Error GitHub');
                 const text = await response.text();
@@ -239,6 +247,20 @@
             } catch (err) {
                 generateMockData();
                 applyFilters();
+            }
+        }
+
+        function parseAsignacion(text) {
+            const lines = text.split(/\r?\n/);
+            asignacionMap = {};
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i].trim(); if (!line) continue;
+                let parts = line.split(',');
+                if (parts.length >= 4) {
+                    let placa = parts[1].trim().toUpperCase();
+                    let tipoUnidad = parts[3].trim();
+                    if(placa) asignacionMap[placa] = tipoUnidad;
+                }
             }
         }
 
@@ -260,16 +282,23 @@
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
                 let fechaStr = cols[9] || '01/07/2026';
                 let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
-                let canalNombre = cols[2] || 'OTROS';
-                let motivoRechazo = cols[36] || 'SIN ESPECIFICAR';
-                if(motivoRechazo === '-' || !motivoRechazo) motivoRechazo = 'SIN ESPECIFICAR';
-                motivoRechazo = motivoRechazo.toUpperCase();
+                
+                // Cálculo de Semanas y Nombres de Día Reales
+                let dateObj = new Date(2026, 6, parseInt(diaFicticio));
+                let nombreDia = diasNombreArr[dateObj.getDay()];
+                let numeroSemana = "Sem " + String(Math.ceil((parseInt(diaFicticio) + 3) / 7)).padStart(2, '0');
+
+                let placaVehiculo = (cols[4] || 'No Especificado').trim().toUpperCase();
+                // CRUCE DINÁMICO REQUERIDO CON ASIGNACION MAESTRA
+                let tipoUnidadCruzado = asignacionMap[placaVehiculo] || 'HÍBRIDO';
 
                 rawData.push({
-                    centro: centroNombre, canal: canalNombre,
+                    centro: centroNombre, canal: cols[2] || 'OTROS',
                     codClie: cols[5] || '000000', cliente: cols[6] || 'CLIENTE OPERATIVO',
-                    vehiculo: cols[4] || 'No Especificado', rutaVenta: cols[7] || 'Sin Ruta',
-                    distrito: (cols[15] || 'OTROS').toUpperCase(), motivo: motivoRechazo,
+                    vehiculo: placaVehiculo, tipoUnidad: tipoUnidadCruzado,
+                    rutaVenta: cols[7] || 'Sin Ruta', distrito: (cols[15] || 'OTROS').toUpperCase(),
+                    motivo: (cols[36] || 'SIN ESPECIFICAR').toUpperCase(),
+                    nombreDia: nombreDia, numSemana: numeroSemana,
                     lat: parseFloat(cols[16]) || 0, lng: parseFloat(cols[17]) || 0, fecha: fechaStr, numDia: diaFicticio,
                     surtido: parseFloat(cols[31]) || 0, rechazado: parseFloat(cols[34]) || 0
                 });
@@ -278,22 +307,22 @@
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const canales = ['FSE', 'MOD', 'DET', 'OTROS'];
             const vehicles = ['C2I-891', 'BNY-776', 'AKL-733'];
-            const distritos = ['ATE', 'COMAS', 'SAN BORJA', 'CHORRILLOS'];
-            const motivos = ['RECEPCIÓN NO RECIBE', 'TIENDA CERRADA', 'FUERA HORA DE RECEPC'];
+            const tipos = ['PROPIO', 'TERCERO', 'HÍBRIDO'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 12; k++) {
+                let dateObj = new Date(2026, 6, day);
+                for (let k = 0; k < 10; k++) {
                     let surtido = Math.floor(Math.random() * 2000) + 300;
                     let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.05) : 0;
                     rawData.push({
-                        centro: centros[Math.floor(Math.random() * centros.length)], centro: centros[Math.floor(Math.random() * centros.length)], canal: canales[Math.floor(Math.random() * canales.length)],
-                        codClie: '117' + (5000 + k), cliente: 'DISTRIBUIDORA LIMA S.A.C.',
-                        vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)], rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
-                        distrito: distritos[Math.floor(Math.random() * distritos.length)], motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : 'SIN ESPECIFICAR',
-                        lat: -12.0463 + (Math.random() - 0.5) * 0.15, lng: -77.0427 + (Math.random() - 0.5) * 0.15,
-                        fecha: `${formattedDay}/07/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
+                        centro: centros[Math.floor(Math.random() * centros.length)], canal: 'DET',
+                        codClie: '117' + (5000 + k), cliente: 'CLIENTE OPERATIVO ' + k,
+                        vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
+                        tipoUnidad: tipos[Math.floor(Math.random() * tipos.length)],
+                        rutaVenta: 'B6A', distrito: 'ATE', motivo: 'TIENDA CERRADA',
+                        nombreDia: diasNombreArr[dateObj.getDay()], numSemana: "Sem 27",
+                        lat: -12.0463, lng: -77.0427, fecha: `${formattedDay}/07/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
                     });
                 }
             }
@@ -308,7 +337,6 @@
             applyFilters();
         }
 
-        // CONTROL CLIC MÁSTER TARJETAS FILA 1
         window.handleCardClick = function(centroName, event) {
             if(event.target.closest('.noclick')) return;
             if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
@@ -335,14 +363,8 @@
             applyFilters();
         };
 
-        // FILTRADO AVANZADO INTERACTIVO FILA 3
         window.handleDimensionItemClick = function(dimensionKey, value, event) {
-            let targetArray;
-            if (dimensionKey === 'motivo') targetArray = selectedMotivosFiltro;
-            else if (dimensionKey === 'vehiculo') targetArray = selectedVehiculosFiltro;
-            else if (dimensionKey === 'rutaVenta') targetArray = selectedRutasFiltro;
-            else if (dimensionKey === 'distrito') targetArray = selectedDistritosFiltro;
-
+            let targetArray = dimensionKey === 'motivo' ? selectedMotivosFiltro : dimensionKey === 'vehiculo' ? selectedVehiculosFiltro : dimensionKey === 'rutaVenta' ? selectedRutasFiltro : selectedDistritosFiltro;
             if (event.ctrlKey) {
                 if (targetArray.includes(value)) targetArray.splice(targetArray.indexOf(value), 1);
                 else targetArray.push(value);
@@ -353,34 +375,9 @@
             applyFilters();
         };
 
-        // FUNCIONES DE DESPLIEGUE ARREGLADAS (Evitan la pérdida de eventos de escucha)
-        window.toggleCanales = function(containerId, event) {
-            if(event) event.stopPropagation();
-            expandedState[containerId] = !expandedState[containerId];
-            applyFilters();
-        };
-
-        window.toggleSubcard = function(id) {
-            expandedState[id] = !expandedState[id];
-            applyFilters();
-        };
-
-        window.toggleTableExpansion = function() {
-            expandedState['master-table'] = !expandedState['master-table'];
-            applyFilters();
-        };
-
-        window.shareDashboard = function() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Dashboard de Control % DBE - Sigma Foods',
-                    text: 'Reporte operativo de control de rechazos en despacho.',
-                    url: 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html'
-                }).catch(err => console.log("Compartición no admitida."));
-            } else {
-                window.print();
-            }
-        };
+        window.toggleCanales = function(containerId, e) { e.stopPropagation(); expandedState[containerId] = !expandedState[containerId]; applyFilters(); };
+        window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
+        window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
             let dataTemporal = rawData.filter(row => {
@@ -396,45 +393,108 @@
                 return true;
             });
 
-            renderMotivosSubcard('subcard-motivo', 'Motivo', dataFila1);
-            renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataFila1, 'vehiculo', selectedVehiculosFiltro);
-            renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
-            renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
+            // RENDER DE LOS 3 NUEVOS CARDS DE BARRAS INTERACTIVOS (Fila 1.5)
+            renderFilaGraficosBarras(dataFila1);
 
+            // DATA FINAL CRUZADA (Aplica también el filtro cruzado de la barra Tipo Unidad si se clickea)
             filteredData = dataFila1.filter(row => {
+                if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
                 if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
                 if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
                 return true;
             });
+
+            renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
+            renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', filteredData, 'vehiculo', selectedVehiculosFiltro);
+            renderDimensionSubcard('subcard-ruta', 'Ruta Venta', filteredData, 'rutaVenta', selectedRutasFiltro);
+            renderDimensionSubcard('subcard-distrito', 'Distrito', filteredData, 'distrito', selectedDistritosFiltro);
 
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            // CORRECCIÓN CLAVE: El gráfico responde dinámicamente tanto a la Fila 1 como a las selecciones de la Fila 3
+            // Gráfico evolutivo histórico de doble eje afectado por todos los filtros
             let dataParaGraficoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
+                if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
                 if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
                 if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
                 return true;
             });
-
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
-            setTimeout(() => { lucide.createIcons(); }, 100);
+        }
+
+        // LÓGICA DE RENDERIZADO Y FILTRADO DE LA NUEVA FILA DE GRÁFICOS INTERMEDIOS
+        function renderFilaGraficosBarras(dataset) {
+            let asigMap = {}, diaMap = {}, semMap = {};
+            
+            dataset.forEach(row => {
+                if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
+                if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
+                if (!semMap[row.numSemana]) semMap[row.numSemana] = { s:0, r:0 };
+
+                asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
+                diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
+                semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
+            });
+
+            // 1. Gráfico Tipo de Unidad vs % DBE (Con Filtro Cruzado Habilitado)
+            if(chartAsignacion) chartAsignacion.destroy();
+            let asigLabels = Object.keys(asigMap);
+            let asigData = asigLabels.map(l => asigMap[l].s > 0 ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
+            
+            chartAsignacion = new Chart(document.getElementById('chartAsignacion').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: asigLabels,
+                    datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            let index = elements[0].index;
+                            let label = asigLabels[index];
+                            if (e.native.ctrlKey) {
+                                if (selectedUnidadesFiltro.includes(label)) selectedUnidadesFiltro = selectedUnidadesFiltro.filter(x => x !== label);
+                                else selectedUnidadesFiltro.push(label);
+                            } else {
+                                selectedUnidadesFiltro = selectedUnidadesFiltro.includes(label) && selectedUnidadesFiltro.length === 1 ? [] : [label];
+                            }
+                            applyFilters();
+                        }
+                    }
+                }
+            });
+
+            // 2. Gráfico Nombre Día vs % DBE
+            if(chartDiaSemana) chartDiaSemana.destroy();
+            let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
+            chartDiaSemana = new Chart(document.getElementById('chartDiaSemana').getContext('2d'), {
+                type: 'bar',
+                data: { labels: diaLabels, datasets: [{ data: diaData, backgroundColor: '#fb923c', borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+            });
+
+            // 3. Gráfico Número Semana vs % DBE
+            if(chartNumSemana) chartNumSemana.destroy();
+            let semLabels = Object.keys(semMap).sort();
+            let semData = semLabels.map(l => semMap[l].s > 0 ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
+            chartNumSemana = new Chart(document.getElementById('chartNumSemana').getContext('2d'), {
+                type: 'bar',
+                data: { labels: semLabels, datasets: [{ data: semData, backgroundColor: '#2dd4bf', borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+            });
         }
 
         function renderPerformanceCards(dataCards) {
-            const updateClasses = (id, target) => {
-                const el = document.getElementById(id);
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(target) && target !== 'Total') el.classList.add('card-inactive');
-                else el.classList.remove('card-inactive');
-            };
-            updateClasses('card-Global', 'Total'); updateClasses('card-Chancay', 'Chancay'); updateClasses('card-Ate1', 'Ate 1'); updateClasses('card-Ate2', 'Ate 2');
-
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
@@ -454,7 +514,7 @@
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
             let barColor = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-            let textColor = dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
+            let textColor = dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-700';
             let isExpanded = expandedState[containerId];
 
             let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey)
@@ -463,7 +523,7 @@
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
-                    <div onclick="handleCardClick('${titleName}', event)">
+                    <div>
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
@@ -493,7 +553,7 @@
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
@@ -505,9 +565,7 @@
                 let cWidth = Math.min((cRate / 5) * 100, 100);
                 let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
                 let cText = cRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
-                let canalCircle = selectedCanalesFiltro.includes(canal)
-                    ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>`
-                    : `<div class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50 shrink-0"></div>`;
+                let canalCircle = selectedCanalesFiltro.includes(canal) ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>` : `<div class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50 shrink-0"></div>`;
 
                 cardHtml += `
                     <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-50 p-0.5 rounded transition-colors noclick">
@@ -521,8 +579,7 @@
                     </div>
                 `;
             });
-            cardHtml += `</div></div></div>`;
-            document.getElementById(containerId).innerHTML = cardHtml;
+            cardHtml += `</div></div></div>`; document.getElementById(containerId).innerHTML = cardHtml;
         }
 
         function renderMotivosSubcard(containerId, titleLabel, dataset) {
@@ -532,36 +589,23 @@
                 if (!map[row.motivo]) map[row.motivo] = { name: row.motivo, r: 0 };
                 map[row.motivo].r += row.rechazado;
             });
-
             let list = Object.values(map).sort((a, b) => b.r - a.r);
-            let isExpanded = expandedState[containerId];
-            let visibleList = isExpanded ? list : list.slice(0, 10);
+            let isExpanded = expandedState[containerId]; let visibleList = isExpanded ? list : list.slice(0, 10);
             let maxRechazo = list.length > 0 ? list[0].r : 1;
 
-            let html = `
-                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-amber-600">${titleLabel} por Impacto</h4>
-                </div>
-                <div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">
-            `;
-
+            let html = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-amber-600">${titleLabel} por Impacto</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
                 let fillWidth = Math.min((item.r / maxRechazo) * 100, 100);
-                let isActive = selectedMotivosFiltro.includes(item.name);
                 html += `
-                    <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${isActive ? 'subitem-active' : ''}">
+                    <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${selectedMotivosFiltro.includes(item.name) ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5">
-                            <span class="font-bold text-slate-700 truncate max-w-[155px]" title="${item.name}">${item.name}</span>
-                            <span class="font-black font-mono text-amber-600">${item.r.toFixed(1).toLocaleString('es-PE')} Kg</span>
+                            <span class="font-bold text-slate-700 truncate max-w-[155px]">${item.name}</span>
+                            <span class="font-black font-mono text-amber-600">${item.r.toFixed(1)} Kg</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
-                            <div class="bg-amber-500 h-1 rounded-full transition-all" style="width: ${fillWidth}%"></div>
-                        </div>
-                    </div>
-                `;
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full transition-all" style="width: ${fillWidth}%"></div></div>
+                    </div>`;
             });
-
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -572,46 +616,23 @@
                 if (!map[k]) map[k] = { name: k, s: 0, r: 0 };
                 map[k].s += row.surtido; map[k].r += row.rechazado;
             });
-
-            let list = Object.values(map).map(item => {
-                item.rate = item.s > 0 ? (item.r / item.s * 100) : 0;
-                return item;
-            }).sort((a, b) => b.rate - a.rate);
-
+            let list = Object.values(map).map(item => { item.rate = item.s > 0 ? (item.r / item.s * 100) : 0; return item; }).sort((a, b) => b.rate - a.rate);
             let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
-            if(maxDbeInTanda === 0) maxDbeInTanda = 1;
+            let isExpanded = expandedState[containerId]; let visibleList = isExpanded ? list : list.slice(0, 10);
 
-            let isExpanded = expandedState[containerId];
-            let visibleList = isExpanded ? list : list.slice(0, 10);
-
-            let subhtml = `
-                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4>
-                </div>
-                <div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">
-            `;
-
+            let subhtml = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-600">${titleLabel} Críticos</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
-                let colBar = item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                let colText = item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
-                let fillW = Math.min((item.rate / maxDbeInTanda) * 100, 100);
-                let isActive = filterArray.includes(item.name);
-
                 subhtml += `
-                    <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${isActive ? 'subitem-active' : ''}">
+                    <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${filterArray.includes(item.name) ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5">
-                            <span class="font-mono font-bold text-slate-700 truncate max-w-[100px]" title="${item.name}">${item.name}</span>
+                            <span class="font-mono font-bold text-slate-700 truncate max-w-[100px]">${item.name}</span>
                             <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)}/${item.s.toFixed(1)} kg</span>
-                            <span class="font-black font-mono ${colText}">${item.rate.toFixed(2)}%</span>
+                            <span class="font-black font-mono ${item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${item.rate.toFixed(2)}%</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden">
-                            <div class="${colBar} h-1 rounded-full transition-all" style="width: ${fillW}%"></div>
-                        </div>
-                    </div>
-                `;
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full transition-all" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
+                    </div>`;
             });
-
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
@@ -619,173 +640,56 @@
             let customerMap = {};
             dataset.forEach(row => {
                 if (row.rechazado <= 0) return;
-                let key = row.codClie;
-                if (!customerMap[key]) {
-                    customerMap[key] = {
-                        fecha: row.fecha, cod: row.codClie, name: row.cliente,
-                        ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, mot: row.motivo,
-                        surtidoTotal: 0, rechazadoTotal: 0
-                    };
-                }
-                customerMap[key].surtidoTotal += row.surtido;
-                customerMap[key].rechazadoTotal += row.rechazado;
+                if (!customerMap[row.codClie]) { customerMap[row.codClie] = { fecha: row.fecha, cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, mot: row.motivo, surtidoTotal: 0, rechazadoTotal: 0 }; }
+                customerMap[row.codClie].surtidoTotal += row.surtido; customerMap[key = row.codClie].rechazadoTotal += row.rechazado;
             });
-
             let listWithRechazo = Object.values(customerMap).sort((a, b) => b.rechazadoTotal - a.rechazadoTotal);
-            let isExpanded = expandedState['master-table'];
-            let visibleList = isExpanded ? listWithRechazo : listWithRechazo.slice(0, 10);
-
-            const tbody = document.getElementById('masterTableBody');
-            tbody.innerHTML = '';
-
-            if (visibleList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center italic text-slate-400 font-mono">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
-                return;
-            }
-
+            let isExpanded = expandedState['master-table']; let visibleList = isExpanded ? listWithRechazo : listWithRechazo.slice(0, 10);
+            const tbody = document.getElementById('masterTableBody'); tbody.innerHTML = '';
             visibleList.forEach(c => {
-                let tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 font-mono text-slate-700";
-                tr.innerHTML = `
-                    <td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td>
-                    <td class="p-2 text-slate-400 text-[10px]">${c.cod}</td>
-                    <td class="p-2 font-medium text-slate-800 truncate max-w-[120px]" title="${c.name}">${c.name}</td>
-                    <td class="p-2 text-slate-500 font-medium">${c.ruta}</td>
-                    <td class="p-2 text-slate-500">${c.canal}</td>
-                    <td class="p-2 text-slate-500 text-[10px]">${c.veh}</td>
-                    <td class="p-2 truncate max-w-[110px] text-amber-600 font-medium" title="${c.mot}">${c.mot}</td>
-                    <td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1).toLocaleString('es-PE')}</td>
-                    <td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1).toLocaleString('es-PE')} Kg</td>
-                `;
+                let tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 font-mono text-slate-700";
+                tr.innerHTML = `<td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td><td class="p-2 text-slate-400 text-[10px]">${c.cod}</td><td class="p-2 font-medium text-slate-800 truncate max-w-[120px]">${c.name}</td><td class="p-2 text-slate-500 font-medium">${c.ruta}</td><td class="p-2 text-slate-500">${c.canal}</td><td class="p-2 text-slate-500 text-[10px]">${c.veh}</td><td class="p-2 truncate max-w-[110px] text-amber-600 font-medium">${c.mot}</td><td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1)}</td><td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1)} Kg</td>`;
                 tbody.appendChild(tr);
             });
         }
 
         function renderMapMarkers(dataset) {
-            if (!markersGroup) return;
-            markersGroup.clearLayers();
-
-            let validPoints = dataset.filter(x => x.rechazado > 0 && !isNaN(x.lat) && !isNaN(x.lng) && x.lat !== 0 && x.lng !== 0);
-            
+            if (!markersGroup) return; markersGroup.clearLayers();
+            let validPoints = dataset.filter(x => x.rechazado > 0 && x.lat !== 0);
             validPoints.forEach(p => {
-                let rate = p.surtido > 0 ? (p.rechazado / p.surtido * 100) : 0;
-                let markerColor = rate > dbeMeta ? '#e11d48' : '#059669';
-                let markerRadius = Math.max(5, Math.min(p.rechazado / 8, 14));
-
-                let circleMarker = L.circleMarker([p.lat, p.lng], {
-                    radius: markerRadius,
-                    fillColor: markerColor,
-                    color: '#ffffff',
-                    weight: 1.5,
-                    opacity: 1,
-                    fillOpacity: 0.75
-                });
-
-                let popupContent = `
-                    <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;">
-                        <b style="color:#4f46e5; text-transform:uppercase;">${p.cliente}</b><br/>
-                        <b>Fecha:</b> ${p.fecha}<br/>
-                        <b>Ruta:</b> ${p.rutaVenta} | <b>Vehículo:</b> ${p.vehiculo}<br/>
-                        <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/>
-                        <b>Motivo:</b> <span style="color:#b45309;font-weight:bold;">${p.motivo}</span>
-                    </div>
-                `;
-
-                circleMarker.bindPopup(popupContent);
+                let circleMarker = L.circleMarker([p.lat, p.lng], { radius: Math.max(5, Math.min(p.rechazado / 8, 14)), fillColor: '#e11d48', color: '#ffffff', weight: 1.5, fillOpacity: 0.75 });
+                circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;"><b>${p.cliente}</b><br/><b>Fecha:</b> ${p.fecha}<br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/><b>Motivo:</b> ${p.motivo}</div>`);
                 markersGroup.addLayer(circleMarker);
             });
-
-            if (validPoints.length > 0) {
-                let coordsArray = validPoints.map(x => [x.lat, x.lng]);
-                mapInstance.fitBounds(coordsArray, { padding: [25, 25], maxZoom: 14 });
-            } else {
-                mapInstance.setView([-12.0463, -77.0427], 11);
-            }
+            if (validPoints.length > 0) mapInstance.fitBounds(validPoints.map(x => [x.lat, x.lng]), { padding: [25, 25], maxZoom: 14 });
         }
 
         function renderTrendChart(dataTrend) {
-            let fMap = {};
-            dataTrend.forEach(r => {
-                if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0};
-                fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
-            });
+            let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
-            
-            const ctx = document.getElementById('chartTrend').getContext('2d');
-            trendChart = new Chart(ctx, {
+            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: sortedDays,
                     datasets: [
-                        {
-                            label: '% DBE Diario',
-                            data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                            borderColor: '#4f46e5',
-                            backgroundColor: 'transparent',
-                            borderWidth: 2.5,
-                            tension: 0.1,
-                            pointRadius: 2.5,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Kg. Rechazados',
-                            data: sortedDays.map(d => fMap[d].r.toFixed(1)),
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.03)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.1,
-                            pointRadius: 2,
-                            yAxisID: 'y1'
-                        }
+                        { label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), borderColor: '#4f46e5', backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.1, yAxisID: 'y' },
+                        { label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.03)', borderWidth: 2, fill: true, tension: 0.1, yAxisID: 'y1' }
                     ]
                 },
-                options: { 
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10, family: 'monospace' } } } },
-                    scales: { 
-                        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' }, grid: { color: '#e2e8f0' } },
-                        y1: { type: 'linear', position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } },
-                        x: { ticks: { color: '#64748b' }, grid: { display: false } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } }, x: { grid: { display: false } } } }
             });
         }
 
-        window.downloadExcelComas = function() {
+        function downloadExcelComas() {
             let aggregatedExcelMap = {};
-            filteredData.forEach(row => {
-                if (row.rechazado <= 0) return;
-                let k = row.codClie;
-                if (!aggregatedExcelMap[k]) {
-                    aggregatedExcelMap[k] = { ...row, surtido: 0, rechazado: 0 };
-                }
-                aggregatedExcelMap[k].surtido += row.surtido;
-                aggregatedExcelMap[k].rechazado += row.rechazado;
-            });
+            filteredData.forEach(row => { if (row.rechazado <= 0) return; if (!aggregatedExcelMap[row.codClie]) aggregatedExcelMap[row.codClie] = { ...row, surtido: 0, rechazado: 0 }; aggregatedExcelMap[row.codClie].surtido += row.surtido; aggregatedExcelMap[row.codClie].rechazado += row.rechazado; });
+            let csvContent = "\uFEFFFecha,Código,Cliente,Ruta,Canal,Vehículo,Tipo Unidad,Motivo,Surtido (Kg),Rechazado (Kg)\n";
+            Object.values(aggregatedExcelMap).forEach(c => { csvContent += `"${c.fecha}","${c.codClie}","${c.cliente}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${c.tipoUnidad}","${c.motivo}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)}\n`; });
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.setAttribute("href", URL.createObjectURL(blob)); link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
 
-            let recordsMap = Object.values(aggregatedExcelMap).sort((a, b) => b.rechazado - a.rechazado);
-
-            let csvContent = "\uFEFF"; 
-            csvContent += "Fecha,Código,Cliente,Ruta,Canal,Vehículo,Motivo,Surtido (Kg),Rechazado (Kg),% DBE\n";
-            
-            recordsMap.forEach(c => {
-                let dbe = c.surtido > 0 ? (c.rechazado / c.surtido * 100).toFixed(1) : "0.0";
-                let nameClean = c.cliente.replace(/,/g, " ").replace(/"/g, '""');
-                let motClean = c.motivo.replace(/,/g, " ").replace(/"/g, '""');
-                csvContent += `"${c.fecha}","${c.codClie}","${nameClean}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${motClean}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)},${dbe}%\n`;
-            });
-
-            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            let url = URL.createObjectURL(blob);
-            let link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
+        function shareDashboard() { if (navigator.share) { navigator.share({ title: 'Dashboard DBE', url: window.location.href }); } else { window.print(); } }
     </script>
 </body>
 </html>
