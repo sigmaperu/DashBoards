@@ -62,19 +62,21 @@
         }
     </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
+<body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
-    <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-3 shadow-md shrink-0 flex items-center justify-between">
-        <div class="flex items-center gap-5">
-            <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-14 w-auto object-contain rounded-md select-none pointer-events-none">
-            <span class="text-base font-black tracking-widest text-slate-100 uppercase font-mono">
-                Dashboard % DBE
-            </span>
+    <header class="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:px-6 md:py-3 shadow-md shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center justify-between w-full sm:w-auto gap-4">
+            <div class="flex items-center gap-3 md:gap-5">
+                <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-10 md:h-14 w-auto object-contain rounded-md select-none pointer-events-none">
+                <span class="text-sm md:text-base font-black tracking-widest text-slate-100 uppercase font-mono">
+                    Dashboard % DBE
+                </span>
+            </div>
         </div>
         
-        <div class="flex items-center gap-4 bg-slate-950/30 border border-slate-800/50 px-4 py-1.5 rounded-xl">
+        <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-950/30 border border-slate-800/50 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-300 tracking-wide font-mono">MARCⓊ DAVILA</span>
-            <div class="w-px h-4 bg-slate-800"></div>
+            <div class="w-px h-4 bg-slate-800 hidden sm:block"></div>
             <div class="flex items-center gap-3">
                 <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer" title="Contactar por WhatsApp">
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
@@ -86,12 +88,12 @@
 
                 <div class="w-px h-3 bg-slate-800/80"></div>
 
-                <button onclick="copyOfficialLink()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Copiar enlace oficial del Dashboard">
-                    <i data-lucide="link" class="w-4 h-4"></i>
-                </button>
-                
-                <button onclick="shareDashboard()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Compartir Dashboard o guardar en PDF">
+                <button onclick="shareDashboard()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Compartir Dashboard">
                     <i data-lucide="share-2" class="w-4 h-4"></i>
+                </button>
+
+                <button onclick="window.print()" class="p-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="Descargar Reporte en PDF">
+                    <i data-lucide="download-cloud" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
@@ -119,7 +121,7 @@
         </section>
     </div>
 
-    <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[230px] w-full">
+    <section class="bg-slate-900 p-3 md:p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[200px] md:h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
@@ -134,13 +136,13 @@
         </section>
     </div>
 
-    <section class="flex flex-col xl:flex-row gap-4 items-stretch w-full min-h-[380px]">
-        <div class="w-full xl:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl min-w-0">
+    <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
+        <div class="w-full lg:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xl min-w-0">
             <div>
                 <div class="flex items-center justify-between mb-3 border-b border-slate-800/80 pb-2">
                     <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-950/20 transition-all select-none">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        Exportar Excel (CSV por Comas)
+                        Exportar Excel
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-500"></span>
                 </div>
@@ -170,8 +172,8 @@
             </button>
         </div>
 
-        <div class="w-full xl:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-2 flex flex-col shadow-xl">
-            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[330px] z-10"></div>
+        <div class="w-full lg:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-2 flex flex-col shadow-xl min-h-[300px] lg:min-h-auto">
+            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[300px] lg:min-h-[330px] z-10"></div>
         </div>
     </section>
 
@@ -205,7 +207,7 @@
             buildCalendarGrid(); 
             initMap(); 
             loadData(); 
-            lucide.createIcons(); // Inicializar iconos de Lucide garantizados
+            lucide.createIcons();
         });
 
         function initMap() {
@@ -365,13 +367,6 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        window.copyOfficialLink = function() {
-            const urlOficial = 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html';
-            navigator.clipboard.writeText(urlOficial).then(() => {
-                alert("¡Enlace oficial copiado al portapapeles con éxito!");
-            });
-        };
-
         window.shareDashboard = function() {
             if (navigator.share) {
                 navigator.share({
@@ -444,7 +439,7 @@
                 return true;
             });
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
-            setTimeout(() => { lucide.createIcons(); }, 100); // Forzar refresco de nuevos iconos dinámicos
+            setTimeout(() => { lucide.createIcons(); }, 100);
         }
 
         function renderPerformanceCards(dataCards) {
