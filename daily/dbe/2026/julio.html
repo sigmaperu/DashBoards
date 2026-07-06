@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Leaflet CSS y JS CDN -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -60,6 +64,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
+    <!-- Header Corporativo Claro Premium -->
     <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
@@ -70,6 +75,7 @@
             </div>
         </div>
         
+        <!-- Bloque de Firma de Autoría e Iconos de Contacto -->
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
@@ -77,7 +83,7 @@
                 <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer" title="Contactar por WhatsApp">
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                 </a>
-                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
                     <i data-lucide="users" class="w-4 h-4"></i>
                 </a>
                 <div class="w-px h-3 bg-slate-200"></div>
@@ -91,8 +97,10 @@
         </div>
     </header>
 
+    <!-- FILA 1: CALENDARIO + TARJETAS MÁSTER SUPERIORES -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
+            <!-- Calendario -->
             <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
@@ -106,28 +114,32 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-50/20 to-white"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <!-- Contenedores estáticos de las 4 Tarjetas Máster -->
+            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
         </section>
     </div>
 
-    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[210px] md:h-[240px] w-full">
+    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN CON DOBLE EJE -->
+    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
+    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO INTERACTIVO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
-            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
-            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
-            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
+            <div id="subcard-vehiculo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
+            <div id="subcard-ruta" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
+            <div id="subcard-distrito" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xl transition-all"></div>
         </section>
     </div>
 
+    <!-- FILA 4: TABLA MAESTRA CONSOLIDADA Y MAPA PARALELO CLARO -->
     <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
         <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
             <div>
@@ -138,7 +150,6 @@
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-400"></span>
                 </div>
-                
                 <div class="overflow-x-auto custom-scrollbar max-h-[290px]">
                     <table class="w-full text-left border-collapse text-[11px] font-mono text-slate-700">
                         <thead>
@@ -176,6 +187,7 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
+        // Estados de Filtros de Selección Múltiple con CTRL
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
         let selectedVehiculosFiltro = [];
@@ -276,7 +288,7 @@
                     let surtido = Math.floor(Math.random() * 2000) + 300;
                     let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.05) : 0;
                     rawData.push({
-                        centro: centros[Math.floor(Math.random() * centros.length)], canal: canales[Math.floor(Math.random() * canales.length)],
+                        centro: centros[Math.floor(Math.random() * centros.length)], centro: centros[Math.floor(Math.random() * centros.length)], canal: canales[Math.floor(Math.random() * canales.length)],
                         codClie: '117' + (5000 + k), cliente: 'DISTRIBUIDORA LIMA S.A.C.',
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)], rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
                         distrito: distritos[Math.floor(Math.random() * distritos.length)], motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : 'SIN ESPECIFICAR',
@@ -286,6 +298,89 @@
                 }
             }
         }
+
+        function selectDiaCalendario(dia) {
+            selectedDia = dia;
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            const btnAll = document.getElementById('btnDayAll');
+            if (dia === 'ALL') { btnAll.classList.add('bg-indigo-600', 'text-white'); } 
+            else { btnAll.classList.remove('bg-indigo-600', 'text-white'); const targetBtn = document.getElementById(`btn-day-${dia}`); if (targetBtn) targetBtn.classList.add('active'); }
+            applyFilters();
+        }
+
+        // CONTROL CLIC MÁSTER TARJETAS FILA 1
+        window.handleCardClick = function(centroName, event) {
+            if(event.target.closest('.noclick')) return;
+            if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
+                if (event.ctrlKey) {
+                    if (selectedCentrosFiltro.includes(centroName)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
+                    else selectedCentrosFiltro.push(centroName);
+                } else {
+                    if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) selectedCentrosFiltro = [];
+                    else selectedCentrosFiltro = [centroName];
+                }
+            }
+            applyFilters();
+        };
+
+        window.handleCanalCircleClick = function(canalName, event) {
+            event.stopPropagation();
+            if (event.ctrlKey) {
+                if (selectedCanalesFiltro.includes(canalName)) selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canalName);
+                else selectedCanalesFiltro.push(canalName);
+            } else {
+                if (selectedCanalesFiltro.length === 1 && selectedCanalesFiltro[0] === canalName) selectedCanalesFiltro = [];
+                else selectedCanalesFiltro = [canalName];
+            }
+            applyFilters();
+        };
+
+        // FILTRADO AVANZADO INTERACTIVO FILA 3
+        window.handleDimensionItemClick = function(dimensionKey, value, event) {
+            let targetArray;
+            if (dimensionKey === 'motivo') targetArray = selectedMotivosFiltro;
+            else if (dimensionKey === 'vehiculo') targetArray = selectedVehiculosFiltro;
+            else if (dimensionKey === 'rutaVenta') targetArray = selectedRutasFiltro;
+            else if (dimensionKey === 'distrito') targetArray = selectedDistritosFiltro;
+
+            if (event.ctrlKey) {
+                if (targetArray.includes(value)) targetArray.splice(targetArray.indexOf(value), 1);
+                else targetArray.push(value);
+            } else {
+                if (targetArray.length === 1 && targetArray[0] === value) targetArray.length = 0;
+                else { targetArray.length = 0; targetArray.push(value); }
+            }
+            applyFilters();
+        };
+
+        // FUNCIONES DE DESPLIEGUE ARREGLADAS (Evitan la pérdida de eventos de escucha)
+        window.toggleCanales = function(containerId, event) {
+            if(event) event.stopPropagation();
+            expandedState[containerId] = !expandedState[containerId];
+            applyFilters();
+        };
+
+        window.toggleSubcard = function(id) {
+            expandedState[id] = !expandedState[id];
+            applyFilters();
+        };
+
+        window.toggleTableExpansion = function() {
+            expandedState['master-table'] = !expandedState['master-table'];
+            applyFilters();
+        };
+
+        window.shareDashboard = function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dashboard de Control % DBE - Sigma Foods',
+                    text: 'Reporte operativo de control de rechazos en despacho.',
+                    url: 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html'
+                }).catch(err => console.log("Compartición no admitida."));
+            } else {
+                window.print();
+            }
+        };
 
         function applyFilters() {
             let dataTemporal = rawData.filter(row => {
@@ -317,7 +412,7 @@
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            // CRÍTICO: El gráfico mensual completo ahora reacciona a los filtros cruzados de la Fila 1 Y la Fila 3 en simultáneo
+            // CORRECCIÓN CLAVE: El gráfico responde dinámicamente tanto a la Fila 1 como a las selecciones de la Fila 3
             let dataParaGraficoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -330,56 +425,6 @@
 
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
             setTimeout(() => { lucide.createIcons(); }, 100);
-        }
-
-        function renderTrendChart(dataTrend) {
-            let fMap = {};
-            dataTrend.forEach(r => {
-                if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0};
-                fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
-            });
-            let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
-            if(trendChart) trendChart.destroy();
-            
-            const ctx = document.getElementById('chartTrend').getContext('2d');
-            trendChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sortedDays,
-                    datasets: [
-                        {
-                            label: '% DBE Diario',
-                            data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
-                            borderColor: '#4f46e5',
-                            backgroundColor: 'transparent',
-                            borderWidth: 2.5,
-                            tension: 0.1,
-                            pointRadius: 2.5,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Kg. Rechazados',
-                            data: sortedDays.map(d => fMap[d].r.toFixed(1)),
-                            borderColor: '#f59e0b', // Línea secundaria Naranja
-                            backgroundColor: 'rgba(245, 158, 11, 0.03)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.1,
-                            pointRadius: 2,
-                            yAxisID: 'y1' // Vinculado al eje derecho
-                        }
-                    ]
-                },
-                options: { 
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10, family: 'monospace' } } } },
-                    scales: { 
-                        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' }, grid: { color: '#e2e8f0' } },
-                        y1: { type: 'linear', position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } },
-                        x: { ticks: { color: '#64748b' }, grid: { display: false } }
-                    }
-                }
-            });
         }
 
         function renderPerformanceCards(dataCards) {
@@ -418,7 +463,7 @@
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
-                    <div>
+                    <div onclick="handleCardClick('${titleName}', event)">
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
@@ -448,7 +493,7 @@
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
                             <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
                         </button>
@@ -516,7 +561,7 @@
                 `;
             });
 
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -541,7 +586,7 @@
 
             let subhtml = `
                 <div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono">
-                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-600">${titleLabel} Críticos</h4>
+                    <h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4>
                 </div>
                 <div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">
             `;
@@ -566,7 +611,7 @@
                 `;
             });
 
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
@@ -609,7 +654,7 @@
                     <td class="p-2 text-slate-500">${c.canal}</td>
                     <td class="p-2 text-slate-500 text-[10px]">${c.veh}</td>
                     <td class="p-2 truncate max-w-[110px] text-amber-600 font-medium" title="${c.mot}">${c.mot}</td>
-                    <td class="p-2 text-right text-slate-500">${c.surtidoTotal.toFixed(1).toLocaleString('es-PE')}</td>
+                    <td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1).toLocaleString('es-PE')}</td>
                     <td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1).toLocaleString('es-PE')} Kg</td>
                 `;
                 tbody.appendChild(tr);
@@ -658,7 +703,89 @@
             }
         }
 
-        window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
+        function renderTrendChart(dataTrend) {
+            let fMap = {};
+            dataTrend.forEach(r => {
+                if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0};
+                fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado;
+            });
+            let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
+            if(trendChart) trendChart.destroy();
+            
+            const ctx = document.getElementById('chartTrend').getContext('2d');
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDays,
+                    datasets: [
+                        {
+                            label: '% DBE Diario',
+                            data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0),
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            tension: 0.1,
+                            pointRadius: 2.5,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Kg. Rechazados',
+                            data: sortedDays.map(d => fMap[d].r.toFixed(1)),
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.03)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10, family: 'monospace' } } } },
+                    scales: { 
+                        y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' }, grid: { color: '#e2e8f0' } },
+                        y1: { type: 'linear', position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } },
+                        x: { ticks: { color: '#64748b' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        window.downloadExcelComas = function() {
+            let aggregatedExcelMap = {};
+            filteredData.forEach(row => {
+                if (row.rechazado <= 0) return;
+                let k = row.codClie;
+                if (!aggregatedExcelMap[k]) {
+                    aggregatedExcelMap[k] = { ...row, surtido: 0, rechazado: 0 };
+                }
+                aggregatedExcelMap[k].surtido += row.surtido;
+                aggregatedExcelMap[k].rechazado += row.rechazado;
+            });
+
+            let recordsMap = Object.values(aggregatedExcelMap).sort((a, b) => b.rechazado - a.rechazado);
+
+            let csvContent = "\uFEFF"; 
+            csvContent += "Fecha,Código,Cliente,Ruta,Canal,Vehículo,Motivo,Surtido (Kg),Rechazado (Kg),% DBE\n";
+            
+            recordsMap.forEach(c => {
+                let dbe = c.surtido > 0 ? (c.rechazado / c.surtido * 100).toFixed(1) : "0.0";
+                let nameClean = c.cliente.replace(/,/g, " ").replace(/"/g, '""');
+                let motClean = c.motivo.replace(/,/g, " ").replace(/"/g, '""');
+                csvContent += `"${c.fecha}","${c.codClie}","${nameClean}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${motClean}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)},${dbe}%\n`;
+            });
+
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let url = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
     </script>
 </body>
 </html>
