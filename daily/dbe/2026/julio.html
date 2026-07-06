@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -153,7 +153,7 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Arrays de Almacenamiento Multiselección con CTRL
+        // Filtros Multi-selección con CTRL
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
         let selectedVehiculosFiltro = [];
@@ -177,7 +177,6 @@
 
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
-            // Leaflet inyectando mapa oscuro premium de CartoDB sin fallas de carga
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; CARTO'
             }).addTo(mapInstance);
@@ -231,15 +230,13 @@
                 let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
 
                 let canalNombre = cols[2] || 'OTROS';
-                if(canalNombre.toLowerCase() === 'otros') canalNombre = 'OTROS';
-
                 let motivoRechazo = cols[36] || 'SIN ESPECIFICAR';
                 if(motivoRechazo === '-' || !motivoRechazo) motivoRechazo = 'SIN ESPECIFICAR';
                 motivoRechazo = motivoRechazo.toUpperCase();
 
-                let lat = parseFloat(cols[19]); let lng = parseFloat(cols[20]);
-                if (isNaN(lat) || lat === 0) lat = -12.0463 + (Math.random() - 0.5) * 0.14;
-                if (isNaN(lng) || lng === 0) lng = -77.0427 + (Math.random() - 0.5) * 0.14;
+                // CORRECCIÓN CLAVE: Mapear latitud al índice 16 y longitud al índice 17
+                let lat = parseFloat(cols[16]); 
+                let lng = parseFloat(cols[17]);
 
                 rawData.push({
                     centro: centroNombre, canal: canalNombre,
@@ -313,7 +310,6 @@
             applyFilters();
         };
 
-        // INTEGRADO: Evento Click Avanzado Multiselección CTRL para Fila 3
         window.handleDimensionItemClick = function(dimensionKey, value, event) {
             let targetArray;
             if (dimensionKey === 'motivo') targetArray = selectedMotivosFiltro;
@@ -356,7 +352,6 @@
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
 
-            // DATA FINAL CRUZADA (Aplica filtros de Fila 1 + Fila 3 combinados)
             let dataMaestraFinal = dataFila1.filter(row => {
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
@@ -566,7 +561,6 @@
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
-        // TABLA MAESTRA RECONFIGURADA: Ordena prioritariamente por Rechazado de Mayor a Menor y aplica regla de Exclusión Cero
         function renderMasterTable(dataset) {
             let customerMap = {};
             dataset.forEach(row => {
@@ -582,10 +576,9 @@
                 customerMap[key].r += row.rechazado;
             });
 
-            // CORRECCIÓN SOLICITADA: Filtrar para eliminar del reporte a clientes con 0 rechazo, y ordenar por Kg Rechazados
             let list = Object.values(customerMap)
-                             .filter(x => x.r > 0) // Regla de exclusión cero estricta
-                             .sort((a, b) => b.r - a.r); // Ordenado de Mayor a Menor Rechazo
+                             .filter(x => x.r > 0)
+                             .sort((a, b) => b.r - a.r);
 
             let isExpanded = expandedState['master-table'];
             let visibleList = isExpanded ? list : list.slice(0, 10);
@@ -619,19 +612,23 @@
             });
         }
 
-        // MAPA DE LIMA OPERATIVO: Inyecta marcadores y ajusta encuadre geográfico sin fallas de carga
+        // CONTROL EXCLUSIVO DEL MAPA DE GEOLOCALIZACIÓN CORREGIDO (Columnas Índices 16 y 17)
         function renderMapMarkers(dataset) {
             if (!markersGroup) return;
             markersGroup.clearLayers();
 
-            let recordsWithRechazo = dataset.filter(x => x.rechazado > 0);
+            // Filtrar registros que tengan rechazo mayor a 0 y coordenadas válidas
+            let validPoints = dataset.filter(x => x.rechazado > 0 && !isNaN(x.lat) && !isNaN(x.lng) && x.lat !== 0 && x.lng !== 0);
             
-            recordsWithRechazo.forEach(p => {
+            validPoints.forEach(p => {
                 let rate = p.s > 0 ? (p.rechazado / p.s * 100) : 0;
                 let markerColor = rate > dbeMeta ? '#f43f5e' : '#10b981';
 
+                // Radio dinámico según severidad del rechazo en Kg
+                let markerRadius = Math.max(5, Math.min(p.rechazado / 8, 14));
+
                 let circleMarker = L.circleMarker([p.lat, p.lng], {
-                    radius: Math.max(4, Math.min(rate * 2, 12)),
+                    radius: markerRadius,
                     fillColor: markerColor,
                     color: '#0f172a',
                     weight: 1.5,
@@ -640,7 +637,7 @@
                 });
 
                 let popupContent = `
-                    <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 160px;">
+                    <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;">
                         <b style="color:#4f46e5; text-transform:uppercase;">${p.cliente}</b><br/>
                         <b>Ruta:</b> ${p.rutaVenta} | <b>Vehículo:</b> ${p.vehiculo}<br/>
                         <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${Math.round(p.rechazado)} Kg</span><br/>
@@ -652,9 +649,13 @@
                 markersGroup.addLayer(circleMarker);
             });
 
-            if (recordsWithRechazo.length > 0) {
-                let coordsArray = recordsWithRechazo.map(x => [x.lat, x.lng]);
-                mapInstance.fitBounds(coordsArray, { padding: [15, 15], maxZoom: 13 });
+            // Ajustar encuadre visual de la cámara automáticamente en base a las posiciones reales
+            if (validPoints.length > 0) {
+                let coordsArray = validPoints.map(x => [x.lat, x.lng]);
+                mapInstance.fitBounds(coordsArray, { padding: [25, 25], maxZoom: 14 });
+            } else {
+                // Vista por defecto en Lima si no hay incidencias con geolocalización filtradas
+                mapInstance.setView([-12.0463, -77.0427], 11);
             }
         }
 
