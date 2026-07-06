@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <!-- Icono temático de Dashboard para la pestaña -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Leaflet CSS y JS CDN Oficiales para Mapas -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0f172a;
@@ -67,43 +64,41 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
 
-    <!-- Header Corporativo Rediseñado Integrado (Sin Cuadros de Texto Separados) -->
     <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-3 shadow-md shrink-0 flex items-center justify-between">
         <div class="flex items-center gap-5">
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-14 w-auto object-contain rounded-md select-none pointer-events-none">
-            <!-- Título integrado directamente en la cabecera de forma limpia -->
             <span class="text-base font-black tracking-widest text-slate-100 uppercase font-mono">
                 Dashboard % DBE
             </span>
         </div>
         
-        <!-- Bloque de Autoría con Iconos de Acción Solicitados -->
         <div class="flex items-center gap-4 bg-slate-950/30 border border-slate-800/50 px-4 py-1.5 rounded-xl">
             <span class="text-xs font-black text-slate-300 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-800"></div>
             <div class="flex items-center gap-3">
-                <!-- Icono de Enlace (Copia URL específica solicitada) -->
+                <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer" title="Contactar por WhatsApp">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                </a>
+
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-400 hover:text-blue-400 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                </a>
+
+                <div class="w-px h-3 bg-slate-800/80"></div>
+
                 <button onclick="copyOfficialLink()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Copiar enlace oficial del Dashboard">
-                    <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.75" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.81 15.312a4.5 4.5 0 01-1.242-7.244l4.5-4.5a4.5 4.5 0 016.364 6.364l-1.757 1.75" />
-                    </svg>
+                    <i data-lucide="link" class="w-4 h-4"></i>
                 </button>
                 
-                <!-- Icono de Compartir Multiplataforma (WhatsApp, Teams, Correo, PDF) -->
                 <button onclick="shareDashboard()" class="p-1 text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer" title="Compartir Dashboard o guardar en PDF">
-                    <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186l5.566-2.783m-5.566 2.783l5.566 2.783m3.14-6.061a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5zm0 12.122a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z" />
-                    </svg>
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- FILA 1: CALENDARIO INTEGRADO IZQUIERDO + TARGETAS MÁSTER DE OPERACIÓN -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <!-- Calendario Izquierdo -->
             <div class="w-[230px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400">Julio 2026</span>
@@ -117,7 +112,6 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <!-- Las 4 tarjetas de operación -->
             <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
             <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
@@ -125,14 +119,12 @@
         </section>
     </div>
 
-    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN DIARIA DEL % DBE MENSUAL -->
     <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
-    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO (Motivo, Vehículo, Ruta, Distrito) -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
@@ -142,17 +134,12 @@
         </section>
     </div>
 
-    <!-- FILA 4: TABLA MAESTRA Y MAPA PERFECTAMENTE ALINEADOS EN PARALELO (65% / 35%) -->
     <section class="flex flex-col xl:flex-row gap-4 items-stretch w-full min-h-[380px]">
-        <!-- Bloque Tabla Maestro (65% del ancho) -->
         <div class="w-full xl:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl min-w-0">
             <div>
-                <!-- Menú superior de exportación -->
                 <div class="flex items-center justify-between mb-3 border-b border-slate-800/80 pb-2">
                     <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-md shadow-indigo-950/20 transition-all select-none">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
                         Exportar Excel (CSV por Comas)
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-500"></span>
@@ -162,7 +149,6 @@
                     <table class="w-full text-left border-collapse text-[11px]">
                         <thead>
                             <tr class="bg-slate-950/60 text-slate-400 font-bold border-b border-slate-800">
-                                <!-- Nueva columna Fecha en primer orden de lectura -->
                                 <th class="p-2 text-indigo-400 font-semibold">Fecha</th>
                                 <th class="p-2 font-mono">Código</th>
                                 <th class="p-2 truncate max-w-[120px]">Cliente</th>
@@ -184,7 +170,6 @@
             </button>
         </div>
 
-        <!-- Bloque Mapa de Leaflet (35% del ancho) -->
         <div class="w-full xl:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-2 flex flex-col shadow-xl">
             <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[330px] z-10"></div>
         </div>
@@ -216,7 +201,12 @@
 
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
 
-        document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            buildCalendarGrid(); 
+            initMap(); 
+            loadData(); 
+            lucide.createIcons(); // Inicializar iconos de Lucide garantizados
+        });
 
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
@@ -270,7 +260,6 @@
                 let rawCentro = cols[1] || ''; if (!rawCentro || rawCentro === "null") continue;
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
                 
-                // Mapear estrictamente la columna Fecha (Índice 9)
                 let fechaStr = cols[9] || '01/07/2026';
                 let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
 
@@ -279,7 +268,6 @@
                 if(motivoRechazo === '-' || !motivoRechazo) motivoRechazo = 'SIN ESPECIFICAR';
                 motivoRechazo = motivoRechazo.toUpperCase();
 
-                // Latitud columna índice 16 y longitud columna índice 17
                 let lat = parseFloat(cols[16]); let lng = parseFloat(cols[17]);
 
                 rawData.push({
@@ -377,7 +365,6 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        // ACCIÓN: Copiar URL oficial requerida
         window.copyOfficialLink = function() {
             const urlOficial = 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html';
             navigator.clipboard.writeText(urlOficial).then(() => {
@@ -385,34 +372,23 @@
             });
         };
 
-        // ACCIÓN: Compartir multiplataforma nativo (WhatsApp, Teams, Correo o guardado PDF)
         window.shareDashboard = function() {
             if (navigator.share) {
                 navigator.share({
                     title: 'Dashboard de Control % DBE - Sigma Foods',
                     text: 'Reporte operativo maestro de performance y control de rechazos en despacho.',
                     url: 'https://sigmaperu.github.io/DashBoards/daily/dbe/2026/julio.html'
-                }).catch(err => console.log("Compartición cancelada o no admitida."));
+                }).catch(err => console.log("Compartición no admitida."));
             } else {
-                // Alternativa de impresión a PDF si la API nativa de compartición está bloqueada
                 window.print();
             }
         };
 
-        // ACCIÓN CORREGIDA: Exportación de Excel separada estrictamente por comas (,)
         window.downloadExcelComas = function() {
-            let recordsMap = [];
-            filteredData.forEach(row => {
-                if(row.rechazado > 0) {
-                    recordsMap.push(row);
-                }
-            });
-
-            // Ordenado de Mayor a Menor Rechazo
+            let recordsMap = filteredData.filter(x => x.rechazado > 0);
             recordsMap.sort((a, b) => b.rechazado - a.rechazado);
 
             let csvContent = "\uFEFF"; 
-            // Encabezado con coma como separador estándar
             csvContent += "Fecha,Código,Cliente,Ruta,Canal,Vehículo,Motivo,Surtido (Kg),Rechazado (Kg),% DBE\n";
             
             recordsMap.forEach(c => {
@@ -468,6 +444,7 @@
                 return true;
             });
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
+            setTimeout(() => { lucide.createIcons(); }, 100); // Forzar refresco de nuevos iconos dinámicos
         }
 
         function renderPerformanceCards(dataCards) {
@@ -658,11 +635,8 @@
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
-        // MAESTRO DETALLE: Incorpora columna Fecha (Índice 9) ordenado estrictamente por Kg. Rechazado
         function renderMasterTable(dataset) {
             let recordsWithRechazo = dataset.filter(x => x.rechazado > 0);
-            
-            // Ordenado prioritario de Mayor a Menor Rechazo
             recordsWithRechazo.sort((a, b) => b.rechazado - a.rechazado);
 
             let isExpanded = expandedState['master-table'];
@@ -683,7 +657,6 @@
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/40";
                 tr.innerHTML = `
-                    <!-- Fecha inyectada al inicio de la tabla en formato compacto -->
                     <td class="p-2 font-medium text-indigo-400/90 font-mono text-[10.5px]">${c.fecha}</td>
                     <td class="p-2 font-mono text-slate-400 text-[10px]">${c.codClie}</td>
                     <td class="p-2 font-medium text-slate-200 truncate max-w-[120px]" title="${c.cliente}">${c.cliente}</td>
