@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Leaflet CSS y JS CDN para Mapas -->
-    <link rel="stylesheet" href="https://造型.com/leaflet/dist/leaflet.css" id="leaflet-css-fallback"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -49,8 +45,7 @@
 </head>
 <body class="text-slate-200 antialiased min-h-screen flex flex-col select-none p-4 md:p-6 gap-5">
 
-    <!-- Header Corporativo Máster con Botón de WhatsApp Iconizado -->
-    <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-2.5 shadow-md shrink-0 flex items-center justify-between">
+    <header class="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-2 shadow-md shrink-0 flex items-center justify-between">
         <div class="flex items-center gap-4">
             <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-9 w-auto object-contain rounded-md select-none pointer-events-none">
             <h1 class="text-sm font-black tracking-wider text-slate-100 uppercase bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/60">
@@ -58,24 +53,25 @@
             </h1>
         </div>
         
-        <!-- Bloque de Firma Autoría con Icono Solo de WhatsApp -->
         <div class="text-right pr-2">
             <span class="text-xs font-black text-slate-400 tracking-wide font-mono block">MARCⓊ DAVILA</span>
-            <div class="flex items-center justify-end gap-3 mt-0.5">
-                <a href="https://wa.me/51946397037" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-400 p-1 rounded-full transition-all cursor-pointer" title="Contactar por WhatsApp">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <div class="flex items-center justify-end gap-2 mt-1">
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/30 text-blue-400 p-1 rounded-md transition-all cursor-pointer shadow-xs" title="Contactar por Microsoft Teams">
+                    <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                        <path d="M11.603 9.097c.456-.002.827.362.829.818v1.391a3.785 3.785 0 011.66-.462c1.942.001 3.522 1.554 3.522 3.473a3.53 3.53 0 01-3.522 3.473c-.627 0-1.222-.167-1.745-.487l-.004.095c-.002.456-.366.824-.822.822h-1.39a3.79 3.79 0 01-1.662.463c-1.94 0-3.52-1.553-3.52-3.474a3.528 3.528 0 013.52-3.472c.628 0 1.223.167 1.747.487l.004-.095c.002-.456.365-.824.821-.822h1.364zm5.097-7.222c.343 0 .622.274.625.613v1.045a2.852 2.852 0 011.248-.348c1.46-.001 2.648 1.168 2.649 2.61a2.651 2.651 0 01-2.649 2.61c-.472 0-.922-.126-1.317-.367l-.003.072a.622.622 0 01-.62.618h-1.046c-.468.324-.954.492-1.527.492-1.458 0-2.647-1.168-2.647-2.61a2.65 2.65 0 012.647-2.61c.472 0 .92.126 1.315.367l.003-.072a.62.62 0 01.618-.618H16.7zM7.054 10.846c2.148 0 3.896 1.722 3.896 3.846 0 2.124-1.748 3.846-3.896 3.846C4.905 18.538 3.16 16.816 3.16 14.692c0-2.124 1.746-3.846 3.894-3.846zm6.302-6.538c1.378 0 2.5 1.105 2.5 2.461 0 1.357-1.122 2.462-2.5 2.462-1.378 0-2.5-1.105-2.5-2.462 0-1.356 1.122-2.461 2.5-2.461z"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/51946397037" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-400 p-1 rounded-md transition-all cursor-pointer shadow-xs" title="Contactar por WhatsApp">
+                    <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.93 0c3.165.001 6.14 1.233 8.377 3.469 2.237 2.235 3.467 5.21 3.466 8.377-.003 6.582-5.339 11.93-11.871 11.93h-.001c-2.01 0-3.987-.54-5.742-1.566L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.743 1.451 5.4 0 9.786-4.386 9.788-9.789 0-2.615-1.017-5.074-2.864-6.921C16.42 2.046 13.962.984 11.348.984c-5.4 0-9.785 4.386-9.787 9.79 0 1.686.46 3.328 1.328 4.771l-.995 3.637 3.738-.981zM17.15 14.8c-.31-.154-1.83-.903-2.115-1.006-.283-.103-.49-.154-.695.154-.204.307-.792.103-.97.103-.177 0-.355-.087-.664-.242-1.31-.583-2.16-1.748-2.42-2.106-.26-.357-.02-.55.154-.724.156-.156.31-.358.466-.538.155-.18.206-.308.31-.513.102-.205.05-.384-.025-.538-.076-.154-.695-1.674-.953-2.3-.25-.604-.505-.523-.695-.533-.18-.01-.385-.012-.59-.012s-.538.077-.82.384c-.282.308-1.077 1.05-1.077 2.563 0 1.512 1.1 2.973 1.253 3.178.154.205 2.165 3.307 5.244 4.636.732.316 1.302.505 1.746.646.736.234 1.407.2 1.938.12.59-.09 1.83-.747 2.086-1.465.256-.717.256-1.332.18-1.464-.077-.132-.282-.209-.592-.363z"/>
                     </svg>
                 </a>
-                <span class="text-[10px] text-slate-500 font-mono tracking-tight block">mdavilab@sigma-alimentos.com</span>
             </div>
         </div>
     </header>
 
-    <!-- FILA 1: CALENDARIO IZQUIERDO + TARGETAS DE PERFORMANCE MÁSTER -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <!-- Calendario Izquierdo -->
             <div class="w-[230px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-lg flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-800 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400">Julio 2026</span>
@@ -89,7 +85,6 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <!-- Las 4 tarjetas operativas -->
             <div id="card-Global" onclick="handleCardClick('Total Operación', event)" class="w-[215px] shrink-0 bg-slate-900 border border-indigo-500/30 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer bg-gradient-to-b from-indigo-950/5 to-slate-900"></div>
             <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
             <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-lg flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
@@ -97,14 +92,12 @@
         </section>
     </div>
 
-    <!-- FILA 2: GRÁFICO DE EVOLUCIÓN MENSUAL (Sin Título) -->
     <section class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-xl flex flex-col h-[230px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
-    <!-- FILA 3: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO INTERACTIVO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-slate-900 border border-slate-800 rounded-2xl p-3.5 shadow-xl transition-all"></div>
@@ -114,47 +107,42 @@
         </section>
     </div>
 
-    <!-- FILA 4: NUEVA SECCIÓN DE CONTROL DETALLADO Y MAPA DE UBICACIONES -->
-    <section class="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch w-full min-h-[400px]">
-        <!-- Bloque Izquierdo: Tabla Detalle Maestro de Despacho (Ocupa 2 columnas) -->
-        <div class="xl:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
+    <section class="flex flex-col xl:flex-row gap-4 items-stretch w-full min-h-[380px]">
+        <div class="w-full xl:w-[65%] bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl min-w-0">
             <div>
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
                     <h3 class="text-xs font-black tracking-wider uppercase text-indigo-400">Detalle Operativo Maestro de Despachos</h3>
-                    <span id="table-view-status" class="text-[9px] font-mono text-slate-500">Top 10 Ordenado por Surtido</span>
+                    <span id="table-view-status" class="text-[9px] font-mono text-slate-500">Top 10 por Mayor Rechazo</span>
                 </div>
-                <div class="overflow-x-auto custom-scrollbar max-h-[340px]">
+                <div class="overflow-x-auto custom-scrollbar max-h-[290px]">
                     <table class="w-full text-left border-collapse text-[11px]">
                         <thead>
                             <tr class="bg-slate-950/60 text-slate-400 font-bold border-b border-slate-800">
                                 <th class="p-2 font-mono">Código</th>
-                                <th class="p-2 truncate max-w-[140px]">Cliente</th>
+                                <th class="p-2 truncate max-w-[130px]">Cliente</th>
                                 <th class="p-2">Ruta</th>
                                 <th class="p-2">Canal</th>
                                 <th class="p-2 font-mono">Vehículo</th>
-                                <th class="p-2 truncate max-w-[120px]">Motivo</th>
+                                <th class="p-2 truncate max-w-[110px]">Motivo</th>
                                 <th class="p-2 text-right">Surtido</th>
-                                <th class="p-2 text-right">Rechazado</th>
+                                <th class="p-2 text-right text-rose-400">Rechazado</th>
                             </tr>
                         </thead>
                         <tbody id="masterTableBody" class="divide-y divide-slate-800/60 text-slate-300"></tbody>
                     </table>
                 </div>
             </div>
-            <button onclick="toggleTableExpansion()" class="w-full border-t border-slate-800/80 mt-3 pt-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
+            <button onclick="toggleTableExpansion()" class="w-full border-t border-slate-800/80 mt-2 pt-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-400 transition-colors cursor-pointer">
                 <span id="btnTableText">Ver Todos los Despachos</span>
                 <span id="btnTableArrow">▼</span>
             </button>
         </div>
 
-        <!-- Bloque Derecho: Mapa Georreferenciado de Incidencias y Rechazos -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col shadow-xl">
+        <div class="w-full xl:w-[35%] bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col shadow-xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
-                <h3 class="text-xs font-black tracking-wider uppercase text-rose-400">Ubicación y Georreferenciación de Rechazos</h3>
-                <span class="text-[9px] text-slate-500 font-mono">Lima Metropolitana</span>
+                <h3 class="text-xs font-black tracking-wider uppercase text-rose-400">Focalización y Geo-Ubicación de Rechazos</h3>
             </div>
-            <!-- Div donde Leaflet inyectará el mapa real -->
-            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[300px] z-10"></div>
+            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-950 border border-slate-800 min-h-[290px] z-10"></div>
         </div>
     </section>
 
@@ -165,7 +153,7 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estados de Multi-Selección Cruzada (Fila 1 y Fila 3)
+        // Arrays de Almacenamiento Multiselección con CTRL
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
         let selectedVehiculosFiltro = [];
@@ -188,10 +176,10 @@
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); });
 
         function initMap() {
-            // Inicializar mapa centrado en Lima Metropolitana
-            mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.046374, -77.042793], 11);
+            mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
+            // Leaflet inyectando mapa oscuro premium de CartoDB sin fallas de carga
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap &copy; CARTO'
+                attribution: '&copy; CARTO'
             }).addTo(mapInstance);
             markersGroup = L.layerGroup().addTo(mapInstance);
         }
@@ -249,22 +237,16 @@
                 if(motivoRechazo === '-' || !motivoRechazo) motivoRechazo = 'SIN ESPECIFICAR';
                 motivoRechazo = motivoRechazo.toUpperCase();
 
-                // Capturar coordenadas reales o asignar base de Lima si son nulas o nulas ficticias
-                let lat = parseFloat(cols[19]);
-                let lng = parseFloat(cols[20]);
-                if (isNaN(lat) || lat === 0) lat = -12.0463 + (Math.random() - 0.5) * 0.15;
-                if (isNaN(lng) || lng === 0) lng = -77.0427 + (Math.random() - 0.5) * 0.15;
+                let lat = parseFloat(cols[19]); let lng = parseFloat(cols[20]);
+                if (isNaN(lat) || lat === 0) lat = -12.0463 + (Math.random() - 0.5) * 0.14;
+                if (isNaN(lng) || lng === 0) lng = -77.0427 + (Math.random() - 0.5) * 0.14;
 
                 rawData.push({
                     centro: centroNombre, canal: canalNombre,
-                    codClie: cols[5] || '000000',
-                    cliente: cols[6] || 'CLIENTE OPERATIVO',
-                    vehiculo: cols[4] || 'No Especificado',
-                    rutaVenta: cols[7] || 'Sin Ruta',
-                    distrito: (cols[15] || 'OTROS').toUpperCase(),
-                    motivo: motivoRechazo,
-                    lat: lat, lng: lng,
-                    fecha: fechaStr, numDia: diaFicticio,
+                    codClie: cols[5] || '000000', cliente: cols[6] || 'CLIENTE OPERATIVO',
+                    vehiculo: cols[4] || 'No Especificado', rutaVenta: cols[7] || 'Sin Ruta',
+                    distrito: (cols[15] || 'OTROS').toUpperCase(), motivo: motivoRechazo,
+                    lat: lat, lng: lng, fecha: fechaStr, numDia: diaFicticio,
                     surtido: parseFloat(cols[31]) || 0, rechazado: parseFloat(cols[34]) || 0
                 });
             }
@@ -278,22 +260,19 @@
             const motivos = ['RECEPCIÓN NO RECIBE', 'TIENDA CERRADA', 'FUERA HORA DE RECEPC', 'DIFERENCIAS CEDI'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
-                for (let k = 0; k < 15; k++) {
+                for (let k = 0; k < 12; k++) {
                     let surtido = Math.floor(Math.random() * 2000) + 300;
-                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.06) : 0;
+                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.05) : 0;
                     rawData.push({
                         centro: centros[Math.floor(Math.random() * centros.length)],
                         canal: canales[Math.floor(Math.random() * canales.length)],
-                        codClie: '117' + (4000 + k),
-                        cliente: 'DISTRIBUIDORA LIMA CLIENTE ' + k,
+                        codClie: '117' + (5000 + k), cliente: 'CLIENTE OPERATIVO ' + k,
                         vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)],
                         rutaVenta: 'B6' + String.fromCharCode(65 + Math.floor(Math.random() * 4)),
                         distrito: distritos[Math.floor(Math.random() * distritos.length)],
                         motivo: rechazado > 0 ? motivos[Math.floor(Math.random() * motivos.length)] : 'SIN ESPECIFICAR',
-                        lat: -12.0463 + (Math.random() - 0.5) * 0.18,
-                        lng: -77.0427 + (Math.random() - 0.5) * 0.18,
-                        fecha: `7/${day}/2026`, numDia: formattedDay,
-                        surtido: surtido, rechazado: rechazado
+                        lat: -12.0463 + (Math.random() - 0.5) * 0.15, lng: -77.0427 + (Math.random() - 0.5) * 0.15,
+                        fecha: `7/${day}/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
                     });
                 }
             }
@@ -308,7 +287,6 @@
             applyFilters();
         }
 
-        // CONTROL MULTI-SELECT FILA 1
         window.handleCardClick = function(centroName, event) {
             if(event.target.closest('.noclick')) return;
             if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
@@ -335,7 +313,7 @@
             applyFilters();
         };
 
-        // INTERACTIVIDAD DE FILTRADO MULTI-SELECT CON CTRL PARA LA FILA 3
+        // INTEGRADO: Evento Click Avanzado Multiselección CTRL para Fila 3
         window.handleDimensionItemClick = function(dimensionKey, value, event) {
             let targetArray;
             if (dimensionKey === 'motivo') targetArray = selectedMotivosFiltro;
@@ -344,40 +322,22 @@
             else if (dimensionKey === 'distrito') targetArray = selectedDistritosFiltro;
 
             if (event.ctrlKey) {
-                if (targetArray.includes(value)) {
-                    targetArray.splice(targetArray.indexOf(value), 1);
-                } else {
-                    targetArray.push(value);
-                }
+                if (targetArray.includes(value)) targetArray.splice(targetArray.indexOf(value), 1);
+                else targetArray.push(value);
             } else {
-                if (targetArray.length === 1 && targetArray[0] === value) {
-                    targetArray.length = 0; // Vaciar array limpio
-                } else {
-                    targetArray.length = 0;
-                    targetArray.push(value);
-                }
+                if (targetArray.length === 1 && targetArray[0] === value) targetArray.length = 0;
+                else { targetArray.length = 0; targetArray.push(value); }
             }
             applyFilters();
         };
 
-        window.toggleCanales = function(containerId, event) {
-            if(event) event.stopPropagation();
-            expandedState[containerId] = !expandedState[containerId];
-            applyFilters();
+        window.toggleCanales = function(containerId, e) {
+            e.stopPropagation(); expandedState[containerId] = !expandedState[containerId]; applyFilters();
         };
-
-        window.toggleSubcard = function(subcardId) {
-            expandedState[subcardId] = !expandedState[subcardId];
-            applyFilters();
-        };
-
-        window.toggleTableExpansion = function() {
-            expandedState['master-table'] = !expandedState['master-table'];
-            applyFilters();
-        };
+        window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
+        window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // 1. Data filtrada por el Calendario
             let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -385,7 +345,6 @@
 
             renderPerformanceCards(dataTemporal);
 
-            // 2. Data filtrada por Fila 1 (CD + Canal) para alimentar Fila 3 de desgloses
             let dataFila1 = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -397,7 +356,7 @@
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
 
-            // 3. DATA MAESTRA CRUZADA TOTAL (Para la Tabla del Top Ten y los Pines del Mapa)
+            // DATA FINAL CRUZADA (Aplica filtros de Fila 1 + Fila 3 combinados)
             let dataMaestraFinal = dataFila1.filter(row => {
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
@@ -409,7 +368,6 @@
             renderMasterTable(dataMaestraFinal);
             renderMapMarkers(dataMaestraFinal);
 
-            // 4. Gráfico evolutivo histórico de tendencia
             let dataParaGraficoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -608,7 +566,7 @@
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
-        // NUEVA FUNCIÓN: Genera la Tabla Maestra consolidando y agrupando por Cliente con ordenamiento de mayor a menor Surtido
+        // TABLA MAESTRA RECONFIGURADA: Ordena prioritariamente por Rechazado de Mayor a Menor y aplica regla de Exclusión Cero
         function renderMasterTable(dataset) {
             let customerMap = {};
             dataset.forEach(row => {
@@ -624,11 +582,15 @@
                 customerMap[key].r += row.rechazado;
             });
 
-            let list = Object.values(customerMap).sort((a, b) => b.s - a.s); // Ordenado estricto por Surtido (Mayor a Menor)
+            // CORRECCIÓN SOLICITADA: Filtrar para eliminar del reporte a clientes con 0 rechazo, y ordenar por Kg Rechazados
+            let list = Object.values(customerMap)
+                             .filter(x => x.r > 0) // Regla de exclusión cero estricta
+                             .sort((a, b) => b.r - a.r); // Ordenado de Mayor a Menor Rechazo
+
             let isExpanded = expandedState['master-table'];
             let visibleList = isExpanded ? list : list.slice(0, 10);
 
-            document.getElementById('table-view-status').innerText = isExpanded ? 'Universo Operativo Completo' : 'Top 10 por Volumen Surtido';
+            document.getElementById('table-view-status').innerText = isExpanded ? 'Universo Incidencias Completo' : 'Top 10 por Mayor Rechazo';
             document.getElementById('btnTableText').innerText = isExpanded ? 'Contraer Vista Detallada' : 'Ver Todos los Despachos';
             document.getElementById('btnTableArrow').innerText = isExpanded ? '▲' : '▼';
 
@@ -636,31 +598,28 @@
             tbody.innerHTML = '';
 
             if (visibleList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center italic text-slate-500">Sin datos que cumplan las condiciones del filtro.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center italic text-slate-500">Sin incidencias de rechazo registradas en este cuadrante.</td></tr>`;
                 return;
             }
 
             visibleList.forEach(c => {
-                let dbe = c.s > 0 ? (c.r / c.s * 100) : 0;
-                let textRateColor = dbe > dbeMeta ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold';
-
                 let tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/40 transition-colors border-b border-slate-800/40";
                 tr.innerHTML = `
                     <td class="p-2 font-mono text-slate-400 text-[10px]">${c.cod}</td>
-                    <td class="p-2 font-medium text-slate-200 truncate max-w-[140px]" title="${c.name}">${c.name}</td>
+                    <td class="p-2 font-medium text-slate-200 truncate max-w-[130px]" title="${c.name}">${c.name}</td>
                     <td class="p-2 text-slate-400 font-medium">${c.ruta}</td>
                     <td class="p-2 text-slate-400">${c.canal}</td>
                     <td class="p-2 font-mono text-slate-300 text-[10px]">${c.veh}</td>
-                    <td class="p-2 truncate max-w-[120px] text-amber-500/90 font-medium" title="${c.mot}">${c.mot}</td>
-                    <td class="p-2 text-right font-mono font-semibold text-slate-300">${Math.round(c.s).toLocaleString('es-PE')}</td>
-                    <td class="p-2 text-right font-mono ${c.r > 0 ? 'text-rose-400 font-bold' : 'text-slate-500'}">${Math.round(c.r).toLocaleString('es-PE')}</td>
+                    <td class="p-2 truncate max-w-[110px] text-amber-500/90 font-medium" title="${c.mot}">${c.mot}</td>
+                    <td class="p-2 text-right font-mono text-slate-400">${Math.round(c.s).toLocaleString('es-PE')}</td>
+                    <td class="p-2 text-right font-mono text-rose-400 font-black">${Math.round(c.r).toLocaleString('es-PE')} Kg</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // NUEVA FUNCIÓN: Dibuja dinámicamente las ubicaciones en el Mapa Oscuro de Leaflet según las coordenadas
+        // MAPA DE LIMA OPERATIVO: Inyecta marcadores y ajusta encuadre geográfico sin fallas de carga
         function renderMapMarkers(dataset) {
             if (!markersGroup) return;
             markersGroup.clearLayers();
@@ -671,9 +630,8 @@
                 let rate = p.s > 0 ? (p.rechazado / p.s * 100) : 0;
                 let markerColor = rate > dbeMeta ? '#f43f5e' : '#10b981';
 
-                // Crear un círculo interactivo para representar el punto operativo del cliente
                 let circleMarker = L.circleMarker([p.lat, p.lng], {
-                    radius: Math.max(4, Math.min(rate * 2, 12)), // El tamaño del punto varía proporcionalmente al % DBE
+                    radius: Math.max(4, Math.min(rate * 2, 12)),
                     fillColor: markerColor,
                     color: '#0f172a',
                     weight: 1.5,
@@ -682,12 +640,11 @@
                 });
 
                 let popupContent = `
-                    <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4;">
+                    <div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 160px;">
                         <b style="color:#4f46e5; text-transform:uppercase;">${p.cliente}</b><br/>
                         <b>Ruta:</b> ${p.rutaVenta} | <b>Vehículo:</b> ${p.vehiculo}<br/>
-                        <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${Math.round(p.rechazado)} Kg</span> / ${Math.round(p.surtido)} Kg<br/>
-                        <b>Motivo:</b> <span style="color:#d97706;">${p.motivo}</span><br/>
-                        <b>% DBE:</b> <span style="font-weight:black;color:${rate > dbeMeta ? '#e11d48' : '#059669'};">${rate.toFixed(2)}%</span>
+                        <b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${Math.round(p.rechazado)} Kg</span><br/>
+                        <b>Motivo:</b> <span style="color:#d97706;font-weight:bold;">${p.motivo}</span>
                     </div>
                 `;
 
@@ -695,10 +652,9 @@
                 markersGroup.addLayer(circleMarker);
             });
 
-            // Si hay puntos en el mapa, auto-ajustar el encuadre para enfocar la zona crítica activa de Lima
             if (recordsWithRechazo.length > 0) {
                 let coordsArray = recordsWithRechazo.map(x => [x.lat, x.lng]);
-                mapInstance.fitBounds(coordsArray, { padding: [20, 20], maxZoom: 14 });
+                mapInstance.fitBounds(coordsArray, { padding: [15, 15], maxZoom: 13 });
             }
         }
 
