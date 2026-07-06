@@ -8,45 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #e2e8f0;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .day-btn.active {
-            background-color: #4f46e5 !important;
-            color: white !important;
-            border-color: #4f46e5 !important;
-            font-weight: 700;
-        }
-        .card-inactive {
-            opacity: 0.35;
-            transform: scale(0.99);
-            border-color: #e2e8f0 !important;
-            background-color: #f8fafc !important;
-        }
-        .subitem-active {
-            background-color: rgba(79, 70, 229, 0.08);
-            border-left: 2.5px solid #4f46e5;
-        }
-        @media print {
-            body { background-color: #ffffff !important; color: #000000 !important; }
-            .day-btn, header button, header a, .noclick, button, select { display: none !important; }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .day-btn.active { background-color: #4f46e5 !important; color: white !important; border-color: #4f46e5 !important; font-weight: 700; }
+        .card-inactive { opacity: 0.4; transform: scale(0.99); border-color: #e2e8f0 !important; background-color: #f8fafc !important; }
+        .subitem-active { background-color: rgba(79, 70, 229, 0.08); border-left: 3px solid #4f46e5; font-weight: 700; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
@@ -54,27 +26,18 @@
     <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
-                <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-10 md:h-14 w-auto object-contain rounded-md select-none pointer-events-none">
-                <span class="text-sm md:text-base font-black tracking-widest text-slate-800 uppercase font-mono">
-                    Dashboard % DBE
-                </span>
+                <img src="https://www.sigmafoods.com//wp-content/uploads/2022/02/SIGMA-2_page-0001.jpg" alt="Sigma" class="h-10 md:h-14 w-auto object-contain rounded-md">
+                <span class="text-sm md:text-base font-black tracking-widest text-slate-800 uppercase font-mono">Dashboard % DBE</span>
             </div>
         </div>
-        
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
             <div class="flex items-center gap-3">
-                <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer" title="Contactar por WhatsApp">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i>
-                </a>
-                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-400 transition-colors cursor-pointer" title="Contactar por Microsoft Teams">
-                    <i data-lucide="users" class="w-4 h-4"></i>
-                </a>
+                <a href="https://wa.me/51946397037" target="_blank" class="p-1 text-slate-500 hover:text-emerald-600 transition-colors"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=mdavilab@sigma-alimentos.com" target="_blank" class="p-1 text-slate-500 hover:text-blue-400 transition-colors"><i data-lucide="users" class="w-4 h-4"></i></a>
                 <div class="w-px h-3 bg-slate-200"></div>
-                <button onclick="window.print()" class="p-1 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer" title="Descargar Reporte en PDF">
-                    <i data-lucide="download-cloud" class="w-4 h-4"></i>
-                </button>
+                <button onclick="window.print()" class="p-1 text-slate-500 hover:text-rose-600 transition-colors"><i data-lucide="download-cloud" class="w-4 h-4"></i></button>
             </div>
         </div>
     </header>
@@ -84,38 +47,36 @@
             <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
-                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">Todo el mes</button>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold px-1.5 py-0.5 rounded border border-indigo-100 transition-colors cursor-pointer">Todo el mes</button>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
-            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Total Operación', event)"></div>
-            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Chancay', event)"></div>
-            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Ate 1', event)"></div>
-            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Ate 2', event)"></div>
+            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Total', event)"></div>
+            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Chancay', event)"></div>
+            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Ate 1', event)"></div>
+            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Ate 2', event)"></div>
         </section>
     </div>
 
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[160px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[160px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[160px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
     </div>
 
-    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[220px] w-full">
-        <div class="w-full flex-1 min-h-0 relative">
-            <canvas id="chartTrend"></canvas>
-        </div>
+    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[210px] w-full">
+        <div class="w-full flex-1 min-h-0 relative"><canvas id="chartTrend"></canvas></div>
     </section>
 
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
@@ -127,16 +88,16 @@
         </section>
     </div>
 
-    <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
-        <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
+    <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[360px]">
+        <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between shadow-xs min-w-0">
             <div>
-                <div class="flex items-center justify-between mb-3 border-b border-slate-200 pb-2">
-                    <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10.5px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-xs transition-all select-none">
+                <div class="flex items-center justify-between mb-2.5 border-b border-slate-200 pb-2">
+                    <button onclick="downloadExcelComas()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black py-1.5 px-3 rounded-lg flex items-center gap-2 cursor-pointer shadow-xs transition-all">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>Exportar Excel
                     </button>
                     <span id="table-view-status" class="text-[9px] font-mono text-slate-400"></span>
                 </div>
-                <div class="overflow-x-auto custom-scrollbar max-h-[290px]">
+                <div class="overflow-x-auto custom-scrollbar max-h-[260px]">
                     <table class="w-full text-left border-collapse text-[11px] font-mono text-slate-700">
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
@@ -160,8 +121,8 @@
                 <span id="btnTableText">Ver Todos los Despachos</span><span id="btnTableArrow">▼</span>
             </button>
         </div>
-        <div class="w-full lg:w-[35%] bg-white border border-slate-200 rounded-2xl p-2 flex flex-col shadow-xs min-h-[300px] lg:min-h-auto">
-            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-50 border border-slate-200 min-h-[300px] lg:min-h-[330px] z-10"></div>
+        <div class="w-full lg:w-[35%] bg-white border border-slate-200 rounded-2xl p-2 flex flex-col shadow-xs min-h-[300px]">
+            <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-50 border border-slate-200 min-h-[290px] z-10"></div>
         </div>
     </section>
 
@@ -169,28 +130,16 @@
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv';
         const asignacionUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/Asignacion%20unidades.csv';
         
-        let rawData = [];
-        let filteredData = [];
-        let asignacionMap = {};
-        let selectedDia = 'ALL';
-        const dbeMeta = 2.15;
+        let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDia = 'ALL'; const dbeMeta = 2.15;
+        let selectedCentrosFiltro = []; let selectedCanalesFiltro = []; let selectedVehiculosFiltro = [];
+        let selectedRutasFiltro = []; let selectedDistritosFiltro = []; let selectedMotivosFiltro = []; let selectedUnidadesFiltro = [];
 
-        let selectedCentrosFiltro = [];
-        let selectedCanalesFiltro = []; 
-        let selectedVehiculosFiltro = [];
-        let selectedRutasFiltro = [];
-        let selectedDistritosFiltro = [];
-        let selectedMotivosFiltro = [];
-        let selectedUnidadesFiltro = []; 
-
-        let trendChart = null;
-        let chartAsignacion = null, chartDiaSemana = null, chartNumSemana = null;
+        let trendChart = null; let chartAsignacion = null; let chartDiaSemana = null; let chartNumSemana = null;
         let mapInstance = null; let markersGroup = null;
 
         let expandedState = {
             'card-Global': false, 'card-Chancay': false, 'card-Ate1': false, 'card-Ate2': false,
-            'subcard-motivo': false, 'subcard-vehiculo': false, 'subcard-ruta': false, 'subcard-distrito': false,
-            'master-table': false
+            'subcard-motivo': false, 'subcard-vehiculo': false, 'subcard-ruta': false, 'subcard-distrito': false, 'master-table': false
         };
 
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
@@ -199,17 +148,12 @@
         const percentageLabelsPlugin = {
             id: 'percentageLabels',
             afterDatasetsDraw(chart) {
-                const { ctx, data } = chart;
-                ctx.save();
-                ctx.font = 'bold 9px "Inter", sans-serif';
-                ctx.fillStyle = '#475569';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
+                const { ctx, data } = chart; ctx.save();
+                ctx.font = 'bold 9px "Inter", sans-serif'; ctx.fillStyle = '#475569';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
                 chart.getDatasetMeta(0).data.forEach((bar, index) => {
                     const value = data.datasets[0].data[index];
-                    if (value !== undefined && value !== null) {
-                        ctx.fillText(Number(value).toFixed(2) + '%', bar.x, bar.y - 4);
-                    }
+                    if (value !== undefined && value !== null) ctx.fillText(Number(value).toFixed(2) + '%', bar.x, bar.y - 4);
                 });
                 ctx.restore();
             }
@@ -219,7 +163,7 @@
 
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO' }).addTo(mapInstance);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(mapInstance);
             markersGroup = L.layerGroup().addTo(mapInstance);
         }
 
@@ -230,7 +174,7 @@
             for (let d = 1; d <= totalDiasMes; d++) {
                 const diaStr = String(d).padStart(2, '0');
                 const btn = document.createElement('button');
-                btn.className = "day-btn text-[9px] py-1 border border-slate-200 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-center cursor-pointer font-medium";
+                btn.className = "day-btn text-[9px] py-1 border border-slate-200 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-center cursor-pointer font-medium font-mono";
                 btn.id = `btn-day-${diaStr}`; btn.innerText = d;
                 btn.onclick = () => selectDiaCalendario(diaStr);
                 grid.appendChild(btn);
@@ -240,25 +184,15 @@
         async function loadData() {
             try {
                 const resAsig = await fetch(asignacionUrl);
-                if (resAsig.ok) {
-                    const textAsig = await resAsig.text();
-                    parseAsignacion(textAsig);
-                }
+                if (resAsig.ok) { const textAsig = await resAsig.text(); parseAsignacion(textAsig); }
                 const response = await fetch(csvUrl);
                 if (!response.ok) throw new Error('Error GitHub');
-                const text = await response.text();
-                parseCSV(text);
-                applyFilters();
-            } catch (err) {
-                generateMockData();
-                applyFilters();
-            }
+                const text = await response.text(); parseCSV(text); applyFilters();
+            } catch (err) { generateMockData(); applyFilters(); }
         }
 
-        // CORRECCIÓN EXACTA DE CRUCE POR ÍNDICE 0 (PLACA) Y RETORNO DE ÍNDICE 2 (TIPO)
         function parseAsignacion(text) {
-            const lines = text.split(/\r?\n/);
-            asignacionMap = {};
+            const lines = text.split(/\r?\n/); asignacionMap = {};
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i].trim(); if (!line) continue;
                 let parts = line.split(',');
@@ -281,18 +215,14 @@
                     else if (char === ',' && !insideQuote) { cols.push(current.trim()); current = ""; }
                     else current += char;
                 }
-                cols.push(current.trim());
-                if (cols.length < 37) continue;
+                cols.push(current.trim()); if (cols.length < 37) continue;
 
                 let rawCentro = cols[1] || ''; if (!rawCentro || rawCentro === "null") continue;
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
                 let fechaStr = cols[9] || '7/1/2026';
                 
                 let partesFecha = fechaStr.split('/');
-                let mes = parseInt(partesFecha[0]) - 1;
-                let dia = parseInt(partesFecha[1]);
-                let anio = parseInt(partesFecha[2]);
-                
+                let mes = parseInt(partesFecha[0]) - 1; let dia = parseInt(partesFecha[1]); let anio = parseInt(partesFecha[2]);
                 let diaFicticio = String(dia).padStart(2, '0');
                 let dateObj = new Date(anio, mes, dia);
                 let nombreDia = diasNombreArr[dateObj.getDay()];
@@ -320,32 +250,102 @@
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const vehicles = ['ABE 738', 'BFY-769', 'CML-932'];
-            const tipos = ['PROPIO', '3PL', 'HÍBRIDO'];
-            for (let day = 1; day <= 31; day++) {
-                let formattedDay = String(day).padStart(2, '0');
-                let dateObj = new Date(2026, 6, day);
-                for (let k = 0; k < 10; k++) {
-                    let surtido = Math.floor(Math.random() * 2000) + 300;
-                    let rechazado = Math.random() > 0.75 ? Math.floor(Math.random() * surtido * 0.05) : 0;
-                    rawData.push({
-                        centro: centros[Math.floor(Math.random() * centros.length)], canal: 'DET',
-                        codClie: '117' + (5000 + k), cliente: 'DISTRIBUIDORA DE ALIMENTOS PERÚ S.A.C.',
-                        vehiculo: vehicles[Math.floor(Math.random() * vehicles.length)], tipoUnidad: tipos[Math.floor(Math.random() * tipos.length)],
-                        rutaVenta: 'B6A', distrito: 'ATE', motivo: 'TIENDA CERRADA',
-                        nombreDia: diasNombreArr[dateObj.getDay()], numSemana: "Sem 27",
-                        lat: -12.0463, lng: -77.0427, fecha: `7/${day}/2026`, numDia: formattedDay, surtido: surtido, rechazado: rechazado
-                    });
-                }
+            for (let d = 1; d <= 31; d++) {
+                let formattedDay = String(d).padStart(2, '0');
+                rawData.push({
+                    centro: centros[d % 3], canal: 'DET', codClie: '100'+d, cliente: 'CLIENTE PRUEBA COLD ' + d,
+                    vehiculo: 'ABC-123', tipoUnidad: 'PROPIO', rutaVenta: 'R0'+d, distrito: 'COMAS', motivo: 'CLIENTE CERRADO',
+                    nombreDia: 'Lunes', numSemana: 'Sem 27', lat: -12.04, lng: -77.04, fecha: `7/${d}/2026`, numDia: formattedDay, surtido: 1500, rechazado: 12
+                });
             }
         }
 
+        function selectDiaCalendario(dia) {
+            selectedDia = dia;
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btnDayAll').classList.remove('bg-indigo-600', 'text-white');
+            if (dia === 'ALL') {
+                document.getElementById('btnDayAll').classList.add('bg-indigo-600', 'text-white');
+            } else {
+                document.getElementById(`btn-day-${dia}`).classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function handleCardClick(centroKey, event) {
+            if (event.target.closest('.noclick')) return;
+            if (event.ctrlKey) {
+                if (selectedCentrosFiltro.includes(centroKey)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroKey);
+                else selectedCentrosFiltro.push(centroKey);
+            } else {
+                selectedCentrosFiltro = selectedCentrosFiltro.includes(centroKey) && selectedCentrosFiltro.length === 1 ? [] : [centroKey];
+            }
+            applyFilters();
+        }
+
+        function handleCanalCircleClick(canal, event) {
+            event.stopPropagation();
+            if (event.ctrlKey) {
+                if (selectedCanalesFiltro.includes(canal)) selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canal);
+                else selectedCanalesFiltro.push(canal);
+            } else {
+                selectedCanalesFiltro = selectedCanalesFiltro.includes(canal) && selectedCanalesFiltro.length === 1 ? [] : [canal];
+            }
+            applyFilters();
+        }
+
+        function handleDimensionItemClick(key, val, event) {
+            let targetArr;
+            if (key === 'motivo') targetArr = selectedMotivosFiltro;
+            else if (key === 'vehiculo') targetArr = selectedVehiculosFiltro;
+            else if (key === 'rutaVenta') targetArr = selectedRutasFiltro;
+            else if (key === 'distrito') targetArr = selectedDistritosFiltro;
+
+            if (event.ctrlKey) {
+                if (targetArr.includes(val)) {
+                    if (key === 'motivo') selectedMotivosFiltro = selectedMotivosFiltro.filter(x => x !== val);
+                    if (key === 'vehiculo') selectedVehiculosFiltro = selectedVehiculosFiltro.filter(x => x !== val);
+                    if (key === 'rutaVenta') selectedRutasFiltro = selectedRutasFiltro.filter(x => x !== val);
+                    if (key === 'distrito') selectedDistritosFiltro = selectedDistritosFiltro.filter(x => x !== val);
+                } else { targetArr.push(val); }
+            } else {
+                let resets = targetArr.includes(val) && targetArr.length === 1;
+                if (key === 'motivo') selectedMotivosFiltro = resets ? [] : [val];
+                if (key === 'vehiculo') selectedVehiculosFiltro = resets ? [] : [val];
+                if (key === 'rutaVenta') selectedRutasFiltro = resets ? [] : [val];
+                if (key === 'distrito') selectedDistritosFiltro = resets ? [] : [val];
+            }
+            applyFilters();
+        }
+
+        function toggleCanales(cardId, event) {
+            event.stopPropagation();
+            expandedState[cardId] = !expandedState[cardId];
+            applyFilters();
+        }
+
+        function toggleSubcard(subcardId) {
+            expandedState[subcardId] = !expandedState[subcardId];
+            applyFilters();
+        }
+
+        function toggleTableExpansion() {
+            expandedState['master-table'] = !expandedState['master-table'];
+            document.getElementById('btnTableText').innerText = expandedState['master-table'] ? 'Contraer Despachos' : 'Ver Todos los Despachos';
+            document.getElementById('btnTableArrow').innerText = expandedState['master-table'] ? '▲' : '▼';
+            applyFilters();
+        }
+
         function applyFilters() {
-            let dataTemporal = rawData.filter(row => {
-                if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
-                return true;
+            // Opacidad de Tarjetas según selección de centros
+            ['card-Global', 'card-Chancay', 'card-Ate1', 'card-Ate2'].forEach(id => {
+                let key = id === 'card-Global' ? 'Total' : id === 'card-Chancay' ? 'Chancay' : id === 'card-Ate1' ? 'Ate 1' : 'Ate 2';
+                let el = document.getElementById(id);
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(key)) el.classList.add('card-inactive');
+                else el.classList.remove('card-inactive');
             });
 
+            let dataTemporal = rawData.filter(row => selectedDia === 'ALL' || row.numDia === selectedDia);
             renderPerformanceCards(dataTemporal);
 
             let dataFila1 = rawData.filter(row => {
@@ -353,7 +353,6 @@
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
-
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
             filteredData = dataTemporal.filter(row => {
@@ -375,17 +374,7 @@
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            let dataParaGraficoTrend = rawData.filter(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
-                if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
-                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
-                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
-                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
-                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
-                return true;
-            });
-            setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
+            setTimeout(() => { renderTrendChart(filteredData); }, 50);
         }
 
         function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
@@ -405,18 +394,17 @@
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Tipo de Unidad vs % DBE
+            // 1. Asignación Unidades
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
-            
             chartAsignacion = new Chart(document.getElementById('chartAsignacion').getContext('2d'), {
                 type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: asigLabels, datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }] },
                 options: {
                     responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
                     layout: { padding: { top: 15 } },
-                    scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
+                    scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             let label = asigLabels[elements[0].index];
@@ -430,7 +418,7 @@
                 }
             });
 
-            // 2. Nombre del Día vs % DBE
+            // 2. Día de la Semana
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -440,10 +428,9 @@
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
 
-            // 3. Número de Semana vs % DBE
+            // 3. Número de Semana
             if(chartNumSemana) chartNumSemana.destroy();
-            let semLabels = Object.keys(semMap).sort();
-            if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
+            let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
             chartNumSemana = new Chart(document.getElementById('chartNumSemana').getContext('2d'), {
                 type: 'bar', plugins: [percentageLabelsPlugin],
@@ -471,12 +458,10 @@
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
-            let barColor = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-            let textColor = dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-700';
             let isExpanded = expandedState[containerId];
 
             let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey)
-                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-sm">✓</div>`
+                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 flex items-center justify-center text-[8px] text-white font-bold shrink-0">✓</div>`
                 : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
 
             let cardHtml = `
@@ -484,57 +469,40 @@
                     <div>
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
-                                ${circleHtml}
-                                <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4>
+                                ${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4>
                             </div>
-                            <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">
-                                ${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}
-                            </span>
+                            <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}</span>
                         </div>
                         <div class="mt-2.5">
                             <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'} tracking-tight">${totalRechazado.toFixed(1).toLocaleString('es-PE')}</h2>
                             <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">Kg. Rechazados</p>
                         </div>
                         <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-500 border-t border-slate-200 pt-1.5">
-                            <span>Kg. Surtidos:</span>
-                            <span class="font-mono text-slate-800 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
+                            <span>Kg. Surtidos:</span><span class="font-mono text-slate-800 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
                         </div>
                         <div class="mt-2.5">
                             <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                                <span>% DBE: <b class="${textColor}">${dbeRate.toFixed(2)}%</b></span>
-                                <span>Meta: 2.15%</span>
+                                <span>% DBE: <b class="${dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${dbeRate.toFixed(2)}%</b></span><span>Meta: 2.15%</span>
                             </div>
-                            <div class="w-full bg-slate-100 rounded-full h-1 relative overflow-hidden">
-                                <div class="${barColor} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-1 relative overflow-hidden"><div class="${dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full transition-all" style="width: ${fillPercent}%"></div></div>
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
-                            <span>% DBE por Canal</span>
-                            <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 cursor-pointer py-0.5">
+                            <span>% DBE por Canal</span><span class="text-[9px]">${isExpanded ? '▲' : '▼'}</span>
                         </button>
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
 
             Object.keys(canalMap).sort().forEach(canal => {
                 let cItem = canalMap[canal] || {s:0, r:0}; let cRate = cItem.s > 0 ? (cItem.r / cItem.s * 100) : 0;
-                let cWidth = Math.min((cRate / 5) * 100, 100);
-                let cColor = cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
-                let cText = cRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600';
                 let canalCircle = selectedCanalesFiltro.includes(canal) ? `<div class="w-2.5 h-2.5 rounded-full bg-indigo-600 border border-indigo-500 flex items-center justify-center text-[6px] text-white font-bold shrink-0">✓</div>` : `<div class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50 shrink-0"></div>`;
-
                 cardHtml += `
                     <div onclick="handleCanalCircleClick('${canal}', event)" class="flex items-center justify-between gap-1.5 text-[10px] cursor-pointer hover:bg-slate-50 p-0.5 rounded transition-colors noclick">
-                        <div class="flex items-center gap-1.5 truncate w-14">
-                            ${canalCircle} <span class="font-medium text-slate-600 truncate">${canal}</span>
-                        </div>
-                        <div class="flex-1 bg-slate-100 h-1 rounded-full relative overflow-hidden">
-                            <div class="${cColor} h-1 rounded-full" style="width: ${cWidth}%"></div>
-                        </div>
-                        <span class="font-bold font-mono text-right w-9 ${cText}">${cRate.toFixed(1)}%</span>
-                    </div>
-                `;
+                        <div class="flex items-center gap-1.5 truncate w-14">${canalCircle} <span class="font-medium text-slate-600 truncate">${canal}</span></div>
+                        <div class="flex-1 bg-slate-100 h-1 rounded-full relative overflow-hidden"><div class="${cRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((cRate / 5) * 100, 100)}%"></div></div>
+                        <span class="font-bold font-mono text-right w-9 ${cRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${cRate.toFixed(1)}%</span>
+                    </div>`;
             });
             cardHtml += `</div></div></div>`; document.getElementById(containerId).innerHTML = cardHtml;
         }
@@ -543,8 +511,7 @@
             let map = {};
             dataset.forEach(row => {
                 if (row.rechazado <= 0 || row.motivo === 'SIN ESPECIFICAR') return;
-                if (!map[row.motivo]) map[row.motivo] = { name: row.motivo, r: 0 };
-                map[row.motivo].r += row.rechazado;
+                if (!map[row.motivo]) map[row.motivo] = { name: row.motivo, r: 0 }; map[row.motivo].r += row.rechazado;
             });
             let list = Object.values(map).sort((a, b) => b.r - a.r);
             let isExpanded = expandedState[containerId]; let visibleList = isExpanded ? list : list.slice(0, 10);
@@ -552,17 +519,13 @@
 
             let html = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-amber-600">${titleLabel} por Impacto</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
-                let fillWidth = Math.min((item.r / maxRechazo) * 100, 100);
                 html += `
                     <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${selectedMotivosFiltro.includes(item.name) ? 'subitem-active' : ''}">
-                        <div class="flex justify-between items-center mb-0.5">
-                            <span class="font-bold text-slate-700 truncate max-w-[155px]">${item.name}</span>
-                            <span class="font-black font-mono text-amber-600">${item.r.toFixed(1)} Kg</span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${fillWidth}%"></div></div>
+                        <div class="flex justify-between items-center mb-0.5"><span class="font-bold text-slate-700 truncate max-w-[155px]">${item.name}</span><span class="font-black font-mono text-amber-600">${item.r.toFixed(1)} Kg</span></div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${Math.min((item.r / maxRechazo) * 100, 100)}%"></div></div>
                     </div>`;
             });
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -570,8 +533,7 @@
             let map = {};
             dataset.forEach(row => {
                 let k = row[groupingKey]; if (!k || k === '-') return;
-                if (!map[k]) map[k] = { name: k, s: 0, r: 0 };
-                map[k].s += row.surtido; map[k].r += row.rechazado;
+                if (!map[k]) map[k] = { name: k, s: 0, r: 0 }; map[k].s += row.surtido; map[k].r += row.rechazado;
             });
             let list = Object.values(map).map(item => { item.rate = item.s > 0 ? (item.r / item.s * 100) : 0; return item; }).sort((a, b) => b.rate - a.rate);
             let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
@@ -589,21 +551,16 @@
                         <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
         function renderMasterTable(dataset) {
             let customerMap = {};
             dataset.forEach(row => {
-                if (row.rechazado <= 0) return;
-                let key = row.codClie;
+                if (row.rechazado <= 0) return; let key = row.codClie;
                 if (!customerMap[key]) {
-                    customerMap[key] = {
-                        fecha: row.fecha, cod: row.codClie, name: row.cliente,
-                        ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, tipo: row.tipoUnidad, mot: row.motivo,
-                        surtidoTotal: 0, rechazadoTotal: 0
-                    };
+                    customerMap[key] = { fecha: row.fecha, cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, tipo: row.tipoUnidad, mot: row.motivo, surtidoTotal: 0, rechazadoTotal: 0 };
                 }
                 customerMap[key].surtidoTotal += row.surtido; customerMap[key].rechazadoTotal += row.rechazado;
             });
@@ -611,8 +568,8 @@
             let isExpanded = expandedState['master-table']; let visibleList = isExpanded ? listWithRechazo : listWithRechazo.slice(0, 10);
             const tbody = document.getElementById('masterTableBody'); tbody.innerHTML = '';
             visibleList.forEach(c => {
-                let tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 font-mono text-slate-700";
-                tr.innerHTML = `<td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td><td class="p-2 text-slate-400 text-[10px]">${c.cod}</td><td class="p-2 font-medium text-slate-800 truncate max-w-[120px]">${c.name}</td><td class="p-2 text-slate-500 font-medium">${c.ruta}</td><td class="p-2 text-slate-500">${c.canal}</td><td class="p-2 text-slate-500 text-[10px]">${c.veh}</td><td class="p-2 text-[9.5px] font-bold ${c.tipo === 'PROPIO' ? 'text-indigo-600' : c.tipo === '3PL' ? 'text-amber-600' : 'text-purple-600'}">${c.tipo}</td><td class="p-2 truncate max-w-[110px] text-amber-600 font-medium">${c.mot}</td><td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1)}</td><td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1)} Kg</td>`;
+                let tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 border-b border-slate-100 font-mono text-slate-700";
+                tr.innerHTML = `<td class="p-2 text-indigo-600 font-medium">${c.fecha}</td><td class="p-2 text-slate-400">${c.cod}</td><td class="p-2 font-medium text-slate-800 truncate max-w-[120px]">${c.name}</td><td class="p-2 text-slate-500">${c.ruta}</td><td class="p-2 text-slate-500">${c.canal}</td><td class="p-2 text-slate-400">${c.veh}</td><td class="p-2 font-bold ${c.tipo === 'PROPIO' ? 'text-indigo-600' : c.tipo === '3PL' ? 'text-amber-600' : 'text-purple-600'}">${c.tipo}</td><td class="p-2 truncate max-w-[110px] text-amber-600">${c.mot}</td><td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1)}</td><td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1)} Kg</td>`;
                 tbody.appendChild(tr);
             });
             document.getElementById('table-view-status').innerText = `Mostrando ${visibleList.length} de ${listWithRechazo.length} clientes con rechazo`;
@@ -623,7 +580,7 @@
             let validPoints = dataset.filter(x => x.rechazado > 0 && x.lat !== 0);
             validPoints.forEach(p => {
                 let circleMarker = L.circleMarker([p.lat, p.lng], { radius: Math.max(5, Math.min(p.rechazado / 8, 14)), fillColor: '#e11d48', color: '#ffffff', weight: 1.5, fillOpacity: 0.75 });
-                circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;"><b>${p.cliente}</b><br/><b>Tipo:</b> ${p.tipoUnidad}<br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/><b>Motivo:</b> ${p.motivo}</div>`);
+                circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px;"><b>${p.cliente}</b><br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/><b>Motivo:</b> ${p.motivo}</div>`);
                 markersGroup.addLayer(circleMarker);
             });
             if (validPoints.length > 0 && mapInstance) mapInstance.fitBounds(validPoints.map(x => [x.lat, x.lng]), { padding: [25, 25], maxZoom: 14 });
@@ -633,17 +590,16 @@
             let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
-            const ctx = document.getElementById('chartTrend').getContext('2d');
-            trendChart = new Chart(ctx, {
+            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: sortedDays,
                     datasets: [
-                        { label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), borderColor: '#4f46e5', backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.1, yAxisID: 'y' },
-                        { label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.03)', borderWidth: 2, fill: true, tension: 0.1, yAxisID: 'y1' }
+                        { label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), borderColor: '#4f46e5', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1, yAxisID: 'y' },
+                        { label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.02)', borderWidth: 1.5, fill: true, tension: 0.1, yAxisID: 'y1' }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { type: 'linear', position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' } }, y1: { type: 'linear', position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } }, x: { grid: { display: false } } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { position: 'left', beginAtZero: true, ticks: { color: '#4f46e5', callback: v => v + '%' } }, y1: { position: 'right', beginAtZero: true, ticks: { color: '#b45309', callback: v => v + ' kg' }, grid: { drawOnChartArea: false } }, x: { grid: { display: false } } } }
             });
         }
 
