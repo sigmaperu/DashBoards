@@ -75,7 +75,7 @@
         </section>
     </div>
 
-    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[200px] md:h-[210px] w-full">
+    <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[230px] md:h-[240px] w-full">
         <div class="w-full flex-1 min-h-0 relative"><canvas id="chartTrend"></canvas></div>
     </section>
 
@@ -159,7 +159,56 @@
             }
         };
 
-        // Configuración común para remover grillas y textos del eje Y
+        // Plugin avanzado para dibujar datos en el Gráfico de Tendencia (Evolutivo)
+        const trendLabelsPlugin = {
+            id: 'trendLabelsPlugin',
+            afterDatasetsDraw(chart) {
+                const { ctx } = chart;
+                ctx.save();
+                
+                // Dataset 1: Barras de Kg Rechazados (Índice 1)
+                const barMeta = chart.getDatasetMeta(1);
+                if (barMeta && !barMeta.hidden) {
+                    ctx.font = 'bold 9px "Courier New", monospace';
+                    ctx.fillStyle = '#78350f'; // Marrón oscuro para legibilidad dentro de barra naranja
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    barMeta.data.forEach((bar, index) => {
+                        const val = chart.data.datasets[1].data[index];
+                        if (val && val > 0) {
+                            const txt = Math.round(val) + "k";
+                            // Calcular el punto medio vertical de la barra
+                            const barCenterY = (bar.y + bar.base) / 2;
+                            
+                            ctx.save();
+                            ctx.translate(bar.x, barCenterY);
+                            ctx.rotate(-Math.PI / 2); // Rotar 90 grados a la izquierda
+                            ctx.fillText(txt, 0, 0);
+                            ctx.restore();
+                        }
+                    });
+                }
+
+                // Dataset 0: Línea de % DBE (Índice 0)
+                const lineMeta = chart.getDatasetMeta(0);
+                if (lineMeta && !lineMeta.hidden) {
+                    ctx.font = 'black 9px "Inter", sans-serif';
+                    ctx.fillStyle = '#4f46e5'; // Color índigo corporativo
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    
+                    lineMeta.data.forEach((point, index) => {
+                        const val = chart.data.datasets[0].data[index];
+                        if (val !== undefined && val !== null) {
+                            ctx.fillText(Number(val).toFixed(1) + '%', point.x, point.y - 6);
+                        }
+                    });
+                }
+                ctx.restore();
+            }
+        };
+
         const cleanScalesConfig = {
             y: { grid: { display: false }, ticks: { display: false }, border: { display: false } },
             x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } }
@@ -330,6 +379,7 @@
             applyFilters();
         }
 
+        // Simplificado: Ya no compacta ni altera la estructura tras seleccionar elementos
         function toggleSubcard(subcardId) {
             expandedState[subcardId] = !expandedState[subcardId];
             applyFilters();
@@ -379,7 +429,7 @@
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            // El Evolutivo Diario NO depende de la selección del calendario diario (usa dataFila1 para respetar filtros estructurales)
+            // El Evolutivo Diario se mantiene intacto respecto al calendario diario
             setTimeout(() => { renderTrendChart(dataFila1); }, 50);
         }
 
@@ -531,7 +581,7 @@
                         <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${Math.min((item.r / maxRechazo) * 100, 100)}%"></div></div>
                     </div>`;
             });
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Ver Menos' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -557,7 +607,7 @@
                         <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Ver Menos' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
@@ -596,22 +646,64 @@
             let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
+            
             trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
-                type: 'line',
+                plugins: [trendLabelsPlugin], // Inyectar etiquetas avanzadas e internas
                 data: {
                     labels: sortedDays,
                     datasets: [
-                        { label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), borderColor: '#4f46e5', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1, yAxisID: 'y' },
-                        { label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(1)), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.02)', borderWidth: 1.5, fill: true, tension: 0.1, yAxisID: 'y1' }
+                        { 
+                            type: 'line',
+                            label: '% DBE Diario', 
+                            data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), 
+                            borderColor: '#4f46e5', 
+                            backgroundColor: 'transparent', 
+                            borderWidth: 2.5, 
+                            tension: 0.1, 
+                            yAxisID: 'y',
+                            z: 10 // Poner la línea al frente
+                        },
+                        { 
+                            type: 'bar',
+                            label: 'Kg. Rechazados', 
+                            data: sortedDays.map(d => fMap[d].r.toFixed(0)), 
+                            backgroundColor: 'rgba(245, 158, 11, 0.28)', 
+                            borderColor: 'rgba(245, 158, 11, 0.6)',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            yAxisID: 'y1',
+                            z: 1
+                        }
                     ]
                 },
                 options: { 
                     responsive: true, 
                     maintainAspectRatio: false, 
+                    plugins: {
+                        legend: { display: false } // Removida la leyenda por completo
+                    },
+                    layout: {
+                        padding: { top: 18, bottom: 5, left: 10, right: 10 }
+                    },
                     scales: { 
-                        y: { position: 'left', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
-                        y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
-                        x: { grid: { display: false } } 
+                        y: { 
+                            position: 'left', 
+                            beginAtZero: true, 
+                            grid: { display: true, color: '#f1f5f9' }, // Grillas horizontales activas
+                            ticks: { display: false }, 
+                            border: { display: false } 
+                        }, 
+                        y1: { 
+                            position: 'right', 
+                            beginAtZero: true, 
+                            grid: { display: false }, // Evitar duplicar grillas horizontales
+                            ticks: { display: false }, 
+                            border: { display: false } 
+                        }, 
+                        x: { 
+                            grid: { display: true, color: '#f1f5f9' }, // Grillas verticales activas
+                            ticks: { font: { size: 9, weight: 'bold' } }
+                        } 
                     } 
                 }
             });
