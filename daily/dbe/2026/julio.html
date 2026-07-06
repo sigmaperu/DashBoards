@@ -33,24 +33,13 @@
             border-color: #4f46e5 !important;
             font-weight: 700;
         }
-        .card-inactive {
-            opacity: 0.4;
-            transform: scale(0.99);
-            border-color: #e2e8f0 !important;
-            background-color: #f8fafc !important;
-        }
         .subitem-active {
             background-color: rgba(79, 70, 229, 0.08);
             border-left: 2px solid #4f46e5;
         }
         @media print {
-            body {
-                background-color: #ffffff !important;
-                color: #000000 !important;
-            }
-            .day-btn, header button, header a, .noclick, button, select {
-                display: none !important;
-            }
+            body { background-color: #ffffff !important; color: #000000 !important; }
+            .day-btn, header button, header a, .noclick, button, select { display: none !important; }
         }
     </style>
 </head>
@@ -77,9 +66,6 @@
                     <i data-lucide="users" class="w-4 h-4"></i>
                 </a>
                 <div class="w-px h-3 bg-slate-200"></div>
-                <button onclick="shareDashboard()" class="p-1 text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer" title="Compartir Dashboard">
-                    <i data-lucide="share-2" class="w-4 h-4"></i>
-                </button>
                 <button onclick="window.print()" class="p-1 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer" title="Descargar Reporte en PDF">
                     <i data-lucide="download-cloud" class="w-4 h-4"></i>
                 </button>
@@ -99,25 +85,25 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
-            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
-            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between transition-all duration-200 cursor-pointer"></div>
+            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-indigo-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Total Operación', event)"></div>
+            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Chancay', event)"></div>
+            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Ate 1', event)"></div>
+            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer" onclick="handleCardClick('Ate 2', event)"></div>
         </section>
     </div>
 
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Distribución por Tipo de Unidad</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Distribución por Tipo de Unidad (Filtra con Click)</span>
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día de la Semana</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día (Global / No afectado por Calendario)</span>
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana (No afectado por Calendario)</span>
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
@@ -157,6 +143,7 @@
                                 <th class="p-2">Ruta</th>
                                 <th class="p-2">Canal</th>
                                 <th class="p-2">Vehículo</th>
+                                <th class="p-2">Tipo</th>
                                 <th class="p-2 truncate max-w-[110px]">Motivo</th>
                                 <th class="p-2 text-right">Surtido</th>
                                 <th class="p-2 text-right text-rose-600">Rechazado</th>
@@ -185,14 +172,13 @@
         let selectedDia = 'ALL';
         const dbeMeta = 2.15;
 
-        // Estados de Filtros de Selección Múltiple con CTRL
         let selectedCentrosFiltro = [];
         let selectedCanalesFiltro = []; 
         let selectedVehiculosFiltro = [];
         let selectedRutasFiltro = [];
         let selectedDistritosFiltro = [];
         let selectedMotivosFiltro = [];
-        let selectedUnidadesFiltro = []; // Nuevo Filtro Cruzado de Barra
+        let selectedUnidadesFiltro = []; 
 
         let trendChart = null;
         let chartAsignacion = null, chartDiaSemana = null, chartNumSemana = null;
@@ -207,7 +193,28 @@
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
         const diasNombreArr = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-        document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); });
+        // Plugin Inline para dibujar las etiquetas de datos en porcentaje (%) arriba de las barras
+        const percentageLabelsPlugin = {
+            id: 'percentageLabels',
+            afterDatasetsDraw(chart) {
+                const { ctx, data } = chart;
+                ctx.save();
+                ctx.font = 'bold 9px "Inter", sans-serif';
+                ctx.fillStyle = '#475569';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                
+                chart.getDatasetMeta(0).data.forEach((bar, index) => {
+                    const value = data.datasets[0].data[index];
+                    if (value !== undefined && value !== null) {
+                        ctx.fillText(Number(value).toFixed(2) + '%', bar.x, bar.y - 4);
+                    }
+                });
+                ctx.restore();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); lucide.createIcons(); });
 
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
@@ -231,14 +238,12 @@
 
         async function loadData() {
             try {
-                // 1. Cargar Maestro Asignación de Unidades
                 const resAsig = await fetch(asignacionUrl);
                 if (resAsig.ok) {
                     const textAsig = await resAsig.text();
                     parseAsignacion(textAsig);
                 }
                 
-                // 2. Cargar Base Operativa Transaccional
                 const response = await fetch(csvUrl);
                 if (!response.ok) throw new Error('Error GitHub');
                 const text = await response.text();
@@ -258,8 +263,8 @@
                 let parts = line.split(',');
                 if (parts.length >= 4) {
                     let placa = parts[1].trim().toUpperCase();
-                    let tipoUnidad = parts[3].trim();
-                    if(placa) asignacionMap[placa] = tipoUnidad;
+                    let tipoUnidad = parts[3].trim().toUpperCase();
+                    if(placa) asignacionMap[placa] = (tipoUnidad === 'PROPIO' || tipoUnidad === '3PL') ? tipoUnidad : 'HÍBRIDO';
                 }
             }
         }
@@ -283,13 +288,20 @@
                 let fechaStr = cols[9] || '01/07/2026';
                 let diaFicticio = '01'; if (fechaStr.includes('/')) diaFicticio = fechaStr.split('/')[1].trim().padStart(2, '0');
                 
-                // Cálculo de Semanas y Nombres de Día Reales
-                let dateObj = new Date(2026, 6, parseInt(diaFicticio));
+                // Cálculo de Semanas Exactas y Nombres de Día Reales en Base a Fecha
+                let partsFecha = fechaStr.split('/');
+                let d = parseInt(partsFecha[0]), m = parseInt(partsFecha[1]) - 1, y = parseInt(partsFecha[2]);
+                let dateObj = new Date(y, m, d);
+                
                 let nombreDia = diasNombreArr[dateObj.getDay()];
-                let numeroSemana = "Sem " + String(Math.ceil((parseInt(diaFicticio) + 3) / 7)).padStart(2, '0');
+                
+                // Cálculo correcto de la semana del año
+                let tempDate = new Date(dateObj.getFullYear(), 0, 1);
+                let days = Math.floor((dateObj - tempDate) / (24 * 60 * 60 * 1000));
+                let numSemReal = Math.ceil((days + tempDate.getDay() + 1) / 7);
+                let numeroSemana = "Sem " + String(numSemReal).padStart(2, '0');
 
                 let placaVehiculo = (cols[4] || 'No Especificado').trim().toUpperCase();
-                // CRUCE DINÁMICO REQUERIDO CON ASIGNACION MAESTRA
                 let tipoUnidadCruzado = asignacionMap[placaVehiculo] || 'HÍBRIDO';
 
                 rawData.push({
@@ -308,7 +320,7 @@
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
             const vehicles = ['C2I-891', 'BNY-776', 'AKL-733'];
-            const tipos = ['PROPIO', 'TERCERO', 'HÍBRIDO'];
+            const tipos = ['PROPIO', '3PL', 'HÍBRIDO'];
             for (let day = 1; day <= 31; day++) {
                 let formattedDay = String(day).padStart(2, '0');
                 let dateObj = new Date(2026, 6, day);
@@ -380,6 +392,7 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
+            // dataset que responde al calendario para tarjetas máster superiores
             let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
                 return true;
@@ -387,17 +400,20 @@
 
             renderPerformanceCards(dataTemporal);
 
-            let dataFila1 = dataTemporal.filter(row => {
+            // dataset base filtrado por centros o canales seleccionados
+            let dataFila1 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
-            // RENDER DE LOS 3 NUEVOS CARDS DE BARRAS INTERACTIVOS (Fila 1.5)
-            renderFilaGraficosBarras(dataFila1);
+            // RENDER DE LOS 3 NUEVOS CARDS DE BARRAS INTERACTIVOS
+            renderFilaGraficosBarras(dataFila1, dataTemporal);
 
-            // DATA FINAL CRUZADA (Aplica también el filtro cruzado de la barra Tipo Unidad si se clickea)
-            filteredData = dataFila1.filter(row => {
+            // DATA FINAL CRUZADA (Sujeta a filtros elásticos inferiores)
+            filteredData = dataTemporal.filter(row => {
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
@@ -414,7 +430,6 @@
             renderMasterTable(filteredData);
             renderMapMarkers(filteredData);
 
-            // Gráfico evolutivo histórico de doble eje afectado por todos los filtros
             let dataParaGraficoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -428,27 +443,34 @@
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
         }
 
-        // LÓGICA DE RENDERIZADO Y FILTRADO DE LA NUEVA FILA DE GRÁFICOS INTERMEDIOS
-        function renderFilaGraficosBarras(dataset) {
+        function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            dataset.forEach(row => {
+            // Gráfico 1 (Tipo de Unidad): Sí es afectado por el calendario para análisis situacional
+            dataCalendarioActual.forEach(row => {
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
+                asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
+            });
+
+            // Gráficos 2 y 3 (Día y Semana): NO afectados por el filtro del calendario (Usa dataset mensual global)
+            dataGlobalCentros.forEach(row => {
                 if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                 if (!semMap[row.numSemana]) semMap[row.numSemana] = { s:0, r:0 };
 
-                asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
                 diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Gráfico Tipo de Unidad vs % DBE (Con Filtro Cruzado Habilitado)
+            // 1. Render Tipo de Unidad vs % DBE
             if(chartAsignacion) chartAsignacion.destroy();
-            let asigLabels = Object.keys(asigMap);
-            let asigData = asigLabels.map(l => asigMap[l].s > 0 ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
+            let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
+            let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
             
             chartAsignacion = new Chart(document.getElementById('chartAsignacion').getContext('2d'), {
                 type: 'bar',
+                plugins: [percentageLabelsPlugin],
                 data: {
                     labels: asigLabels,
                     datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }]
@@ -456,11 +478,11 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
+                    layout: { padding: { top: 15 } },
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
-                            let index = elements[0].index;
-                            let label = asigLabels[index];
+                            let index = elements[0].index; let label = asigLabels[index];
                             if (e.native.ctrlKey) {
                                 if (selectedUnidadesFiltro.includes(label)) selectedUnidadesFiltro = selectedUnidadesFiltro.filter(x => x !== label);
                                 else selectedUnidadesFiltro.push(label);
@@ -473,24 +495,27 @@
                 }
             });
 
-            // 2. Gráfico Nombre Día vs % DBE
+            // 2. Render Nombre del Día vs % DBE (Sin efecto de calendario)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
             chartDiaSemana = new Chart(document.getElementById('chartDiaSemana').getContext('2d'), {
                 type: 'bar',
+                plugins: [percentageLabelsPlugin],
                 data: { labels: diaLabels, datasets: [{ data: diaData, backgroundColor: '#fb923c', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
 
-            // 3. Gráfico Número Semana vs % DBE
+            // 3. Render Número de Semana vs % DBE (Sin efecto de calendario)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort();
-            let semData = semLabels.map(l => semMap[l].s > 0 ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
+            if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
+            let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
             chartNumSemana = new Chart(document.getElementById('chartNumSemana').getContext('2d'), {
                 type: 'bar',
+                plugins: [percentageLabelsPlugin],
                 data: { labels: semLabels, datasets: [{ data: semData, backgroundColor: '#2dd4bf', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
         }
 
@@ -548,14 +573,13 @@
                             </div>
                             <div class="w-full bg-slate-100 rounded-full h-1 relative overflow-hidden">
                                 <div class="${barColor} h-1 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                                <div class="absolute left-[71.6%] top-0 w-0.5 h-1 bg-slate-300 z-10"></div>
                             </div>
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
                         <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer py-0.5">
                             <span>% DBE por Canal</span>
-                            <span class="text-[9px] transition-transform duration-200">${isExpanded ? '▲' : '▼'}</span>
+                            <span class="text-[9px]">${isExpanded ? '▲' : '▼'}</span>
                         </button>
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
@@ -602,7 +626,7 @@
                             <span class="font-bold text-slate-700 truncate max-w-[155px]">${item.name}</span>
                             <span class="font-black font-mono text-amber-600">${item.r.toFixed(1)} Kg</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full transition-all" style="width: ${fillWidth}%"></div></div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${fillWidth}%"></div></div>
                     </div>`;
             });
             html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
@@ -626,10 +650,10 @@
                     <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${filterArray.includes(item.name) ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5">
                             <span class="font-mono font-bold text-slate-700 truncate max-w-[100px]">${item.name}</span>
-                            <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)}/${item.s.toFixed(1)} kg</span>
+                            <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)} kg</span>
                             <span class="font-black font-mono ${item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${item.rate.toFixed(2)}%</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full transition-all" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
             subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
@@ -640,17 +664,18 @@
             let customerMap = {};
             dataset.forEach(row => {
                 if (row.rechazado <= 0) return;
-                if (!customerMap[row.codClie]) { customerMap[row.codClie] = { fecha: row.fecha, cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, mot: row.motivo, surtidoTotal: 0, rechazadoTotal: 0 }; }
-                customerMap[row.codClie].surtidoTotal += row.surtido; customerMap[key = row.codClie].rechazadoTotal += row.rechazado;
+                if (!customerMap[row.codClie]) { customerMap[row.codClie] = { fecha: row.fecha, cod: row.codClie, name: row.cliente, ruta: row.rutaVenta, canal: row.canal, veh: row.vehiculo, tipo: row.tipoUnidad, mot: row.motivo, surtidoTotal: 0, rechazadoTotal: 0 }; }
+                customerMap[row.codClie].surtidoTotal += row.surtido; customerMap[row.codClie].rechazadoTotal += row.rechazado;
             });
             let listWithRechazo = Object.values(customerMap).sort((a, b) => b.rechazadoTotal - a.rechazadoTotal);
             let isExpanded = expandedState['master-table']; let visibleList = isExpanded ? listWithRechazo : listWithRechazo.slice(0, 10);
             const tbody = document.getElementById('masterTableBody'); tbody.innerHTML = '';
             visibleList.forEach(c => {
                 let tr = document.createElement('tr'); tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 font-mono text-slate-700";
-                tr.innerHTML = `<td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td><td class="p-2 text-slate-400 text-[10px]">${c.cod}</td><td class="p-2 font-medium text-slate-800 truncate max-w-[120px]">${c.name}</td><td class="p-2 text-slate-500 font-medium">${c.ruta}</td><td class="p-2 text-slate-500">${c.canal}</td><td class="p-2 text-slate-500 text-[10px]">${c.veh}</td><td class="p-2 truncate max-w-[110px] text-amber-600 font-medium">${c.mot}</td><td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1)}</td><td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1)} Kg</td>`;
+                tr.innerHTML = `<td class="p-2 font-medium text-indigo-600/90 text-[10.5px]">${c.fecha}</td><td class="p-2 text-slate-400 text-[10px]">${c.cod}</td><td class="p-2 font-medium text-slate-800 truncate max-w-[120px]">${c.name}</td><td class="p-2 text-slate-500 font-medium">${c.ruta}</td><td class="p-2 text-slate-500">${c.canal}</td><td class="p-2 text-slate-500 text-[10px]">${c.veh}</td><td class="p-2 text-[9.5px] font-bold ${c.tipo === 'PROPIO' ? 'text-indigo-600' : c.tipo === '3PL' ? 'text-amber-600' : 'text-purple-600'}">${c.tipo}</td><td class="p-2 truncate max-w-[110px] text-amber-600 font-medium">${c.mot}</td><td class="p-2 text-right text-slate-400">${c.surtidoTotal.toFixed(1)}</td><td class="p-2 text-right text-rose-600 font-black">${c.rechazadoTotal.toFixed(1)} Kg</td>`;
                 tbody.appendChild(tr);
             });
+            document.getElementById('table-view-status').innerText = `Mostrando ${visibleList.length} de ${listWithRechazo.length} clientes con rechazo`;
         }
 
         function renderMapMarkers(dataset) {
@@ -658,10 +683,10 @@
             let validPoints = dataset.filter(x => x.rechazado > 0 && x.lat !== 0);
             validPoints.forEach(p => {
                 let circleMarker = L.circleMarker([p.lat, p.lng], { radius: Math.max(5, Math.min(p.rechazado / 8, 14)), fillColor: '#e11d48', color: '#ffffff', weight: 1.5, fillOpacity: 0.75 });
-                circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;"><b>${p.cliente}</b><br/><b>Fecha:</b> ${p.fecha}<br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/><b>Motivo:</b> ${p.motivo}</div>`);
+                circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px; color:#1e293b; line-height:1.4; width: 170px;"><b>${p.cliente}</b><br/><b>Tipo:</b> ${p.tipoUnidad}<br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span><br/><b>Motivo:</b> ${p.motivo}</div>`);
                 markersGroup.addLayer(circleMarker);
             });
-            if (validPoints.length > 0) mapInstance.fitBounds(validPoints.map(x => [x.lat, x.lng]), { padding: [25, 25], maxZoom: 14 });
+            if (validPoints.length > 0 && mapInstance) mapInstance.fitBounds(validPoints.map(x => [x.lat, x.lng]), { padding: [25, 25], maxZoom: 14 });
         }
 
         function renderTrendChart(dataTrend) {
@@ -688,8 +713,6 @@
             Object.values(aggregatedExcelMap).forEach(c => { csvContent += `"${c.fecha}","${c.codClie}","${c.cliente}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${c.tipoUnidad}","${c.motivo}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)}\n`; });
             let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.setAttribute("href", URL.createObjectURL(blob)); link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
-
-        function shareDashboard() { if (navigator.share) { navigator.share({ title: 'Dashboard DBE', url: window.location.href }); } else { window.print(); } }
     </script>
 </body>
 </html>
