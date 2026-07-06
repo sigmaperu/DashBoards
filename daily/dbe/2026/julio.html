@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
@@ -34,14 +34,14 @@
             font-weight: 700;
         }
         .card-inactive {
-            opacity: 0.4;
+            opacity: 0.35;
             transform: scale(0.99);
             border-color: #e2e8f0 !important;
             background-color: #f8fafc !important;
         }
         .subitem-active {
             background-color: rgba(79, 70, 229, 0.08);
-            border-left: 2px solid #4f46e5;
+            border-left: 2.5px solid #4f46e5;
         }
         @media print {
             body { background-color: #ffffff !important; color: #000000 !important; }
@@ -100,16 +100,13 @@
 
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Distribución por Tipo de Unidad (Filtra con Click)</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Performance por Día (Global / Mensual)</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[190px] flex flex-col">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1">Evolutivo de Desviación por Semana (Global / Mensual)</span>
+            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[180px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
@@ -199,7 +196,6 @@
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
         const diasNombreArr = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
-        // Plugin Inline para dibujar las etiquetas de datos en porcentaje (%) arriba de las barras
         const percentageLabelsPlugin = {
             id: 'percentageLabels',
             afterDatasetsDraw(chart) {
@@ -209,7 +205,6 @@
                 ctx.fillStyle = '#475569';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
-                
                 chart.getDatasetMeta(0).data.forEach((bar, index) => {
                     const value = data.datasets[0].data[index];
                     if (value !== undefined && value !== null) {
@@ -249,7 +244,6 @@
                     const textAsig = await resAsig.text();
                     parseAsignacion(textAsig);
                 }
-                
                 const response = await fetch(csvUrl);
                 if (!response.ok) throw new Error('Error GitHub');
                 const text = await response.text();
@@ -261,21 +255,21 @@
             }
         }
 
+        // CORRECCIÓN EXACTA DE CRUCE POR ÍNDICE 0 (PLACA) Y RETORNO DE ÍNDICE 2 (TIPO)
         function parseAsignacion(text) {
             const lines = text.split(/\r?\n/);
             asignacionMap = {};
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i].trim(); if (!line) continue;
                 let parts = line.split(',');
-                if (parts.length >= 4) {
-                    let placa = parts[1].trim().toUpperCase();
-                    let tipoUnidad = parts[3].trim().toUpperCase();
+                if (parts.length >= 3) {
+                    let placa = parts[0].trim().toUpperCase().replace(/"/g, '');
+                    let tipoUnidad = parts[2].trim().toUpperCase().replace(/"/g, '');
                     if(placa) asignacionMap[placa] = (tipoUnidad === 'PROPIO' || tipoUnidad === '3PL') ? tipoUnidad : 'HÍBRIDO';
                 }
             }
         }
 
-        // CORRECCIÓN ESTRUCTURAL DEL FORMATO DE FECHA (M/d/yyyy)
         function parseCSV(text) {
             const lines = text.split(/\r?\n/); rawData = [];
             for (let i = 1; i < lines.length; i++) {
@@ -294,7 +288,6 @@
                 let centroNombre = centroMapping[rawCentro] || rawCentro;
                 let fechaStr = cols[9] || '7/1/2026';
                 
-                // Parseo correcto basado en el formato nativo M/d/yyyy de tu base de datos
                 let partesFecha = fechaStr.split('/');
                 let mes = parseInt(partesFecha[0]) - 1;
                 let dia = parseInt(partesFecha[1]);
@@ -304,7 +297,6 @@
                 let dateObj = new Date(anio, mes, dia);
                 let nombreDia = diasNombreArr[dateObj.getDay()];
                 
-                // Cálculo estricto del número de semana basado en la aritmética real de días del año
                 let tempStartYear = new Date(dateObj.getFullYear(), 0, 1);
                 let diffInDays = Math.floor((dateObj - tempStartYear) / (24 * 60 * 60 * 1000));
                 let numSemReal = Math.ceil((diffInDays + tempStartYear.getDay() + 1) / 7);
@@ -348,57 +340,6 @@
             }
         }
 
-        function selectDiaCalendario(dia) {
-            selectedDia = dia;
-            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
-            const btnAll = document.getElementById('btnDayAll');
-            if (dia === 'ALL') { btnAll.classList.add('bg-indigo-600', 'text-white'); } 
-            else { btnAll.classList.remove('bg-indigo-600', 'text-white'); const targetBtn = document.getElementById(`btn-day-${dia}`); if (targetBtn) targetBtn.classList.add('active'); }
-            applyFilters();
-        }
-
-        window.handleCardClick = function(centroName, event) {
-            if(event.target.closest('.noclick')) return;
-            if (centroName === 'Total Operación') { selectedCentrosFiltro = []; } else {
-                if (event.ctrlKey) {
-                    if (selectedCentrosFiltro.includes(centroName)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroName);
-                    else selectedCentrosFiltro.push(centroName);
-                } else {
-                    if (selectedCentrosFiltro.length === 1 && selectedCentrosFiltro[0] === centroName) selectedCentrosFiltro = [];
-                    else selectedCentrosFiltro = [centroName];
-                }
-            }
-            applyFilters();
-        };
-
-        window.handleCanalCircleClick = function(canalName, event) {
-            event.stopPropagation();
-            if (event.ctrlKey) {
-                if (selectedCanalesFiltro.includes(canalName)) selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canalName);
-                else selectedCanalesFiltro.push(canalName);
-            } else {
-                if (selectedCanalesFiltro.length === 1 && selectedCanalesFiltro[0] === canalName) selectedCanalesFiltro = [];
-                else selectedCanalesFiltro = [canalName];
-            }
-            applyFilters();
-        };
-
-        window.handleDimensionItemClick = function(dimensionKey, value, event) {
-            let targetArray = dimensionKey === 'motivo' ? selectedMotivosFiltro : dimensionKey === 'vehiculo' ? selectedVehiculosFiltro : dimensionKey === 'rutaVenta' ? selectedRutasFiltro : selectedDistritosFiltro;
-            if (event.ctrlKey) {
-                if (targetArray.includes(value)) targetArray.splice(targetArray.indexOf(value), 1);
-                else targetArray.push(value);
-            } else {
-                if (targetArray.length === 1 && targetArray[0] === value) targetArray.length = 0;
-                else { targetArray.length = 0; targetArray.push(value); }
-            }
-            applyFilters();
-        };
-
-        window.toggleCanales = function(containerId, e) { e.stopPropagation(); expandedState[containerId] = !expandedState[containerId]; applyFilters(); };
-        window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
-        window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
-
         function applyFilters() {
             let dataTemporal = rawData.filter(row => {
                 if (selectedDia !== 'ALL' && row.numDia !== selectedDia) return false;
@@ -413,7 +354,6 @@
                 return true;
             });
 
-            // RENDER DE LOS 3 CARDS GRÁFICOS DE BARRAS INTERMEDIOS
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
             filteredData = dataTemporal.filter(row => {
@@ -448,91 +388,71 @@
             setTimeout(() => { renderTrendChart(dataParaGraficoTrend); }, 60);
         }
 
-        // LÓGICA DE RENDERS GRÁFICOS INTERMEDIOS CON ETIQUETAS E INDEPENDENCIA DE CALENDARIO
         function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            // Gráfico 1 (Tipo de Unidad): Sí responde al día del calendario seleccionado
             dataCalendarioActual.forEach(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
                 if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
                 asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
             });
 
-            // Gráficos 2 y 3 (Días y Semanas): Independientes del minicalendario diario (Acumulan todo el mes)
             dataGlobalCentros.forEach(row => {
                 if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                 if (!semMap[row.numSemana]) semMap[row.numSemana] = { s:0, r:0 };
-
                 diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Render Tipo de Unidad vs % DBE
+            // 1. Tipo de Unidad vs % DBE
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
             
             chartAsignacion = new Chart(document.getElementById('chartAsignacion').getContext('2d'), {
-                type: 'bar',
-                plugins: [percentageLabelsPlugin],
-                data: {
-                    labels: asigLabels,
-                    datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }]
-                },
+                type: 'bar', plugins: [percentageLabelsPlugin],
+                data: { labels: asigLabels, datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }] },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
                     layout: { padding: { top: 15 } },
                     scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9, weight: 'bold' } } } },
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
-                            let index = elements[0].index; let label = asigLabels[index];
+                            let label = asigLabels[elements[0].index];
                             if (e.native.ctrlKey) {
                                 if (selectedUnidadesFiltro.includes(label)) selectedUnidadesFiltro = selectedUnidadesFiltro.filter(x => x !== label);
                                 else selectedUnidadesFiltro.push(label);
-                            } else {
-                                selectedUnidadesFiltro = selectedUnidadesFiltro.includes(label) && selectedUnidadesFiltro.length === 1 ? [] : [label];
-                            }
+                            } else { selectedUnidadesFiltro = selectedUnidadesFiltro.includes(label) && selectedUnidadesFiltro.length === 1 ? [] : [label]; }
                             applyFilters();
                         }
                     }
                 }
             });
 
-            // 2. Render Nombre del Día vs % DBE (Sin efecto de calendario)
+            // 2. Nombre del Día vs % DBE
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
             chartDiaSemana = new Chart(document.getElementById('chartDiaSemana').getContext('2d'), {
-                type: 'bar',
-                plugins: [percentageLabelsPlugin],
+                type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: diaLabels, datasets: [{ data: diaData, backgroundColor: '#fb923c', borderRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
 
-            // 3. Render Número de Semana vs % DBE (Sin efecto de calendario - Semanas Calculadas Exactas)
+            // 3. Número de Semana vs % DBE
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort();
             if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
             chartNumSemana = new Chart(document.getElementById('chartNumSemana').getContext('2d'), {
-                type: 'bar',
-                plugins: [percentageLabelsPlugin],
+                type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: semLabels, datasets: [{ data: semData, backgroundColor: '#2dd4bf', borderRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15 } }, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { font: { size: 9 } } } } }
             });
         }
 
         function renderPerformanceCards(dataCards) {
-            const updateClasses = (id, target) => {
-                const el = document.getElementById(id);
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(target) && target !== 'Total') el.classList.add('card-inactive');
-                else el.classList.remove('card-inactive');
-            };
-            updateClasses('card-Global', 'Total'); updateClasses('card-Chancay', 'Chancay'); updateClasses('card-Ate1', 'Ate 1'); updateClasses('card-Ate2', 'Ate 2');
-
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
             buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
@@ -561,7 +481,7 @@
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
-                    <div onclick="handleCardClick('${titleName}', event)">
+                    <div>
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">
                                 ${circleHtml}
@@ -657,7 +577,7 @@
             let maxDbeInTanda = list.length > 0 ? Math.max(...list.map(x => x.rate)) : 1;
             let isExpanded = expandedState[containerId]; let visibleList = isExpanded ? list : list.slice(0, 10);
 
-            let subhtml = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-400">${titleLabel} Críticos</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
+            let subhtml = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-indigo-600">${titleLabel} Críticos</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
                 subhtml += `
                     <div onclick="handleDimensionItemClick('${groupingKey}', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${filterArray.includes(item.name) ? 'subitem-active' : ''}">
@@ -666,7 +586,7 @@
                             <span class="text-slate-500 font-mono text-[9px]">${item.r.toFixed(1)} kg</span>
                             <span class="font-black font-mono ${item.rate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${item.rate.toFixed(2)}%</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
             subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Contraer' : 'Ver Todos'}</span><span>▼</span></button>`;
