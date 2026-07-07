@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -150,7 +150,7 @@
         
         let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDia = 'ALL'; const dbeMeta = 2.15;
 
-        // Estructuras de filtros elásticos múltiples
+        // Filtros elásticos múltiples
         let selectedCentrosFiltro = []; let selectedCanalesFiltro = []; let selectedVehiculosFiltro = [];
         let selectedRutasFiltro = []; let selectedDistritosFiltro = []; let selectedMotivosFiltro = [];
         let selectedUnidadesFiltro = []; let selectedNombresDiaFiltro = []; let selectedSemanasFiltro = [];
@@ -171,7 +171,7 @@
             afterDatasetsDraw(chart) {
                 const { ctx, data } = chart; ctx.save();
                 ctx.font = 'bold 9px "Inter", sans-serif'; ctx.fillStyle = '#475569';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+                ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
                 chart.getDatasetMeta(0).data.forEach((bar, index) => {
                     const value = data.datasets[0].data[index];
                     if (value !== undefined && value !== null) ctx.fillText(Number(value).toFixed(2) + '%', bar.x, bar.y - 4);
@@ -369,7 +369,7 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // Opacidad visual de tarjetas Fila 1
+            // Opacidad de tarjetas Fila 1
             ['card-Global', 'card-Chancay', 'card-Ate1', 'card-Ate2'].forEach(id => {
                 let key = id === 'card-Global' ? 'Total' : id === 'card-Chancay' ? 'Chancay' : id === 'card-Ate1' ? 'Ate 1' : 'Ate 2';
                 let el = document.getElementById(id);
@@ -380,16 +380,17 @@
             let dataTemporal = rawData.filter(row => selectedDia === 'ALL' || row.numDia === selectedDia);
             renderPerformanceCards(dataTemporal);
 
+            // Set base Fila 1
             let dataFila1 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
-            // Render de la Fila de Gráficos de barras intermedios
+            // Re-renderizado de gráficos de barras intermedios
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
-            // CORRECCIÓN CLAVE: El set definitivo cruzado ahora integra obligatoriamente los filtros de los cards de barras intermedios
+            // CORRECCIÓN: Filtrado en cascada completo considerando las selecciones de los gráficos de barras intermedios
             filteredData = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -403,16 +404,17 @@
                 return true;
             });
 
-            // FIXED ESTABLE: Mantiene las opciones fijadas en cascada estructuradas sobre dataFila1 para evitar que desaparezcan
-            renderMotivosSubcard('subcard-motivo', 'Motivo', dataFila1);
-            renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataFila1, 'vehiculo', selectedVehiculosFiltro);
-            renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
-            renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
+            // CORRECCIÓN MAESTRA: Se alimenta a las subcards inferiores con 'filteredData' (el set con los gráficos aplicados)
+            // en lugar de usar dataFila1, permitiendo que las barras interactúen con el bloque inferior.
+            renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
+            renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', filteredData, 'vehiculo', selectedVehiculosFiltro);
+            renderDimensionSubcard('subcard-ruta', 'Ruta Venta', filteredData, 'rutaVenta', selectedRutasFiltro);
+            renderDimensionSubcard('subcard-distrito', 'Distrito', filteredData, 'distrito', selectedDistritosFiltro);
 
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // Reactividad completa de la curva histórica diaria frente a selecciones cruzadas superiores e inferiores
+            // Reactividad del gráfico evolutivo histórico diario
             let dataEvolutivo = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -434,6 +436,7 @@
             dataCalendarioActual.forEach(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return;
                 if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return;
@@ -453,7 +456,7 @@
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Asignación Unidades (Filtro Bidireccional Maestro Activo)
+            // 1. Asignación Unidades (Barra Azul)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -475,7 +478,7 @@
                 }
             });
 
-            // 2. Día de la Semana (Filtro Bidireccional Maestro Activo)
+            // 2. Día de la Semana (Barra Naranja)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -496,7 +499,7 @@
                 }
             });
 
-            // 3. Número de Semana (Filtro Bidireccional Maestro Activo)
+            // 3. Número de Semana (Barra Verde)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
