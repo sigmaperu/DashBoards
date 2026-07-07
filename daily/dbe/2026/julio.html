@@ -4,15 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <!-- Icono temático de Dashboard para la pestaña -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Leaflet CSS y JS CDN -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -32,7 +27,6 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
-    <!-- Header Corporativo Claro Premium -->
     <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
@@ -41,7 +35,6 @@
             </div>
         </div>
         
-        <!-- Bloque de Firma de Autoría e Iconos de Contacto -->
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
@@ -60,10 +53,8 @@
         </div>
     </header>
 
-    <!-- FILA 1: CALENDARIO + TARJETAS MÁSTER SUPERIORES -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <!-- Calendario -->
             <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
@@ -75,15 +66,13 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <!-- Contenedores de las 4 Tarjetas Máster -->
-            <div id="card-Global" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Total', event)"></div>
-            <div id="card-Chancay" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Chancay', event)"></div>
-            <div id="card-Ate1" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Ate 1', event)"></div>
-            <div id="card-Ate2" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all" onclick="handleCardClick('Ate 2', event)"></div>
+            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white"></div>
+            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
+            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
+            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
         </section>
     </div>
 
-    <!-- FILA INTERMEDIA: LOS 3 CARDS GRÁFICOS INTERACTIVOS EN AMBAS DIRECCIONES -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
             <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
@@ -98,14 +87,12 @@
         </section>
     </div>
 
-    <!-- FILA: GRÁFICO DE EVOLUCIÓN HISTÓRICO CON DOBLE EJE SIN GRÍLLAS -->
     <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[210px] md:h-[235px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
-    <!-- FILA: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO (Motivo, Vehículo, Ruta, Distrito) -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
@@ -115,7 +102,6 @@
         </section>
     </div>
 
-    <!-- FILA: TABLA MAESTRA CONSOLIDADA Y MAPA -->
     <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
         <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
             <div>
@@ -153,7 +139,6 @@
             </button>
         </div>
 
-        <!-- Bloque Mapa -->
         <div class="w-full lg:w-[35%] bg-white border border-slate-200 rounded-2xl p-2 flex flex-col shadow-xs min-h-[300px] lg:min-h-auto">
             <div id="mapContainer" class="flex-1 w-full rounded-xl bg-slate-50 border border-slate-200 min-h-[300px] lg:min-h-[330px] z-10"></div>
         </div>
@@ -342,25 +327,25 @@
             applyFilters();
         }
 
-        function handleCardClick(centroKey, event) {
+        window.handleCardClick = function(centroKey, event) {
             if (event.target.closest('.noclick')) return;
             if (event.ctrlKey) {
                 if (selectedCentrosFiltro.includes(centroKey)) selectedCentrosFiltro = selectedCentrosFiltro.filter(x => x !== centroKey);
                 else selectedCentrosFiltro.push(centroKey);
             } else { selectedCentrosFiltro = selectedCentrosFiltro.includes(centroKey) && selectedCentrosFiltro.length === 1 ? [] : [centroKey]; }
             applyFilters();
-        }
+        };
 
-        function handleCanalCircleClick(canal, event) {
+        window.handleCanalCircleClick = function(canal, event) {
             event.stopPropagation();
             if (event.ctrlKey) {
                 if (selectedCanalesFiltro.includes(canal)) selectedCanalesFiltro = selectedCanalesFiltro.filter(x => x !== canal);
                 else selectedCanalesFiltro.push(canal);
             } else { selectedCanalesFiltro = selectedCanalesFiltro.includes(canal) && selectedCanalesFiltro.length === 1 ? [] : [canal]; }
             applyFilters();
-        }
+        };
 
-        function handleDimensionItemClick(key, val, event) {
+        window.handleDimensionItemClick = function(key, val, event) {
             let targetArr = key === 'motivo' ? selectedMotivosFiltro : key === 'vehiculo' ? selectedVehiculosFiltro : key === 'rutaVenta' ? selectedRutasFiltro : selectedDistritosFiltro;
             if (event.ctrlKey) {
                 if (targetArr.includes(val)) {
@@ -377,11 +362,11 @@
                 if (key === 'distrito') selectedDistritosFiltro = resets ? [] : [val];
             }
             applyFilters();
-        }
+        };
 
-        function toggleCanales(cardId, event) { event.stopPropagation(); expandedState[cardId] = !expandedState[cardId]; applyFilters(); }
-        function toggleSubcard(subcardId) { expandedState[subcardId] = !expandedState[subcardId]; applyFilters(); }
-        function toggleTableExpansion() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); }
+        window.toggleCanales = function(containerId, e) { e.stopPropagation(); expandedState[containerId] = !expandedState[containerId]; applyFilters(); };
+        window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
+        window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
             // Opacidad visual de tarjetas Fila 1
@@ -392,21 +377,19 @@
                 else el.classList.remove('card-inactive');
             });
 
-            // Dataset Base Afectado por Calendario
             let dataTemporal = rawData.filter(row => selectedDia === 'ALL' || row.numDia === selectedDia);
             renderPerformanceCards(dataTemporal);
 
-            // Dataset estructural para desgloses
             let dataFila1 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 return true;
             });
 
-            // Render de gráficos de barras intermedio (Permite inyección y lectura de filtros mutuos)
+            // Render de la Fila de Gráficos de barras intermedios
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
-            // DATA TOTAL CONSOLIDADA Y FILTRADA EN CASCADA
+            // CORRECCIÓN CLAVE: El set definitivo cruzado ahora integra obligatoriamente los filtros de los cards de barras intermedios
             filteredData = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -420,16 +403,16 @@
                 return true;
             });
 
-            // FIXED ESTRUCTURAL: Las subcards se calculan sobre la data estructural para que las opciones no desaparezcan al cliquearlas
+            // FIXED ESTABLE: Mantiene las opciones fijadas en cascada estructuradas sobre dataFila1 para evitar que desaparezcan
             renderMotivosSubcard('subcard-motivo', 'Motivo', dataFila1);
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', dataFila1, 'vehiculo', selectedVehiculosFiltro);
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', dataFila1, 'rutaVenta', selectedRutasFiltro);
             renderDimensionSubcard('subcard-distrito', 'Distrito', dataFila1, 'distrito', selectedDistritosFiltro);
 
-            renderMasterTable(filteredData);
+            renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // CORRECCIÓN DE REACTIVIDAD: El evolutivo diario reacciona elásticamente a las selecciones superiores e inferiores
+            // Reactividad completa de la curva histórica diaria frente a selecciones cruzadas superiores e inferiores
             let dataEvolutivo = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -448,7 +431,6 @@
         function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            // Tipo de unidad (Sujeto a filtros cruzados e inferiores)
             dataCalendarioActual.forEach(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
@@ -460,7 +442,6 @@
                 asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
             });
 
-            // Gráficos de Día y Semana (Independientes de calendario pero reactivos a los desgloses)
             dataGlobalCentros.forEach(row => {
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return;
@@ -472,7 +453,7 @@
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Asignación Unidades (Filtro Bidireccional Activo)
+            // 1. Asignación Unidades (Filtro Bidireccional Maestro Activo)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -494,7 +475,7 @@
                 }
             });
 
-            // 2. Día de la Semana (Filtro Bidireccional Activo)
+            // 2. Día de la Semana (Filtro Bidireccional Maestro Activo)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -515,7 +496,7 @@
                 }
             });
 
-            // 3. Número de Semana (Filtro Bidireccional Activo)
+            // 3. Número de Semana (Filtro Bidireccional Maestro Activo)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -553,22 +534,16 @@
                     if (selectedCanalesFiltro.includes(row.canal)) { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
                 } else { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
             });
-
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
             let isExpanded = expandedState[containerId];
-
-            let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey)
-                ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-sm">✓</div>`
-                : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
+            let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey) ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 flex items-center justify-center text-[8px] text-white font-bold shrink-0">✓</div>` : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
                     <div>
                         <div class="flex items-center justify-between gap-1">
-                            <div class="flex items-center gap-1.5 truncate">
-                                ${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4>
-                            </div>
+                            <div class="flex items-center gap-1.5 truncate">${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4></div>
                             <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}</span>
                         </div>
                         <div class="mt-2.5">
@@ -586,9 +561,7 @@
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 cursor-pointer py-0.5">
-                            <span>% DBE por Canal</span><span class="text-[9px]">${isExpanded ? '▲' : '▼'}</span>
-                        </button>
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 cursor-pointer py-0.5"><span class="text-[9px]">% DBE por Canal</span><span>${isExpanded ? '▲' : '▼'}</span></button>
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
 
