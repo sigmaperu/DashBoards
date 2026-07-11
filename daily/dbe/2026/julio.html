@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
@@ -66,7 +66,7 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white"></div>
+            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
             <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
             <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
             <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
@@ -150,7 +150,6 @@
         
         let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDia = 'ALL'; const dbeMeta = 2.15;
 
-        // Filtros elásticos múltiples
         let selectedCentrosFiltro = []; let selectedCanalesFiltro = []; let selectedVehiculosFiltro = [];
         let selectedRutasFiltro = []; let selectedDistritosFiltro = []; let selectedMotivosFiltro = [];
         let selectedUnidadesFiltro = []; let selectedNombresDiaFiltro = []; let selectedSemanasFiltro = [];
@@ -369,7 +368,7 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // Opacidad de tarjetas Fila 1
+            // Opacidad visual de tarjetas Fila 1
             ['card-Global', 'card-Chancay', 'card-Ate1', 'card-Ate2'].forEach(id => {
                 let key = id === 'card-Global' ? 'Total' : id === 'card-Chancay' ? 'Chancay' : id === 'card-Ate1' ? 'Ate 1' : 'Ate 2';
                 let el = document.getElementById(id);
@@ -378,8 +377,7 @@
             });
 
             let dataTemporal = rawData.filter(row => selectedDia === 'ALL' || row.numDia === selectedDia);
-            renderPerformanceCards(dataTemporal);
-
+            
             // Set base Fila 1
             let dataFila1 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -387,10 +385,10 @@
                 return true;
             });
 
-            // Re-renderizado de gráficos de barras intermedios
+            // Renderizado de gráficos de barras intermedios
             renderFilaGraficosBarras(dataFila1, dataTemporal);
 
-            // CORRECCIÓN: Filtrado en cascada completo considerando las selecciones de los gráficos de barras intermedios
+            // Filtrado en cascada completo considerando las selecciones de los gráficos de barras intermedios
             filteredData = dataTemporal.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -404,8 +402,7 @@
                 return true;
             });
 
-            // CORRECCIÓN MAESTRA: Se alimenta a las subcards inferiores con 'filteredData' (el set con los gráficos aplicados)
-            // en lugar de usar dataFila1, permitiendo que las barras interactúen con el bloque inferior.
+            // Pasamos filteredData (el set afectado por los gráficos) a los desgloses inferiores para reactividad total
             renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', filteredData, 'vehiculo', selectedVehiculosFiltro);
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', filteredData, 'rutaVenta', selectedRutasFiltro);
@@ -413,8 +410,8 @@
 
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
+            renderPerformanceCards(dataTemporal);
 
-            // Reactividad del gráfico evolutivo histórico diario
             let dataEvolutivo = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -436,7 +433,6 @@
             dataCalendarioActual.forEach(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return;
                 if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return;
                 if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return;
@@ -456,7 +452,7 @@
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Asignación Unidades (Barra Azul)
+            // 1. Asignación Unidades
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -478,7 +474,7 @@
                 }
             });
 
-            // 2. Día de la Semana (Barra Naranja)
+            // 2. Día de la Semana
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -499,7 +495,7 @@
                 }
             });
 
-            // 3. Número de Semana (Barra Verde)
+            // 3. Número de Semana
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -522,13 +518,25 @@
         }
 
         function renderPerformanceCards(dataCards) {
-            buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total');
-            buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay');
-            buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1');
-            buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2');
+            // Calcular de antemano el % DBE más alto entre los CDs individuales para escalar la barra de forma relativa
+            let maxCD_DBE = 0;
+            ['Chancay', 'Ate 1', 'Ate 2'].forEach(centro => {
+                let ds = dataCards.filter(x => x.centro === centro);
+                let s = ds.reduce((acc, r) => acc + r.surtido, 0);
+                let r = ds.reduce((acc, r) => acc + r.rechazado, 0);
+                let rate = s > 0 ? (r / s * 100) : 0;
+                if(rate > maxCD_DBE) maxCD_DBE = rate;
+            });
+            if(maxCD_DBE === 0) maxCD_DBE = 5.0; // Resguardo de escala base
+
+            buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total', maxCD_DBE);
+            buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay', maxCD_DBE);
+            buildSingleCard('card-Ate1', 'Ate 1', dataCards.filter(x => x.centro === 'Ate 1'), false, 'Ate 1', maxCD_DBE);
+            buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2', maxCD_DBE);
         }
 
-        function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey) {
+        // REESTRUCTURACIÓN COMPLETA DE DISEÑO SOLICITADA PARA LOS CARDS MÁSTER
+        function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey, maxCD_DBE) {
             let totalSurtido = 0; let totalRechazado = 0; let canalMap = {};
             dataset.forEach(row => { if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 }; });
             dataset.forEach(row => {
@@ -537,10 +545,17 @@
                     if (selectedCanalesFiltro.includes(row.canal)) { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
                 } else { totalSurtido += row.surtido; totalRechazado += row.rechazado; }
             });
+
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
-            let fillPercent = Math.min((dbeRate / dbeMeta) * 100, 100);
+            
+            // LÓGICA REQUERIDA: Ajustar el tamaño de la barrita y de la marca de meta de acuerdo al porcentaje mayor de la fila
+            let fillPercent = Math.min((dbeRate / maxCD_DBE) * 100, 100);
+            let metaMarkerPos = Math.min((dbeMeta / maxCD_DBE) * 100, 100);
+
+            let barColor = dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500';
+            let textColor = dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-700';
             let isExpanded = expandedState[containerId];
-            let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey) ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 flex items-center justify-center text-[8px] text-white font-bold shrink-0">✓</div>` : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
+            let circleHtml = (selectedCentrosFiltro.length === 0 && filterKey === 'Total') || selectedCentrosFiltro.includes(filterKey) ? `<div class="w-3.5 h-3.5 rounded-full bg-indigo-600 flex items-center justify-center text-[8px] text-white font-bold shrink-0 shadow-sm">✓</div>` : `<div class="w-3.5 h-3.5 rounded-full border border-slate-300 bg-slate-100 shrink-0"></div>`;
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
@@ -549,18 +564,29 @@
                             <div class="flex items-center gap-1.5 truncate">${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4></div>
                             <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}</span>
                         </div>
-                        <div class="mt-2.5">
-                            <h2 class="text-xl font-black ${dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'} tracking-tight">${totalRechazado.toFixed(1).toLocaleString('es-PE')}</h2>
-                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">Kg. Rechazados</p>
+                        
+                        <div class="mt-2">
+                            <h2 class="text-2xl font-black ${textColor} tracking-tight">${dbeRate.toFixed(2)}%</h2>
+                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">% DBE Real</p>
                         </div>
-                        <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-500 border-t border-slate-200 pt-1.5">
+
+                        <div class="mt-2.5 mb-3">
+                            <div class="w-full bg-slate-100 rounded-full h-1.5 relative overflow-visible">
+                                <div class="${barColor} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
+                                <div class="absolute top-[-3px] w-0.5 h-3 bg-slate-400" style="left: ${metaMarkerPos}%;" title="Meta: 2.15%"></div>
+                            </div>
+                            <div class="flex justify-between text-[8px] text-slate-400 mt-1">
+                                <span>0%</span>
+                                <span>Meta: 2.15%</span>
+                                <span>Max: ${maxCD_DBE.toFixed(1)}%</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-100 pt-2">
                             <span>Kg. Surtidos:</span><span class="font-mono text-slate-800 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
                         </div>
-                        <div class="mt-2.5">
-                            <div class="flex justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-                                <span>% DBE: <b class="${dbeRate > dbeMeta ? 'text-rose-600' : 'text-emerald-600'}">${dbeRate.toFixed(2)}%</b></span><span>Meta: 2.15%</span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-1 relative overflow-hidden"><div class="${dbeRate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full transition-all" style="width: ${fillPercent}%"></div></div>
+                        <div class="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+                            <span>Kg. Rechazados:</span><span class="font-mono text-rose-600 font-bold">${totalRechazado.toFixed(1).toLocaleString('es-PE')}</span>
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
