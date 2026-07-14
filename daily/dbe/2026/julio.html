@@ -54,22 +54,22 @@
     </header>
 
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
-        <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
-            <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
+        <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
+            <div class="w-[235px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between min-h-[195px]">
+                <div class="flex items-center justify-between mb-1 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
                     <button id="btnDayAll" onclick="selectDiaCalendario('ALL', event)" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">Todo el mes</button>
                 </div>
-                <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-1">
+                <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-0.5">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                 </div>
-                <div id="calendarGrid" class="grid grid-cols-7 gap-0.5"></div>
+                <div id="calendarGrid" class="grid grid-cols-7 gap-0.5 flex-1 justify-center items-center"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[215px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all"></div>
+            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
+            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
         </section>
     </div>
 
@@ -317,6 +317,7 @@
             }
         }
 
+        // HABILITADO CORRECCIÓN: Selección múltiple con CTRL / Clic Simple en minicalendario
         function selectDiaCalendario(dia, event) {
             if (dia === 'ALL') {
                 selectedDias = [];
@@ -376,41 +377,26 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // Opacidad visual de tarjetas Fila 1
-            ['card-Global', 'card-Chancay', 'card-Ate1', 'card-Ate2'].forEach(id => {
-                let key = id === 'card-Global' ? 'Total' : id === 'card-Chancay' ? 'Chancay' : id === 'card-Ate1' ? 'Ate 1' : 'Ate 2';
-                let el = document.getElementById(id);
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(key)) el.classList.add('card-inactive');
-                else el.classList.remove('card-inactive');
-            });
-
-            // Si se selecciona alguna semana, se recalculan y agregan automáticamente los días correspondientes de esa semana al filtro
+            // CORRECCIÓN REQUERIDA: Si se seleccionan semanas, el calendario resalta automáticamente los días correspondientes
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
                     .filter(row => selectedSemanasFiltro.includes(row.numSemana))
                     .map(row => row.numDia);
-                // Unión de días seleccionados manualmente + días de las semanas seleccionadas
                 selectedDias = [...new Set([...selectedDias, ...diasDeSemanas])];
             }
 
-            // Actualizar render de estados activos en los botones del calendario
+            // Actualización e inyección visual de estados activos en los botones de días
             document.querySelectorAll('.day-btn').forEach(b => {
                 let dId = b.id.replace('btn-day-', '');
-                if (selectedDias.includes(dId)) {
-                    b.classList.add('active');
-                } else {
-                    b.classList.remove('active');
-                }
+                if (selectedDias.includes(dId)) b.classList.add('active');
+                else b.classList.remove('active');
             });
 
             let btnAll = document.getElementById('btnDayAll');
-            if (selectedDias.length === 0) {
-                btnAll.classList.add('bg-indigo-600', 'text-white');
-            } else {
-                btnAll.classList.remove('bg-indigo-600', 'text-white');
-            }
+            if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
+            else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
-            // Filtrado del dataset basado en todas las dimensiones cruzadas (Fila de gráficos 2 y Calendario)
+            // FILTRADO DINÁMICO UNIVERSAL CRUZADO
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -425,13 +411,14 @@
                 return true;
             });
 
-            // Actualización dinámica de Fila 2 (Se auto-filtra entre sí)
+            // CORRECCIÓN CRÍTICA: El set de gráficos de barras e intermedios (Fila 2) se alimenta de la data unificada cruzada en tiempo real.
+            // Esto permite que las barras se auto-filtren entre sí, afecten a las subcards y recalculen el % DBE de la fila superior.
             renderFilaGraficosBarras(filteredData);
 
-            // Actualización dinámica de Tarjetas Máster de la Fila 1 (Afectadas por Calendario + Fila 2)
+            // Re-renderizado de tarjetas máster superiores afectadas de forma bidireccional
             renderPerformanceCards(filteredData);
 
-            // Renderizado de elementos inferiores y tabla reactiva
+            // Render de desgloses inferiores elásticos (Sin compactaciones abruptas)
             renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', filteredData, 'vehiculo', selectedVehiculosFiltro);
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', filteredData, 'rutaVenta', selectedRutasFiltro);
@@ -440,13 +427,25 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            setTimeout(() => { renderTrendChart(filteredData); }, 55);
+            // CORRECCIÓN REQUERIDA: El evolutivo diario reacciona elásticamente a todos los filtros pero NO es cortado por el calendario diario
+            let dataEvolutivoMensual = rawData.filter(row => {
+                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
+                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
+                if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
+                if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
+                if (selectedSemanasFiltro.length > 0 && !selectedSemanasFiltro.includes(row.numSemana)) return false;
+                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
+                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
+                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
+                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
+                return true;
+            });
+            setTimeout(() => { renderTrendChart(dataEvolutivoMensual); }, 55);
         }
 
         function renderFilaGraficosBarras(datasetActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            // Llenamos datos agrupados en base al dataset filtrado actual (lo que permite filtrado cruzado entre ellos)
             datasetActual.forEach(row => {
                 if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
                 if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
@@ -457,7 +456,7 @@
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Gráfico: Asignación Unidades
+            // 1. Asignación Unidades (Barra Azul)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -479,7 +478,7 @@
                 }
             });
 
-            // 2. Gráfico: Día de la Semana
+            // 2. Día de la Semana (Barra Naranja)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -500,7 +499,7 @@
                 }
             });
 
-            // 3. Gráfico: Número de Semana
+            // 3. Número de Semana (Barra Verde)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -523,7 +522,6 @@
         }
 
         function renderPerformanceCards(dataCards) {
-            // Calcular el % DBE más alto entre los CDs en tiempo real para mantener escala proporcional dinámica
             let maxCD_DBE = 0;
             ['Chancay', 'Ate 1', 'Ate 2'].forEach(centro => {
                 let ds = dataCards.filter(x => x.centro === centro);
@@ -532,7 +530,7 @@
                 let rate = s > 0 ? (r / s * 100) : 0;
                 if(rate > maxCD_DBE) maxCD_DBE = rate;
             });
-            if(maxCD_DBE === 0) maxCD_DBE = 5.0; // Consistencia por defecto
+            if(maxCD_DBE === 0) maxCD_DBE = 5.0;
 
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total', maxCD_DBE);
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay', maxCD_DBE);
@@ -551,7 +549,6 @@
             });
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
-            
             let fillPercent = Math.min((dbeRate / maxCD_DBE) * 100, 100);
             let metaMarkerPos = Math.min((dbeMeta / maxCD_DBE) * 100, 100);
 
@@ -567,24 +564,19 @@
                             <div class="flex items-center gap-1.5 truncate">${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4></div>
                             <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}</span>
                         </div>
-                        
                         <div class="mt-2">
                             <h2 class="text-2xl font-black ${textColor} tracking-tight">${dbeRate.toFixed(2)}%</h2>
                             <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wide mt-0.5">% DBE Real</p>
                         </div>
-
                         <div class="mt-2.5 mb-3">
                             <div class="w-full bg-slate-100 rounded-full h-1.5 relative overflow-visible">
                                 <div class="${barColor} h-1.5 rounded-full transition-all duration-500" style="width: ${fillPercent}%"></div>
-                                <div class="absolute top-[-3px] w-0.5 h-3 bg-slate-400" style="left: ${metaMarkerPos}%;" title="Meta: 2.15%"></div>
+                                <div class="absolute top-[-3px] w-0.5 h-3 bg-slate-400" style="left: ${metaMarkerPos}%;"></div>
                             </div>
                             <div class="flex justify-between text-[8px] text-slate-400 mt-1">
-                                <span>0%</span>
-                                <span>Meta: 2.15%</span>
-                                <span>Max: ${maxCD_DBE.toFixed(1)}%</span>
+                                <span>0%</span><span>Meta: 2.15%</span><span>Max: ${maxCD_DBE.toFixed(1)}%</span>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-100 pt-2">
                             <span>Kg. Surtidos:</span><span class="font-mono text-slate-800 font-semibold">${totalSurtido.toFixed(1).toLocaleString('es-PE')}</span>
                         </div>
@@ -618,11 +610,10 @@
 
             let html = `<div class="flex items-center justify-between border-b border-slate-200 pb-1.5 mb-2.5 font-mono"><h4 class="text-[10px] font-black tracking-wider uppercase text-amber-600">${titleLabel} por Impacto</h4></div><div class="space-y-2.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1 font-mono">`;
             visibleList.forEach(item => {
-                let fillWidth = Math.min((item.r / maxRechazo) * 100, 100);
                 html += `
                     <div onclick="handleDimensionItemClick('motivo', '${item.name}', event)" class="text-[10px] cursor-pointer p-0.5 rounded hover:bg-slate-50 transition-all ${selectedMotivosFiltro.includes(item.name) ? 'subitem-active' : ''}">
                         <div class="flex justify-between items-center mb-0.5"><span class="font-bold text-slate-700 truncate max-w-[155px]">${item.name}</span><span class="font-black font-mono text-amber-600">${item.r.toFixed(1)} Kg</span></div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${fillWidth}%"></div></div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${Math.min((item.r / maxRechazo) * 100, 100)}%"></div></div>
                     </div>`;
             });
             html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Ver Menos' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
