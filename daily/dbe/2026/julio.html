@@ -67,10 +67,10 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5 flex-1 justify-center items-center"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Global" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
+            <div id="card-Chancay" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate1" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate2" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
         </section>
     </div>
 
@@ -386,9 +386,8 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO
+        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO MULTI-DIMENSIONAL
         function applyFilters() {
-            // Sincronización automática de semanas seleccionadas con los días del calendario
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
                     .filter(row => selectedSemanasFiltro.includes(row.numSemana))
@@ -396,7 +395,6 @@
                 selectedDias = [...new Set([...selectedDias, ...diasDeSemanas])];
             }
 
-            // Refrescar visual del calendario
             document.querySelectorAll('.day-btn').forEach(b => {
                 let dId = b.id.replace('btn-day-', '');
                 if (selectedDias.includes(dId)) b.classList.add('active');
@@ -407,7 +405,7 @@
             if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
             else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
-            // 1. DATA GENERAL FILTRADA (Afectada por todo, incluyendo el minicalendario diario) -> Para KPI Cards, Subcards, Tabla y Mapa
+            // 1. DATA GENERAL FILTRADA (Sujeta al Filtro del Calendario por Día)
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -422,7 +420,7 @@
                 return true;
             });
 
-            // 2. DATA ACUMULADA MENSUAL BASE (Totalmente independiente del minicalendario diario)
+            // 2. DATA MENSUAL ACUMULADA BASE (Limpia e independiente del minicalendario diario)
             let dataEstructuralMensual = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -433,7 +431,7 @@
                 return true;
             });
 
-            // CORRECCIÓN: Enviamos el set acumulado mensual base. La lógica interna de renderizado aislará o preservará el día según el gráfico.
+            // Inyectar el set de datos correcto para la fila intermedia
             renderFilaGraficosBarras(dataEstructuralMensual);
             renderPerformanceCards(filteredData);
 
@@ -445,7 +443,7 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // CORRECCIÓN: El evolutivo diario se calcula sobre la base mensual limpia de días, pero reactiva a filtros cruzados
+            // CORRECCIÓN EXACTA: El evolutivo diario procesa la data acumulada mensual cruzada pero ignorando el recorte de día del calendario
             let dataEvolutivoTrend = dataEstructuralMensual.filter(row => {
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
                 if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
@@ -455,7 +453,7 @@
             setTimeout(() => { renderTrendChart(dataEvolutivoTrend); }, 55);
         }
 
-        // CORRECCIÓN QUIRÚRGICA: Separación estricta del impacto de días del calendario por tipo de gráfico de barra
+        // CORRECCIÓN VISUAL: Gráficos de barra con lógicas de aislamiento selectivo de día del calendario
         function renderFilaGraficosBarras(datasetMensualBase) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
