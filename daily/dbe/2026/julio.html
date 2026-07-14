@@ -58,7 +58,7 @@
             <div class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-1.5 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
-                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL')" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">Todo el mes</button>
+                    <button id="btnDayAll" onclick="selectDiaCalendario('ALL', event)" class="text-[9px] bg-slate-100 text-indigo-600 hover:bg-slate-200 font-bold px-1.5 py-0.5 rounded border border-slate-200 transition-colors cursor-pointer">Todo el mes</button>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-slate-400 mb-1">
                     <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
@@ -148,7 +148,7 @@
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv';
         const asignacionUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/Asignacion%20unidades.csv';
         
-        let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDia = 'ALL'; const dbeMeta = 2.15;
+        let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDias = []; const dbeMeta = 2.15;
 
         let selectedCentrosFiltro = []; let selectedCanalesFiltro = []; let selectedVehiculosFiltro = [];
         let selectedRutasFiltro = []; let selectedDistritosFiltro = []; let selectedMotivosFiltro = [];
@@ -230,7 +230,7 @@
                 const btn = document.createElement('button');
                 btn.className = "day-btn text-[9px] py-1 border border-slate-200 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all text-center cursor-pointer font-medium font-mono";
                 btn.id = `btn-day-${diaStr}`; btn.innerText = d;
-                btn.onclick = () => selectDiaCalendario(diaStr);
+                btn.onclick = (e) => selectDiaCalendario(diaStr, e);
                 grid.appendChild(btn);
             }
         }
@@ -317,12 +317,20 @@
             }
         }
 
-        function selectDiaCalendario(dia) {
-            selectedDia = dia;
-            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btnDayAll').classList.remove('bg-indigo-600', 'text-white');
-            if (dia === 'ALL') { document.getElementById('btnDayAll').classList.add('bg-indigo-600', 'text-white'); } 
-            else { document.getElementById(`btn-day-${dia}`).classList.add('active'); }
+        function selectDiaCalendario(dia, event) {
+            if (dia === 'ALL') {
+                selectedDias = [];
+            } else {
+                if (event && event.ctrlKey) {
+                    if (selectedDias.includes(dia)) {
+                        selectedDias = selectedDias.filter(d => d !== dia);
+                    } else {
+                        selectedDias.push(dia);
+                    }
+                } else {
+                    selectedDias = selectedDias.includes(dia) && selectedDias.length === 1 ? [] : [dia];
+                }
+            }
             applyFilters();
         }
 
@@ -376,20 +384,35 @@
                 else el.classList.remove('card-inactive');
             });
 
-            let dataTemporal = rawData.filter(row => selectedDia === 'ALL' || row.numDia === selectedDia);
-            
-            // Set base Fila 1
-            let dataFila1 = rawData.filter(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
-                return true;
+            // Si se selecciona alguna semana, se recalculan y agregan automáticamente los días correspondientes de esa semana al filtro
+            if (selectedSemanasFiltro.length > 0) {
+                let diasDeSemanas = rawData
+                    .filter(row => selectedSemanasFiltro.includes(row.numSemana))
+                    .map(row => row.numDia);
+                // Unión de días seleccionados manualmente + días de las semanas seleccionadas
+                selectedDias = [...new Set([...selectedDias, ...diasDeSemanas])];
+            }
+
+            // Actualizar render de estados activos en los botones del calendario
+            document.querySelectorAll('.day-btn').forEach(b => {
+                let dId = b.id.replace('btn-day-', '');
+                if (selectedDias.includes(dId)) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
             });
 
-            // Renderizado de gráficos de barras intermedios
-            renderFilaGraficosBarras(dataFila1, dataTemporal);
+            let btnAll = document.getElementById('btnDayAll');
+            if (selectedDias.length === 0) {
+                btnAll.classList.add('bg-indigo-600', 'text-white');
+            } else {
+                btnAll.classList.remove('bg-indigo-600', 'text-white');
+            }
 
-            // Filtrado en cascada completo considerando las selecciones de los gráficos de barras intermedios
-            filteredData = dataTemporal.filter(row => {
+            // Filtrado del dataset basado en todas las dimensiones cruzadas (Fila de gráficos 2 y Calendario)
+            filteredData = rawData.filter(row => {
+                if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
@@ -402,7 +425,13 @@
                 return true;
             });
 
-            // Pasamos filteredData (el set afectado por los gráficos) a los desgloses inferiores para reactividad total
+            // Actualización dinámica de Fila 2 (Se auto-filtra entre sí)
+            renderFilaGraficosBarras(filteredData);
+
+            // Actualización dinámica de Tarjetas Máster de la Fila 1 (Afectadas por Calendario + Fila 2)
+            renderPerformanceCards(filteredData);
+
+            // Renderizado de elementos inferiores y tabla reactiva
             renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
             renderDimensionSubcard('subcard-vehiculo', 'Vehículo Placa', filteredData, 'vehiculo', selectedVehiculosFiltro);
             renderDimensionSubcard('subcard-ruta', 'Ruta Venta', filteredData, 'rutaVenta', selectedRutasFiltro);
@@ -410,49 +439,25 @@
 
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
-            renderPerformanceCards(dataTemporal);
 
-            let dataEvolutivo = rawData.filter(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
-                if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
-                if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
-                if (selectedSemanasFiltro.length > 0 && !selectedSemanasFiltro.includes(row.numSemana)) return false;
-                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
-                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
-                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
-                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
-                return true;
-            });
-            setTimeout(() => { renderTrendChart(dataEvolutivo); }, 55);
+            setTimeout(() => { renderTrendChart(filteredData); }, 55);
         }
 
-        function renderFilaGraficosBarras(dataGlobalCentros, dataCalendarioActual) {
+        function renderFilaGraficosBarras(datasetActual) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            dataCalendarioActual.forEach(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return;
-                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return;
-                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return;
-                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return;
-                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return;
+            // Llenamos datos agrupados en base al dataset filtrado actual (lo que permite filtrado cruzado entre ellos)
+            datasetActual.forEach(row => {
                 if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
-                asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
-            });
-
-            dataGlobalCentros.forEach(row => {
-                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return;
-                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return;
-                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return;
-                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return;
                 if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                 if (!semMap[row.numSemana]) semMap[row.numSemana] = { s:0, r:0 };
+
+                asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
                 diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
                 semMap[row.numSemana].s += row.surtido; semMap[row.numSemana].r += row.rechazado;
             });
 
-            // 1. Asignación Unidades
+            // 1. Gráfico: Asignación Unidades
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -474,7 +479,7 @@
                 }
             });
 
-            // 2. Día de la Semana
+            // 2. Gráfico: Día de la Semana
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -495,7 +500,7 @@
                 }
             });
 
-            // 3. Número de Semana
+            // 3. Gráfico: Número de Semana
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -518,7 +523,7 @@
         }
 
         function renderPerformanceCards(dataCards) {
-            // Calcular de antemano el % DBE más alto entre los CDs individuales para escalar la barra de forma relativa
+            // Calcular el % DBE más alto entre los CDs en tiempo real para mantener escala proporcional dinámica
             let maxCD_DBE = 0;
             ['Chancay', 'Ate 1', 'Ate 2'].forEach(centro => {
                 let ds = dataCards.filter(x => x.centro === centro);
@@ -527,7 +532,7 @@
                 let rate = s > 0 ? (r / s * 100) : 0;
                 if(rate > maxCD_DBE) maxCD_DBE = rate;
             });
-            if(maxCD_DBE === 0) maxCD_DBE = 5.0; // Resguardo de escala base
+            if(maxCD_DBE === 0) maxCD_DBE = 5.0; // Consistencia por defecto
 
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total', maxCD_DBE);
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay', maxCD_DBE);
@@ -535,7 +540,6 @@
             buildSingleCard('card-Ate2', 'Ate 2', dataCards.filter(x => x.centro === 'Ate 2'), false, 'Ate 2', maxCD_DBE);
         }
 
-        // REESTRUCTURACIÓN COMPLETA DE DISEÑO SOLICITADA PARA LOS CARDS MÁSTER
         function buildSingleCard(containerId, titleName, dataset, isGlobalCard, filterKey, maxCD_DBE) {
             let totalSurtido = 0; let totalRechazado = 0; let canalMap = {};
             dataset.forEach(row => { if (!canalMap[row.canal]) canalMap[row.canal] = { s: 0, r: 0 }; });
@@ -548,7 +552,6 @@
 
             let dbeRate = totalSurtido > 0 ? (totalRechazado / totalSurtido * 100) : 0;
             
-            // LÓGICA REQUERIDA: Ajustar el tamaño de la barrita y de la marca de meta de acuerdo al porcentaje mayor de la fila
             let fillPercent = Math.min((dbeRate / maxCD_DBE) * 100, 100);
             let metaMarkerPos = Math.min((dbeMeta / maxCD_DBE) * 100, 100);
 
