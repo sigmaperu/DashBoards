@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
-    <link class="noclick" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
@@ -216,12 +216,14 @@
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); lucide.createIcons(); });
 
+        // Inicializar Mapa de Leaflet
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO' }).addTo(mapInstance);
             markersGroup = L.layerGroup().addTo(mapInstance);
         }
 
+        // Construir grilla del calendario de Julio 2026
         function buildCalendarGrid() {
             const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
             const diaInicioSemana = 3; const totalDiasMes = 31;
@@ -236,6 +238,7 @@
             }
         }
 
+        // Descarga y descompresión GZIP (.gz) en caliente
         async function loadData() {
             try {
                 const resAsig = await fetch(asignacionUrl);
@@ -386,6 +389,7 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
+        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO MULTI-DIMENSIONAL
         function applyFilters() {
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
@@ -404,6 +408,7 @@
             if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
             else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
+            // Set 1: Data unificada cruzada maestra (Sujeta al Filtro del Calendario por Día)
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -418,7 +423,9 @@
                 return true;
             });
 
+            // Set 2: Data Estructural para Gráficos de Fila 2 (Afectada por el Día del Calendario para actualizar la barra de flota)
             let dataEstructuralFila2 = rawData.filter(row => {
+                if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false; // Inyección de reactividad al minicalendario
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
@@ -439,8 +446,7 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // CORRECCIÓN FIJADA: El gráfico de evolución histórico diario recibe 'dataEvolutivoTrend' que cruza de forma
-            // íntegra las barras e inyecta la reactividad mensual elástica sin ser recortado por el minicalendario.
+            // Set 3: Data de Tendencia Histórica (Aislada por completo de la variable del día para mantener la perspectiva de la línea mensual)
             let dataEvolutivoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -453,7 +459,6 @@
                 if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
                 return true;
             });
-
             setTimeout(() => { renderTrendChart(dataEvolutivoTrend); }, 55);
         }
 
@@ -479,6 +484,7 @@
                 }
             });
 
+            // 1. Asignación Unidades (Filtra con clic)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -500,6 +506,7 @@
                 }
             });
 
+            // 2. Día de la Semana
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -520,6 +527,7 @@
                 }
             });
 
+            // 3. Número de Semana
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
