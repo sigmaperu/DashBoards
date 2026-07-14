@@ -376,7 +376,7 @@
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
         function applyFilters() {
-            // CORRECCIÓN: Si se eligen semanas, se pre-seleccionan y pintan visualmente los días correspondientes en el calendario
+            // Sincronización del Número de Semana con el resaltado del Calendario
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
                     .filter(row => selectedSemanasFiltro.includes(row.numSemana))
@@ -384,7 +384,7 @@
                 selectedDias = [...new Set([...selectedDias, ...diasDeSemanas])];
             }
 
-            // Refrescar visual del calendario
+            // Pintar los botones activos del minicalendario
             document.querySelectorAll('.day-btn').forEach(b => {
                 let dId = b.id.replace('btn-day-', '');
                 if (selectedDias.includes(dId)) b.classList.add('active');
@@ -395,7 +395,7 @@
             if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
             else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
-            // DATA 1: Universo elástico cruzado superior e inferior para Tarjetas Máster e Inferiores
+            // DATA 1: Set elástico cruzado maestro total para Tarjetas de Fila 1, Subcards, Tabla y Mapa
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -410,8 +410,8 @@
                 return true;
             });
 
-            // DATA 2: Universo estructural de centros y canales (Fila 1) para inyectar a las barras de la Fila 2,
-            // permitiendo que no se rompan ni se limpien por los clics del calendario, pero que SÍ respondan cruzadamente entre ellas.
+            // DATA 2: Set de datos aislado del minicalendario diario pero reactivo a los filtros superiores de CD o inferiores de subcards.
+            // Es la data estructural limpia que alimenta el auto-filtrado dinámico e interno de la Fila 2 de Gráficos de barra.
             let dataEstructuralFila2 = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -422,7 +422,7 @@
                 return true;
             });
 
-            // Renders de datos cruzados
+            // Renders de interfaz elástica
             renderFilaGraficosBarras(dataEstructuralFila2);
             renderPerformanceCards(filteredData);
 
@@ -434,7 +434,7 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // DATA 3: Evolutivo Histórico Diario (Independiente del calendario pero reactivo a los filtros superiores y de barras)
+            // CORRECCIÓN: El evolutivo diario NO depende de la selección de un día en el minicalendario. Usa la data de las barras cruzadas de forma íntegra.
             let dataEvolutivoTrend = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -450,12 +450,11 @@
             setTimeout(() => { renderTrendChart(dataEvolutivoTrend); }, 55);
         }
 
-        // RECONFIGURACIÓN: Los gráficos de barras se auto-filtran entre sí de forma bidireccional sobre el acumulado mensual
         function renderFilaGraficosBarras(datasetEstructural) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
             datasetEstructural.forEach(row => {
-                // Auto-filtrado cruzado interno de variables
+                // Lógica de filtrado cruzado bidireccional entre los 3 gráficos de barra en simultáneo
                 let passAsig = (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
                 let passDia = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
                 let passSem = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia));
@@ -548,7 +547,7 @@
                 let rate = s > 0 ? (r / s * 100) : 0;
                 if(rate > maxCD_DBE) maxCD_DBE = rate;
             });
-            if(maxCD_DBE === 0) maxCD_DBE = 5.0;
+            if(maxCD_DBE === 0) maxCD_CD = 5.0;
 
             buildSingleCard('card-Global', 'Total Operación', dataCards, true, 'Total', maxCD_DBE);
             buildSingleCard('card-Chancay', 'Chancay', dataCards.filter(x => x.centro === 'Chancay'), false, 'Chancay', maxCD_DBE);
@@ -577,7 +576,7 @@
 
             let cardHtml = `
                 <div class="flex flex-col justify-between h-full font-mono text-slate-800">
-                    <div>
+                    <div onclick="handleCardClick('${filterKey}', event)">
                         <div class="flex items-center justify-between gap-1">
                             <div class="flex items-center gap-1.5 truncate">${circleHtml} <h4 class="text-[9px] font-black ${isGlobalCard ? 'text-indigo-600' : 'text-slate-700'} uppercase tracking-wider truncate">${titleName}</h4></div>
                             <span class="text-[7.5px] px-1 py-0.5 rounded font-bold shrink-0 ${dbeRate > dbeMeta ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${dbeRate > dbeMeta ? 'Desviado' : 'En Meta'}</span>
@@ -681,6 +680,31 @@
                 circleMarker.bindPopup(`<div style="font-family:'Inter',sans-serif; font-size:11px;"><b>${p.cliente}</b><br/><b>Rechazado:</b> <span style="color:#e11d48;font-weight:bold;">${p.rechazado.toFixed(1)} Kg</span></div>`); markersGroup.addLayer(circleMarker);
             });
             if (validPoints.length > 0 && mapInstance) mapInstance.fitBounds(validPoints.map(x => [x.lat, x.lng]), { padding: [25, 25], maxZoom: 14 });
+        }
+
+        function renderTrendChart(dataTrend) {
+            let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
+            let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
+            if(trendChart) trendChart.destroy();
+            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+                plugins: [trendLabelsPlugin],
+                data: {
+                    labels: sortedDays,
+                    datasets: [
+                        { type: 'line', label: '% DBE Diario', data: sortedDays.map(d => fMap[d].s > 0 ? (fMap[d].r / fMap[d].s * 100).toFixed(2) : 0), borderColor: '#4f46e5', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1, yAxisID: 'y', z: 10 },
+                        { type: 'bar', label: 'Kg. Rechazados', data: sortedDays.map(d => fMap[d].r.toFixed(0)), backgroundColor: 'rgba(245, 158, 11, 0.28)', borderColor: 'rgba(245, 158, 11, 0.6)', borderWidth: 1, borderRadius: 3, yAxisID: 'y1', z: 1 }
+                    ]
+                },
+                options: { 
+                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    layout: { padding: { top: 18, bottom: 5, left: 10, right: 10 } },
+                    scales: { 
+                        y: { position: 'left', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
+                        y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { display: false }, border: { display: false } }, 
+                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } }
+                    } 
+                }
+            });
         }
 
         function downloadExcelComas() {
