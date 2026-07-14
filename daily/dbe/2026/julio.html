@@ -216,14 +216,12 @@
 
         document.addEventListener('DOMContentLoaded', () => { buildCalendarGrid(); initMap(); loadData(); lucide.createIcons(); });
 
-        // Inicializar Mapa de Leaflet
         function initMap() {
             mapInstance = L.map('mapContainer', { zoomControl: false }).setView([-12.0463, -77.0427], 11);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; CARTO' }).addTo(mapInstance);
             markersGroup = L.layerGroup().addTo(mapInstance);
         }
 
-        // Construir grilla del calendario de Julio 2026
         function buildCalendarGrid() {
             const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
             const diaInicioSemana = 3; const totalDiasMes = 31;
@@ -238,7 +236,6 @@
             }
         }
 
-        // Descarga y descompresión GZIP (.gz) en caliente
         async function loadData() {
             try {
                 const resAsig = await fetch(asignacionUrl);
@@ -389,8 +386,9 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO MULTI-DIMENSIONAL
+        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO
         function applyFilters() {
+            // Sincronización automática de semanas seleccionadas con los días del calendario
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
                     .filter(row => selectedSemanasFiltro.includes(row.numSemana))
@@ -398,6 +396,7 @@
                 selectedDias = [...new Set([...selectedDias, ...diasDeSemanas])];
             }
 
+            // Refrescar visual del calendario
             document.querySelectorAll('.day-btn').forEach(b => {
                 let dId = b.id.replace('btn-day-', '');
                 if (selectedDias.includes(dId)) b.classList.add('active');
@@ -408,7 +407,7 @@
             if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
             else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
-            // Set 1: Data unificada cruzada maestra (Sujeta al Filtro del Calendario por Día)
+            // 1. DATA GENERAL FILTRADA (Afectada por todo, incluyendo el minicalendario diario) -> Para KPI Cards, Subcards, Tabla y Mapa
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
@@ -423,9 +422,8 @@
                 return true;
             });
 
-            // Set 2: Data Estructural para Gráficos de Fila 2 (Afectada por el Día del Calendario para actualizar la barra de flota)
-            let dataEstructuralFila2 = rawData.filter(row => {
-                if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false; // Inyección de reactividad al minicalendario
+            // 2. DATA ACUMULADA MENSUAL BASE (Totalmente independiente del minicalendario diario)
+            let dataEstructuralMensual = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
@@ -435,7 +433,8 @@
                 return true;
             });
 
-            renderFilaGraficosBarras(dataEstructuralFila2);
+            // CORRECCIÓN: Enviamos el set acumulado mensual base. La lógica interna de renderizado aislará o preservará el día según el gráfico.
+            renderFilaGraficosBarras(dataEstructuralMensual);
             renderPerformanceCards(filteredData);
 
             renderMotivosSubcard('subcard-motivo', 'Motivo', filteredData);
@@ -446,34 +445,33 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // Set 3: Data de Tendencia Histórica (Aislada por completo de la variable del día para mantener la perspectiva de la línea mensual)
-            let dataEvolutivoTrend = rawData.filter(row => {
-                if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
-                if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
+            // CORRECCIÓN: El evolutivo diario se calcula sobre la base mensual limpia de días, pero reactiva a filtros cruzados
+            let dataEvolutivoTrend = dataEstructuralMensual.filter(row => {
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
                 if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
                 if (selectedSemanasFiltro.length > 0 && !selectedSemanasFiltro.includes(row.numSemana)) return false;
-                if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
-                if (selectedVehiculosFiltro.length > 0 && !selectedVehiculosFiltro.includes(row.vehiculo)) return false;
-                if (selectedRutasFiltro.length > 0 && !selectedRutasFiltro.includes(row.rutaVenta)) return false;
-                if (selectedDistritosFiltro.length > 0 && !selectedDistritosFiltro.includes(row.distrito)) return false;
                 return true;
             });
             setTimeout(() => { renderTrendChart(dataEvolutivoTrend); }, 55);
         }
 
-        function renderFilaGraficosBarras(datasetEstructural) {
+        // CORRECCIÓN QUIRÚRGICA: Separación estricta del impacto de días del calendario por tipo de gráfico de barra
+        function renderFilaGraficosBarras(datasetMensualBase) {
             let asigMap = {}, diaMap = {}, semMap = {};
             
-            datasetEstructural.forEach(row => {
+            datasetMensualBase.forEach(row => {
                 let passAsig = (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
                 let passDia = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
                 let passSem = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia));
 
+                // REGLA: El gráfico de Asignación (Propio, 3PL, Híbrido) SÍ responde al filtro de días del minicalendario
                 if (passAsig) {
-                    if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
-                    asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
+                    if (selectedDias.length === 0 || selectedDias.includes(row.numDia)) {
+                        if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
+                        asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
+                    }
                 }
+                // REGLA: Los gráficos de Nombre de Día y Número de Semana NO se ven afectados por el minicalendario diario
                 if (passDia) {
                     if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                     diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
@@ -484,7 +482,7 @@
                 }
             });
 
-            // 1. Asignación Unidades (Filtra con clic)
+            // 1. Asignación Unidades (Barra Azul)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -506,7 +504,7 @@
                 }
             });
 
-            // 2. Día de la Semana
+            // 2. Día de la Semana (Barra Naranja)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -527,7 +525,7 @@
                 }
             });
 
-            // 3. Número de Semana
+            // 3. Número de Semana (Barra Verde)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -697,8 +695,7 @@
             let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
-            const ctx = document.getElementById('chartTrend').getContext('2d');
-            trendChart = new Chart(ctx, {
+            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
                 plugins: [trendLabelsPlugin],
                 data: {
                     labels: sortedDays,
@@ -717,13 +714,6 @@
                     } 
                 }
             });
-        }
-
-        function downloadExcelComas() {
-            let aggregatedExcelMap = {}; filteredData.forEach(row => { if (row.rechazado <= 0) return; if (!aggregatedExcelMap[row.codClie]) aggregatedExcelMap[row.codClie] = { ...row, surtido: 0, rechazado: 0 }; aggregatedExcelMap[row.codClie].surtido += row.surtido; aggregatedExcelMap[row.codClie].rechazado += row.rechazado; });
-            let csvContent = "\uFEFFFecha,Código,Cliente,Ruta,Canal,Vehículo,Tipo Unidad,Motivo,Surtido (Kg),Rechazado (Kg)\n";
-            Object.values(aggregatedExcelMap).forEach(c => { csvContent += `"${c.fecha}","${c.codClie}","${c.cliente}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${c.tipoUnidad}","${c.motivo}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)}\n`; });
-            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.setAttribute("href", URL.createObjectURL(blob)); link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
     </script>
 </body>
