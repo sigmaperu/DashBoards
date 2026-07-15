@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Control DBE - Julio 2026</title>
+    <!-- Icono temático de Dashboard para la pestaña -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Pako JS CDN para descompresión GZIP en tiempo real -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <!-- Leaflet CSS y JS CDN -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
@@ -28,6 +34,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col select-none p-3 md:p-6 gap-4 md:gap-5">
 
+    <!-- Header Corporativo Claro Premium -->
     <header class="bg-white border border-slate-200 rounded-2xl p-4 md:px-6 md:py-3 shadow-xs shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center justify-between w-full sm:w-auto gap-4">
             <div class="flex items-center gap-3 md:gap-5">
@@ -36,6 +43,7 @@
             </div>
         </div>
         
+        <!-- Bloque de Firma de Autoría e Iconos de Contacto -->
         <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
             <span class="text-xs font-black text-slate-700 tracking-wide font-mono">MARCⓊ DAVILA</span>
             <div class="w-px h-4 bg-slate-200 hidden sm:block"></div>
@@ -54,8 +62,10 @@
         </div>
     </header>
 
+    <!-- FILA 1: CALENDARIO + TARJETAS MÁSTER EMPAREJADOS EN TAMAÑO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
+            <!-- Calendario -->
             <div class="w-[235px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col justify-between min-h-[195px]">
                 <div class="flex items-center justify-between mb-1 border-b border-slate-200 pb-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-slate-500">Julio 2026</span>
@@ -67,6 +77,7 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5 flex-1 justify-center items-center"></div>
             </div>
 
+            <!-- Las 4 tarjetas de operación -->
             <div id="card-Global" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
             <div id="card-Chancay" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
             <div id="card-Ate1" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
@@ -74,26 +85,32 @@
         </section>
     </div>
 
+    <!-- FILA INTERMEDIA: CONFIGURACIÓN ACTUALIZADA DE LOS 4 GRÁFICOS (BARRAS HORIZONTALES INTEGRADAS) -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="flex-1 min-w-[280px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="flex-1 min-w-[280px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+                <div class="flex-1 min-h-0 relative"><canvas id="chartProveedor"></canvas></div>
+            </div>
+            <div class="flex-1 min-w-[310px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[380px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="flex-1 min-w-[310px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
     </div>
 
+    <!-- FILA: GRÁFICO DE EVOLUCIÓN HISTÓRICO CON DOBLE EJE SIN GRÍLLAS -->
     <section class="bg-white p-3 md:p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col h-[210px] md:h-[235px] w-full">
         <div class="w-full flex-1 min-h-0 relative">
             <canvas id="chartTrend"></canvas>
         </div>
     </section>
 
+    <!-- FILA: SEGUNDA LÍNEA DE CARDS DE DETALLE CRÍTICO -->
     <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
         <section class="flex flex-row flex-nowrap gap-3 items-start justify-between w-full min-w-[1180px]">
             <div id="subcard-motivo" class="flex-1 min-w-[275px] bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs transition-all"></div>
@@ -103,6 +120,7 @@
         </section>
     </div>
 
+    <!-- FILA: TABLA MAESTRA CONSOLIDADA Y MAPA -->
     <section class="flex flex-col lg:flex-row gap-4 items-stretch w-full min-h-[380px]">
         <div class="w-full lg:w-[65%] bg-white border border-slate-200 rounded-2xl p-3 md:p-4 flex flex-col justify-between shadow-xs min-w-0">
             <div>
@@ -147,15 +165,15 @@
 
     <script>
         const csvUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/BD_DBE_Julio_2026.csv.gz';
-        const asignacionUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/refs/heads/main/Asignacion%20unidades.csv';
+        const asignacionUrl = 'https://raw.githubusercontent.com/sigmaperu/DashBoards/heads/main/Asignacion%20unidades.csv';
         
         let rawData = []; let filteredData = []; let asignacionMap = {}; let selectedDias = []; const dbeMeta = 2.15;
 
         let selectedCentrosFiltro = []; let selectedCanalesFiltro = []; let selectedVehiculosFiltro = [];
         let selectedRutasFiltro = []; let selectedDistritosFiltro = []; let selectedMotivosFiltro = [];
-        let selectedUnidadesFiltro = []; let selectedNombresDiaFiltro = []; let selectedSemanasFiltro = [];
+        let selectedUnidadesFiltro = []; let selectedNombresDiaFiltro = []; let selectedSemanasFiltro = []; let selectedProveedoresFiltro = [];
 
-        let trendChart = null; let chartAsignacion = null; let chartDiaSemana = null; let chartNumSemana = null;
+        let trendChart = null; let chartAsignacion = null; let chartProveedor = null; let chartDiaSemana = null; let chartNumSemana = null;
         let mapInstance = null; let markersGroup = null;
 
         let expandedState = {
@@ -166,15 +184,26 @@
         const centroMapping = { "0374": "Ate 1", "0752": "Chorrillos", "0754": "Chancay", "0780": "Ate 2" };
         const diasNombreArr = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
+        // Plugin de etiquetas de porcentaje para gráficos de barra (detecta si es horizontal o vertical para posicionar)
         const percentageLabelsPlugin = {
             id: 'percentageLabels',
             afterDatasetsDraw(chart) {
                 const { ctx, data } = chart; ctx.save();
                 ctx.font = 'bold 9px "Inter", sans-serif'; ctx.fillStyle = '#475569';
-                ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
+                const isHorizontal = chart.options.indexAxis === 'y';
+                
                 chart.getDatasetMeta(0).data.forEach((bar, index) => {
                     const value = data.datasets[0].data[index];
-                    if (value !== undefined && value !== null) ctx.fillText(Number(value).toFixed(2) + '%', bar.x, bar.y - 4);
+                    if (value !== undefined && value !== null) {
+                        const txt = Number(value).toFixed(2) + '%';
+                        if (isHorizontal) {
+                            ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+                            ctx.fillText(txt, bar.x + 4, bar.y);
+                        } else {
+                            ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
+                            ctx.fillText(txt, bar.x, bar.y - 4);
+                        }
+                    }
                 });
                 ctx.restore();
             }
@@ -208,6 +237,14 @@
                 ctx.restore();
             }
         };
+
+        // Configuración de escalas limpias (detecta si es horizontal para invertir los ejes limpios)
+        function getScalesConfig(isHorizontal = false) {
+            return {
+                y: { grid: { display: false }, ticks: { display: !isHorizontal, font: { size: 9, weight: 'bold' } }, border: { display: false } },
+                x: { grid: { display: false }, ticks: { display: isHorizontal, font: { size: 9, weight: 'bold' } }, border: { display: false } }
+            };
+        }
 
         const cleanScalesConfig = {
             y: { grid: { display: false }, ticks: { display: false }, border: { display: false } },
@@ -263,8 +300,14 @@
                 let parts = line.split(',');
                 if (parts.length >= 3) {
                     let placa = parts[0].trim().toUpperCase().replace(/"/g, '');
-                    let tipoUnidad = parts[2].trim().toUpperCase().replace(/"/g, '');
-                    if(placa) asignacionMap[placa] = (tipoUnidad === 'PROPIO' || tipoUnidad === '3PL') ? tipoUnidad : 'HÍBRIDO';
+                    let proveedor = parts[1].trim().toUpperCase().replace(/"/g, ''); // 2da columna: Proveedor
+                    let tipoUnidad = parts[2].trim().toUpperCase().replace(/"/g, ''); // 3era columna: Tipo
+                    if(placa) {
+                        asignacionMap[placa] = {
+                            tipo: (tipoUnidad === 'PROPIO' || tipoUnidad === '3PL') ? tipoUnidad : 'HÍBRIDO',
+                            prov: proveedor || 'BRAEDT S.A.'
+                        };
+                    }
                 }
             }
         }
@@ -298,12 +341,14 @@
                 let numeroSemana = "Sem " + String(numSemReal).padStart(2, '0');
 
                 let placaVehiculo = (cols[4] || 'No Especificado').trim().toUpperCase();
-                let tipoUnidadCruzado = asignacionMap[placaVehiculo] || 'HÍBRIDO';
+                
+                // SALVEDAD DE MATCH: Si no existe en el mapa de asignaciones, se inyectan las marcas por defecto (Híbrido y Braedt S.A.)
+                let matchObj = asignacionMap[placaVehiculo] || { tipo: 'HÍBRIDO', prov: 'BRAEDT S.A.' };
 
                 rawData.push({
                     centro: centroNombre, canal: cols[2] || 'OTROS',
                     codClie: cols[5] || '000000', cliente: cols[6] || 'CLIENTE OPERATIVO',
-                    vehiculo: placaVehiculo, tipoUnidad: tipoUnidadCruzado,
+                    vehiculo: placaVehiculo, tipoUnidad: matchObj.tipo, proveedor: matchObj.prov,
                     rutaVenta: cols[7] || 'Sin Ruta', distrito: (cols[15] || 'OTROS').toUpperCase(),
                     motivo: (cols[36] || 'SIN ESPECIFICAR').toUpperCase(),
                     nombreDia: nombreDia, numSemana: numeroSemana,
@@ -315,14 +360,12 @@
 
         function generateMockData() {
             const centros = ['Ate 1', 'Chancay', 'Ate 2'];
-            const vehicles = ['ABE 738', 'BFY-769', 'CML-932'];
-            const tipos = ['PROPIO', '3PL', 'HÍBRIDO'];
             for (let d = 1; d <= 31; d++) {
                 let formattedDay = String(d).padStart(2, '0');
                 let dateObj = new Date(2026, 6, d);
                 rawData.push({
                     centro: centros[d % 3], canal: 'DET', codClie: '100'+d, cliente: 'DISTRIBUIDORA DE ALIMENTOS PERÚ S.A.C.',
-                    vehiculo: vehicles[d % 3], tipoUnidad: tipos[d % 3], rutaVenta: 'B6A', distrito: 'ATE', motivo: 'TIENDA CERRADA',
+                    vehiculo: 'ABC-123', tipoUnidad: 'PROPIO', proveedor: 'SIGMA', rutaVenta: 'B6A', distrito: 'ATE', motivo: 'TIENDA CERRADA',
                     nombreDia: diasNombreArr[dateObj.getDay()], numSemana: 'Sem 27', lat: -12.04, lng: -77.04, fecha: `7/${d}/2026`, numDia: formattedDay, surtido: 1500, rechazado: 12
                 });
             }
@@ -333,14 +376,9 @@
                 selectedDias = [];
             } else {
                 if (event && event.ctrlKey) {
-                    if (selectedDias.includes(dia)) {
-                        selectedDias = selectedDias.filter(d => d !== dia);
-                    } else {
-                        selectedDias.push(dia);
-                    }
-                } else {
-                    selectedDias = selectedDias.includes(dia) && selectedDias.length === 1 ? [] : [dia];
-                }
+                    if (selectedDias.includes(dia)) selectedDias = selectedDias.filter(d => d !== dia);
+                    else selectedDias.push(dia);
+                } else { selectedDias = selectedDias.includes(dia) && selectedDias.length === 1 ? [] : [dia]; }
             }
             applyFilters();
         }
@@ -386,7 +424,6 @@
         window.toggleSubcard = function(id) { expandedState[id] = !expandedState[id]; applyFilters(); };
         window.toggleTableExpansion = function() { expandedState['master-table'] = !expandedState['master-table']; applyFilters(); };
 
-        // MOTOR CENTRALIZADO REACTIVO DE FILTRADO CRUZADO MULTI-DIMENSIONAL
         function applyFilters() {
             if (selectedSemanasFiltro.length > 0) {
                 let diasDeSemanas = rawData
@@ -405,12 +442,12 @@
             if (selectedDias.length === 0) btnAll.classList.add('bg-indigo-600', 'text-white');
             else btnAll.classList.remove('bg-indigo-600', 'text-white');
 
-            // 1. DATA GENERAL FILTRADA (Sujeta al Filtro del Calendario por Día)
             filteredData = rawData.filter(row => {
                 if (selectedDias.length > 0 && !selectedDias.includes(row.numDia)) return false;
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
+                if (selectedProveedoresFiltro.length > 0 && !selectedProveedoresFiltro.includes(row.proveedor)) return false;
                 if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
                 if (selectedSemanasFiltro.length > 0 && !selectedSemanasFiltro.includes(row.numSemana)) return false;
                 if (selectedMotivosFiltro.length > 0 && !selectedMotivosFiltro.includes(row.motivo)) return false;
@@ -420,7 +457,6 @@
                 return true;
             });
 
-            // 2. DATA MENSUAL ACUMULADA BASE (Limpia e independiente del minicalendario diario)
             let dataEstructuralMensual = rawData.filter(row => {
                 if (selectedCentrosFiltro.length > 0 && !selectedCentrosFiltro.includes(row.centro)) return false;
                 if (selectedCanalesFiltro.length > 0 && !selectedCanalesFiltro.includes(row.canal)) return false;
@@ -431,7 +467,6 @@
                 return true;
             });
 
-            // Inyectar el set de datos correcto para la fila intermedia
             renderFilaGraficosBarras(dataEstructuralMensual);
             renderPerformanceCards(filteredData);
 
@@ -443,9 +478,9 @@
             renderMasterTable(filteredData); 
             renderMapMarkers(filteredData);
 
-            // CORRECCIÓN EXACTA: El evolutivo diario procesa la data acumulada mensual cruzada pero ignorando el recorte de día del calendario
             let dataEvolutivoTrend = dataEstructuralMensual.filter(row => {
                 if (selectedUnidadesFiltro.length > 0 && !selectedUnidadesFiltro.includes(row.tipoUnidad)) return false;
+                if (selectedProveedoresFiltro.length > 0 && !selectedProveedoresFiltro.includes(row.proveedor)) return false;
                 if (selectedNombresDiaFiltro.length > 0 && !selectedNombresDiaFiltro.includes(row.nombreDia)) return false;
                 if (selectedSemanasFiltro.length > 0 && !selectedSemanasFiltro.includes(row.numSemana)) return false;
                 return true;
@@ -453,23 +488,27 @@
             setTimeout(() => { renderTrendChart(dataEvolutivoTrend); }, 55);
         }
 
-        // CORRECCIÓN VISUAL: Gráficos de barra con lógicas de aislamiento selectivo de día del calendario
         function renderFilaGraficosBarras(datasetMensualBase) {
-            let asigMap = {}, diaMap = {}, semMap = {};
+            let asigMap = {}, provMap = {}, diaMap = {}, semMap = {};
             
             datasetMensualBase.forEach(row => {
-                let passAsig = (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
-                let passDia = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana));
-                let passSem = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia));
+                let passAsig = (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana)) && (selectedProveedoresFiltro.length === 0 || selectedProveedoresFiltro.includes(row.proveedor));
+                let passProv = (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana)) && (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad));
+                let passDia = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedSemanasFiltro.length === 0 || selectedSemanasFiltro.includes(row.numSemana)) && (selectedProveedoresFiltro.length === 0 || selectedProveedoresFiltro.includes(row.proveedor));
+                let passSem = (selectedUnidadesFiltro.length === 0 || selectedUnidadesFiltro.includes(row.tipoUnidad)) && (selectedNombresDiaFiltro.length === 0 || selectedNombresDiaFiltro.includes(row.nombreDia)) && (selectedProveedoresFiltro.length === 0 || selectedProveedoresFiltro.includes(row.proveedor));
 
-                // REGLA: El gráfico de Asignación (Propio, 3PL, Híbrido) SÍ responde al filtro de días del minicalendario
                 if (passAsig) {
                     if (selectedDias.length === 0 || selectedDias.includes(row.numDia)) {
                         if (!asigMap[row.tipoUnidad]) asigMap[row.tipoUnidad] = { s:0, r:0 };
                         asigMap[row.tipoUnidad].s += row.surtido; asigMap[row.tipoUnidad].r += row.rechazado;
                     }
                 }
-                // REGLA: Los gráficos de Nombre de Día y Número de Semana NO se ven afectados por el minicalendario diario
+                if (passProv) {
+                    if (selectedDias.length === 0 || selectedDias.includes(row.numDia)) {
+                        if (!provMap[row.proveedor]) provMap[row.proveedor] = { s:0, r:0 };
+                        provMap[row.proveedor].s += row.surtido; provMap[row.proveedor].r += row.rechazado;
+                    }
+                }
                 if (passDia) {
                     if (!diaMap[row.nombreDia]) diaMap[row.nombreDia] = { s:0, r:0 };
                     diaMap[row.nombreDia].s += row.surtido; diaMap[row.nombreDia].r += row.rechazado;
@@ -480,7 +519,7 @@
                 }
             });
 
-            // 1. Asignación Unidades (Barra Azul)
+            // 1. Asignación Unidades (BARRAS HORIZONTALES)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -488,8 +527,8 @@
                 type: 'bar', plugins: [percentageLabelsPlugin],
                 data: { labels: asigLabels, datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }] },
                 options: {
-                    responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    layout: { padding: { top: 15 } }, scales: cleanScalesConfig,
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    layout: { padding: { right: 35, left: 5 } }, scales: getScalesConfig(true),
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             let label = asigLabels[elements[0].index];
@@ -502,7 +541,29 @@
                 }
             });
 
-            // 2. Día de la Semana (Barra Naranja)
+            // 2. NUEVO GRÁFICO: Proveedores (BARRAS HORIZONTALES - 2DA COLUMNA CON SALVEDAD BRAEDT)
+            if(chartProveedor) chartProveedor.destroy();
+            let provLabels = Object.keys(provMap).sort(); if(provLabels.length === 0) provLabels = ['BRAEDT S.A.'];
+            let provData = provLabels.map(l => (provMap[l] && provMap[l].s > 0) ? (provMap[l].r / provMap[l].s * 100).toFixed(2) : 0);
+            chartProveedor = new Chart(document.getElementById('chartProveedor').getContext('2d'), {
+                type: 'bar', plugins: [percentageLabelsPlugin],
+                data: { labels: provLabels, datasets: [{ data: provData, backgroundColor: provLabels.map(l => selectedProveedoresFiltro.includes(l) ? '#a855f7' : '#c084fc'), borderRadius: 4 }] },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                    layout: { padding: { right: 35, left: 5 } }, scales: getScalesConfig(true),
+                    onClick: (e, elements) => {
+                        if (elements.length > 0) {
+                            let label = provLabels[elements[0].index];
+                            if (e.native.ctrlKey) {
+                                selectedProveedoresFiltro = selectedProveedoresFiltro.includes(label) ? selectedProveedoresFiltro.filter(x => x !== label) : [...selectedProveedoresFiltro, label];
+                            } else { selectedProveedoresFiltro = selectedProveedoresFiltro.includes(label) && selectedProveedoresFiltro.length === 1 ? [] : [label]; }
+                            applyFilters();
+                        }
+                    }
+                }
+            });
+
+            // 3. Día de la Semana (Barras Verticales)
             if(chartDiaSemana) chartDiaSemana.destroy();
             let diaLabels = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             let diaData = diaLabels.map(l => (diaMap[l] && diaMap[l].s > 0) ? (diaMap[l].r / diaMap[l].s * 100).toFixed(2) : 0);
@@ -523,7 +584,7 @@
                 }
             });
 
-            // 3. Número de Semana (Barra Verde)
+            // 4. Número de Semana (Barras Verticales)
             if(chartNumSemana) chartNumSemana.destroy();
             let semLabels = Object.keys(semMap).sort(); if(semLabels.length === 0) semLabels = ['Sem 27', 'Sem 28', 'Sem 29', 'Sem 30'];
             let semData = semLabels.map(l => (semMap[l] && semMap[l].s > 0) ? (semMap[l].r / semMap[l].s * 100).toFixed(2) : 0);
@@ -641,7 +702,7 @@
                         <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-1 rounded-full" style="width: ${fillWidth}%"></div></div>
                     </div>`;
             });
-            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>${isExpanded ? 'Ver Menos' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            html += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-amber-600 cursor-pointer font-mono"><span>Ver Menos</span><span>▲</span></button>`;
             document.getElementById(containerId).innerHTML = html;
         }
 
@@ -663,7 +724,7 @@
                         <div class="w-full bg-slate-100 h-1 rounded-full overflow-hidden"><div class="${item.rate > dbeMeta ? 'bg-rose-500' : 'bg-emerald-500'} h-1 rounded-full" style="width: ${Math.min((item.rate / maxDbeInTanda) * 100, 100)}%"></div></div>
                     </div>`;
             });
-            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>${isExpanded ? 'Ver Menos' : 'Ver Todos'}</span><span>${isExpanded ? '▲' : '▼'}</span></button>`;
+            subhtml += `</div><button onclick="toggleSubcard('${containerId}')" class="w-full border-t border-slate-200 mt-2 pt-1.5 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer font-mono"><span>Ver Menos</span><span>▲</span></button>`;
             document.getElementById(containerId).innerHTML = subhtml;
         }
 
@@ -693,7 +754,8 @@
             let fMap = {}; dataTrend.forEach(r => { if(!fMap[r.numDia]) fMap[r.numDia] = {s:0, r:0}; fMap[r.numDia].s += r.surtido; fMap[r.numDia].r += r.rechazado; });
             let sortedDays = Object.keys(fMap).sort((a,b) => parseInt(a) - parseInt(b));
             if(trendChart) trendChart.destroy();
-            trendChart = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+            const ctx = document.getElementById('chartTrend').getContext('2d');
+            trendChart = new Chart(ctx, {
                 plugins: [trendLabelsPlugin],
                 data: {
                     labels: sortedDays,
@@ -712,6 +774,13 @@
                     } 
                 }
             });
+        }
+
+        function downloadExcelComas() {
+            let aggregatedExcelMap = {}; filteredData.forEach(row => { if (row.rechazado <= 0) return; if (!aggregatedExcelMap[row.codClie]) aggregatedExcelMap[row.codClie] = { ...row, surtido: 0, rechazado: 0 }; aggregatedExcelMap[row.codClie].surtido += row.surtido; aggregatedExcelMap[row.codClie].rechazado += row.rechazado; });
+            let csvContent = "\uFEFFFecha,Código,Cliente,Ruta,Canal,Vehículo,Tipo Unidad,Motivo,Surtido (Kg),Rechazado (Kg)\n";
+            Object.values(aggregatedExcelMap).forEach(c => { csvContent += `"${c.fecha}","${c.codClie}","${c.cliente}","${c.rutaVenta}","${c.canal}","${c.vehiculo}","${c.tipoUnidad}","${c.motivo}",${c.surtido.toFixed(1)},${c.rechazado.toFixed(1)}\n`; });
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.setAttribute("href", URL.createObjectURL(blob)); link.setAttribute("download", "Reporte_Maestro_DBE_Sigma.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
     </script>
 </body>
