@@ -67,25 +67,25 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-0.5 flex-1 justify-center items-center"></div>
             </div>
 
-            <div id="card-Global" onclick="handleCardClick('Total', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
-            <div id="card-Chancay" onclick="handleCardClick('Chancay', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
-            <div id="card-Ate1" onclick="handleCardClick('Ate 1', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
-            <div id="card-Ate2" onclick="handleCardClick('Ate 2', event)" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Global" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all bg-gradient-to-b from-indigo-50/10 to-white min-h-[195px]"></div>
+            <div id="card-Chancay" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate1" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
+            <div id="card-Ate2" class="w-[230px] shrink-0 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs flex flex-col justify-between cursor-pointer transition-all min-h-[195px]"></div>
         </section>
     </div>
 
-    <div class="w-full shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar pb-1">
-        <section class="flex flex-row flex-nowrap gap-3 items-stretch justify-between w-full min-w-[1180px]">
-            <div class="flex-1 min-w-[280px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+    <div class="w-full shrink-0">
+        <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 w-full">
+            <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col w-full">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartAsignacion"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[280px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col w-full">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartProveedor"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[310px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col w-full">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartDiaSemana"></canvas></div>
             </div>
-            <div class="flex-1 min-w-[310px] bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col">
+            <div class="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs h-[175px] flex flex-col w-full">
                 <div class="flex-1 min-h-0 relative"><canvas id="chartNumSemana"></canvas></div>
             </div>
         </section>
@@ -173,16 +173,16 @@
             id: 'percentageLabels',
             afterDatasetsDraw(chart) {
                 const { ctx, data } = chart; ctx.save();
-                ctx.font = 'bold 9px "Inter", sans-serif'; ctx.fillStyle = '#475569';
+                ctx.font = 'bold 8.5px "Inter", sans-serif'; ctx.fillStyle = '#475569';
                 const isHorizontal = chart.options.indexAxis === 'y';
                 
                 chart.getDatasetMeta(0).data.forEach((bar, index) => {
                     const value = data.datasets[0].data[index];
                     if (value !== undefined && value !== null) {
-                        const txt = Number(value).toFixed(2) + '%';
+                        const txt = Number(value).toFixed(1) + '%';
                         if (isHorizontal) {
                             ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-                            ctx.fillText(txt, bar.x + 4, bar.y);
+                            ctx.fillText(txt, bar.x + 3, bar.y);
                         } else {
                             ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
                             ctx.fillText(txt, bar.x, bar.y - 4);
@@ -222,10 +222,10 @@
             }
         };
 
-        // AJUSTE: Muestra las etiquetas del Eje Y y oculta completamente el Eje X para gráficos horizontales
+        // CORRECCIÓN: Calibrado tipográfico de eje Y comprimido y compactado para no recortar textos horizontales
         function getScalesConfig(isHorizontal = false) {
             return {
-                y: { grid: { display: false }, ticks: { display: isHorizontal, font: { size: 9, weight: 'bold' } }, border: { display: false } },
+                y: { grid: { display: false }, ticks: { display: isHorizontal, font: { size: 8, weight: 'bold' } }, border: { display: false } },
                 x: { grid: { display: false }, ticks: { display: !isHorizontal, font: { size: 9, weight: 'bold' } }, border: { display: false } }
             };
         }
@@ -503,7 +503,7 @@
                 }
             });
 
-            // 1. Asignación Unidades (BARRAS HORIZONTALES)
+            // 1. Asignación Unidades (BARRAS HORIZONTALES - EJE Y VISIBLE)
             if(chartAsignacion) chartAsignacion.destroy();
             let asigLabels = ['PROPIO', '3PL', 'HÍBRIDO'];
             let asigData = asigLabels.map(l => (asigMap[l] && asigMap[l].s > 0) ? (asigMap[l].r / asigMap[l].s * 100).toFixed(2) : 0);
@@ -512,7 +512,7 @@
                 data: { labels: asigLabels, datasets: [{ data: asigData, backgroundColor: asigLabels.map(l => selectedUnidadesFiltro.includes(l) ? '#4f46e5' : '#818cf8'), borderRadius: 4 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    layout: { padding: { right: 35, left: 5 } }, scales: getScalesConfig(true),
+                    layout: { padding: { right: 35, left: 2 } }, scales: getScalesConfig(true),
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             let label = asigLabels[elements[0].index];
@@ -525,7 +525,7 @@
                 }
             });
 
-            // 2. Proveedores (BARRAS HORIZONTALES)
+            // 2. Proveedores (BARRAS HORIZONTALES - EJE Y VISIBLE)
             if(chartProveedor) chartProveedor.destroy();
             let provLabels = Object.keys(provMap).sort(); if(provLabels.length === 0) provLabels = ['BRAEDT S.A.'];
             let provData = provLabels.map(l => (provMap[l] && provMap[l].s > 0) ? (provMap[l].r / provMap[l].s * 100).toFixed(2) : 0);
@@ -534,7 +534,7 @@
                 data: { labels: provLabels, datasets: [{ data: provData, backgroundColor: provLabels.map(l => selectedProveedoresFiltro.includes(l) ? '#a855f7' : '#c084fc'), borderRadius: 4 }] },
                 options: {
                     indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    layout: { padding: { right: 35, left: 5 } }, scales: getScalesConfig(true),
+                    layout: { padding: { right: 35, left: 2 } }, scales: getScalesConfig(true),
                     onClick: (e, elements) => {
                         if (elements.length > 0) {
                             let label = provLabels[elements[0].index];
@@ -654,7 +654,7 @@
                         </div>
                     </div>
                     <div class="mt-3 border-t border-slate-200 pt-1.5 flex flex-col noclick">
-                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 cursor-pointer py-0.5"><span class="text-[9px]">% DBE por Canal</span><span>${isExpanded ? '▲' : '▼'}</span></button>
+                        <button onclick="toggleCanales('${containerId}', event)" class="w-full flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-slate-400 hover:text-indigo-600 cursor-pointer py-0.5"><span class="text-[9px]">% DBE por Canal</span><span>${isExpanded ? '▲' : '▼'}</span></button>
                         <div class="${isExpanded ? 'block' : 'hidden'} mt-2 space-y-1.5">
             `;
 
